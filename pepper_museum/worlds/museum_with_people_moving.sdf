@@ -1,0 +1,820 @@
+<?xml version="1.0" ?>
+<!-- Museo ISCAS con 10 personas estáticas y 16 actores caminando (trayectorias de la tesis).
+     Convertido de la tesis (pepper_sim_ws, Gazebo Classic: worlds/museum_with_people_moving.world) con
+     pepper_museum/tools/convert_worlds.py. No editar a mano: regenerar. -->
+<sdf version="1.6">
+  <world name="default">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <surface><friction><ode><mu>100</mu><mu2>50</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <include>
+      <uri>model://iscas_museum</uri>
+      <name>iscas_museum</name>
+      <pose>1.86134 -2.16704 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>male03_Sup_Izq</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>-5.0 -7.50 0.01 0.0125 0.0023 -1.718</pose>
+    </include>
+
+    <light type="point" name="male03light_Sup_Izq">
+      <pose>-5.6 -7.50 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female02_Sup_Med</name>
+      <uri>model://citizen_extras_female_02</uri>
+      <pose>-4.000000 -3.500000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="female02light_Sup_Med">
+      <pose>-3.8 -3.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female02_Sup_Med_Junto</name>
+      <uri>model://citizen_extras_female_02</uri>
+      <pose>-2.84 -2.63 0.01 0 -0.025 1.683</pose>
+    </include>
+
+    <light type="point" name="female02light_Sup_Med_Junto">
+      <pose>-2.5 -2.63 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Sup_Der_Junto</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>-3.000000 4.000000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="male03bislight_Sup_Der_Junto">
+      <pose>-2.9 3.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female03_Sup_Der</name>
+      <uri>model://citizen_extras_female_03</uri>
+      <pose>-3.3 5.8 0.01 0.011 0.0126 1.6451</pose>
+    </include>
+
+    <light type="point" name="female03light_Sup_Der">
+      <pose>-3.0 6.2 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female02_Inf_Der</name>
+      <uri>model://citizen_extras_female_02</uri>
+      <pose>4.000000 7.000000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="female02bislight_Inf_Der">
+      <pose>3.8 6.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Inf_Med</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>6.0 0.53 0.01 0.0125 0.0023 -1.718</pose>
+    </include>
+
+    <light type="point" name="male03light_Inf_Med">
+      <pose>5.6 0.53 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Inf_Izq</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>6.000000 -10.500000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="male03bislight_Inf_Izq">
+      <pose>6.2 -10.8 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Inf_Med_2</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>8.0 -5.00 0.01 0.0125 0.0023 -1.718</pose>
+    </include>
+
+    <light type="point" name="male03light_Inf_Med_2">
+      <pose>7.7 -5.00 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female03_Med_Med</name>
+      <uri>model://citizen_extras_female_03</uri>
+      <pose>2.0 -4.0 0.01 0.011 0.0126 1.6451</pose>
+    </include>
+
+    <light type="point" name="female03light_Med_Med">
+      <pose>2.3 -3.8 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <actor name="actor1">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-2.5 7 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>2.5 7 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>11</time>
+            <pose>3 6.5 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>12</time>
+            <pose>3.5 6 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>17</time>
+            <pose>6 6 1 0 0 0</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor2">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-1.5 6 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>6</time>
+            <pose>1.5 6 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>7</time>
+            <pose>2 5.5 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>8</time>
+            <pose>2.5 5 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>16</time>
+            <pose>6 5 1 0 0 0</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor3">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>0 2 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>8</time>
+            <pose>4.5 2 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>9</time>
+            <pose>5 2.5 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>4 3 1 0 0 3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>18</time>
+            <pose>0 3 1 0 0 3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor4">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>6 -1 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>7</time>
+            <pose>6 -4.5 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>8</time>
+            <pose>5.5 -5 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>16</time>
+            <pose>1 -5 1 0 0 -3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor5">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>9.5 -0.5 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>4</time>
+            <pose>7.5 -0.5 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>5</time>
+            <pose>7 -1 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>14</time>
+            <pose>7 -6 1 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor6">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>9.5 -9 1 0 0 3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>24</time>
+            <pose>-5 -9 1 0 0 3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor7">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-6 -10 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>13</time>
+            <pose>0.5 -10 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>14</time>
+            <pose>1 -10.5 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>15</time>
+            <pose>1.5 -11 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>21</time>
+            <pose>4.5 -11 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>22</time>
+            <pose>5 -10.5 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>23</time>
+            <pose>5.5 -10 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>31</time>
+            <pose>9.5 -10 1 0 0 0</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor8">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-6 2 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>12</time>
+            <pose>-6 -4 1 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor9">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>8.5 7 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>12</time>
+            <pose>5 7 1 0 0 -3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor10">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-3 8 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>5</time>
+            <pose>-5.5 8 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>6</time>
+            <pose>-6 7.5 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>-6 5.5 1 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor11">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-1 3 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>-6 3 1 0 0 -3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor12">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>8 6 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>8 0 1 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor13">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>7 6 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>7 0 1 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor14">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>6 -6 1 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>1 -6 1 0 0 -3.14</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor15">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>1 -4 1 0 0 -4.71</pose>
+          </waypoint>
+          <waypoint>
+            <time>5</time>
+            <pose>1 -1.5 1 0 0 -4.71</pose>
+          </waypoint>
+          <waypoint>
+            <time>6</time>
+            <pose>1.5 -1 1 0 0 -6.28</pose>
+          </waypoint>
+          <waypoint>
+            <time>8</time>
+            <pose>2.5 -1 1 0 0 -6.28</pose>
+          </waypoint>
+          <waypoint>
+            <time>9</time>
+            <pose>3 -1.5 1 0 0 -7.85</pose>
+          </waypoint>
+          <waypoint>
+            <time>12</time>
+            <pose>3 -3 1 0 0 -7.85</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <actor name="actor16">
+      <skin>
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>model://actor_walk/meshes/walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-4 -8 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>3</time>
+            <pose>-4 -6.5 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>4</time>
+            <pose>-3.5 -6 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>5</time>
+            <pose>-2.5 -6 1 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>6</time>
+            <pose>-2 -5.5 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>13</time>
+            <pose>-2 0 1 0 0 1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>25.5204 -24.0365 14.7272 0 0.275643 2.3562</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+  </world>
+</sdf>

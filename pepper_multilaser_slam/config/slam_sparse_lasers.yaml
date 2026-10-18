@@ -1,0 +1,19 @@
+# Ajustes de slam_toolbox para los láseres de Pepper (3 sectores de 60°, hasta 7 m).
+# Se cargan DESPUÉS de pepper_gazebo_plugin/config/pepper_slam_toolbox.yaml (Fase 6 del V9):
+# aquí sólo están los parámetros que cambian; el resto se hereda sin copiarlo.
+#
+# Con sectores estrechos, cuando Pepper avanza paralelo a una pared larga el scan matching no
+# sabe dónde está a lo largo de la pared y puede "saltar". Karto penaliza alejarse de la
+# odometría con  1 - 0.2·d²/distance_variance_penalty  (Karto.h, ScanMatcher::CorrelateScan):
+# con el 0.5 por defecto un salto de 25 cm sólo pierde un 2.5 % de respuesta.
+slam_toolbox:
+  ros__parameters:
+    # Confiar más en la odometría: un salto de 20 cm pierde un 40 % de respuesta
+    distance_variance_penalty: 0.02
+    angle_variance_penalty: 0.1
+    minimum_distance_penalty: 0.2
+    minimum_angle_penalty: 0.5
+    # Ventana de búsqueda de ±0.15 m (antes ±0.25 m)
+    correlation_search_space_dimension: 0.3
+    # Más scans recientes en el buffer: compensa los pocos puntos de cada scan
+    scan_buffer_size: 20

@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.pyc
+
+# Logs de cada experimento (stdout de los nodos); los resultados (CSV, mapas, resúmenes) sí se suben
+results/**/logs/

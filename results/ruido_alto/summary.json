@@ -1,0 +1,271 @@
+{
+  "acc4nofree_r1": {
+    "samples": 1090,
+    "duration_s": 220.06300000000002,
+    "slam": {
+      "ate_rmse_m": 0.1921293964851851,
+      "ate_max_m": 0.31590604710894643,
+      "final_err_m": 0.1583054190481173,
+      "yaw_rmse_deg": 2.2528737678730995
+    },
+    "odom": {
+      "ate_rmse_m": 0.7208566710782897,
+      "ate_max_m": 1.0795231658931639,
+      "final_err_m": 0.7326101799047021,
+      "yaw_rmse_deg": 5.330971591861665
+    },
+    "map": {
+      "precision_mean_dist_m": 0.07618698726222257,
+      "precision_pct_within_10cm": 64.7037956722242,
+      "completeness_pct_within_10cm": 75.61929595827901,
+      "occupied_cells": 2819,
+      "free_area_m2": 135.0525
+    }
+  },
+  "acc4nofreeT_r1": {
+    "samples": 1087,
+    "duration_s": 219.453,
+    "slam": {
+      "ate_rmse_m": 0.07257657164988751,
+      "ate_max_m": 0.18111745088454945,
+      "final_err_m": 0.10259078567729281,
+      "yaw_rmse_deg": 1.6605829879409122
+    },
+    "odom": {
+      "ate_rmse_m": 0.8280731716122551,
+      "ate_max_m": 1.259343312293148,
+      "final_err_m": 0.8853237066281516,
+      "yaw_rmse_deg": 5.853970718369845
+    },
+    "map": {
+      "precision_mean_dist_m": 0.025133714632511264,
+      "precision_pct_within_10cm": 86.48555708390646,
+      "completeness_pct_within_10cm": 99.05475880052151,
+      "occupied_cells": 2908,
+      "free_area_m2": 136.1575
+    }
+  },
+  "v8_r1": {
+    "samples": 1079,
+    "duration_s": 217.843,
+    "slam": {
+      "ate_rmse_m": 0.2528228538220702,
+      "ate_max_m": 0.5718874942678848,
+      "final_err_m": 0.549307684726875,
+      "yaw_rmse_deg": 2.3163188760701447
+    },
+    "odom": {
+      "ate_rmse_m": 0.8309985374919239,
+      "ate_max_m": 1.2945499899579005,
+      "final_err_m": 0.7634420503220923,
+      "yaw_rmse_deg": 6.307295701248933
+    },
+    "map": {
+      "precision_mean_dist_m": 0.0963598821038743,
+      "precision_pct_within_10cm": 69.54971020954079,
+      "completeness_pct_within_10cm": 85.20208604954368,
+      "occupied_cells": 2243,
+      "free_area_m2": 119.89000000000001
+    }
+  },
+  "v8T_r1": {
+    "samples": 1082,
+    "duration_s": 218.443,
+    "slam": {
+      "ate_rmse_m": 0.20967211678362171,
+      "ate_max_m": 0.5273333210246582,
+      "final_err_m": 0.3592731186001777,
+      "yaw_rmse_deg": 3.095269087927671
+    },
+    "odom": {
+      "ate_rmse_m": 0.8118271387055226,
+      "ate_max_m": 1.2221296267185264,
+      "final_err_m": 0.8781039025169776,
+      "yaw_rmse_deg": 5.74206962684081
+    },
+    "map": {
+      "precision_mean_dist_m": 0.07768379656984928,
+      "precision_pct_within_10cm": 66.54343807763401,
+      "completeness_pct_within_10cm": 79.30247718383312,
+      "occupied_cells": 2164,
+      "free_area_m2": 119.5875
+    }
+  },
+  "acc4nofree_r2": {
+    "samples": 1099,
+    "duration_s": 221.875,
+    "slam": {
+      "ate_rmse_m": 0.19485946458698503,
+      "ate_max_m": 0.3902064249855454,
+      "final_err_m": 0.14736788931107075,
+      "yaw_rmse_deg": 3.032708246248065
+    },
+    "odom": {
+      "ate_rmse_m": 0.735846137857884,
+      "ate_max_m": 1.0783507444240954,
+      "final_err_m": 0.8350294223558833,
+      "yaw_rmse_deg": 5.253715384396834
+    },
+    "map": {
+      "precision_mean_dist_m": 0.07824522846430307,
+      "precision_pct_within_10cm": 62.82291276675402,
+      "completeness_pct_within_10cm": 74.21773142112124,
+      "occupied_cells": 2671,
+      "free_area_m2": 135.85750000000002
+    }
+  },
+  "acc4nofreeT_r2": {
+    "samples": 1089,
+    "duration_s": 219.857,
+    "slam": {
+      "ate_rmse_m": 0.09574034174147773,
+      "ate_max_m": 0.2582441047613582,
+      "final_err_m": 0.17993971956656335,
+      "yaw_rmse_deg": 1.926248653561384
+    },
+    "odom": {
+      "ate_rmse_m": 0.7356464743569273,
+      "ate_max_m": 1.10487609156577,
+      "final_err_m": 0.8132417953974592,
+      "yaw_rmse_deg": 5.351750143328859
+    },
+    "map": {
+      "precision_mean_dist_m": 0.03536273366297161,
+      "precision_pct_within_10cm": 81.13721484508002,
+      "completeness_pct_within_10cm": 98.17470664928291,
+      "occupied_cells": 2937,
+      "free_area_m2": 135.775
+    }
+  },
+  "v8_r2": {
+    "samples": 1089,
+    "duration_s": 219.856,
+    "slam": {
+      "ate_rmse_m": 0.25233575656099605,
+      "ate_max_m": 0.5345322450516898,
+      "final_err_m": 0.4383869487108392,
+      "yaw_rmse_deg": 1.7645266079711175
+    },
+    "odom": {
+      "ate_rmse_m": 0.8313693844657725,
+      "ate_max_m": 1.311653554868815,
+      "final_err_m": 0.7163834263856192,
+      "yaw_rmse_deg": 6.532908626903576
+    },
+    "map": {
+      "precision_mean_dist_m": 0.10412588930644112,
+      "precision_pct_within_10cm": 65.33393911858246,
+      "completeness_pct_within_10cm": 80.24771838331161,
+      "occupied_cells": 2201,
+      "free_area_m2": 120.0875
+    }
+  },
+  "v8T_r2": {
+    "samples": 1075,
+    "duration_s": 217.03400000000002,
+    "slam": {
+      "ate_rmse_m": 0.09625299168527666,
+      "ate_max_m": 0.24814568027677464,
+      "final_err_m": 0.0720469029962463,
+      "yaw_rmse_deg": 1.9982710908770462
+    },
+    "odom": {
+      "ate_rmse_m": 0.8066413502911053,
+      "ate_max_m": 1.2593070807809188,
+      "final_err_m": 0.725501406332077,
+      "yaw_rmse_deg": 6.2067721912463405
+    },
+    "map": {
+      "precision_mean_dist_m": 0.04141809210761405,
+      "precision_pct_within_10cm": 76.2481089258699,
+      "completeness_pct_within_10cm": 79.40026075619296,
+      "occupied_cells": 1983,
+      "free_area_m2": 120.58250000000001
+    }
+  },
+  "acc4nofree_r3": {
+    "samples": 1077,
+    "duration_s": 217.44,
+    "slam": {
+      "ate_rmse_m": 0.4498503971985608,
+      "ate_max_m": 1.1927018095064672,
+      "final_err_m": 0.8481890398372287,
+      "yaw_rmse_deg": 5.974784558869245
+    },
+    "odom": {
+      "ate_rmse_m": 0.8297066441250742,
+      "ate_max_m": 1.2759978064244473,
+      "final_err_m": 0.8067096045665999,
+      "yaw_rmse_deg": 6.100071792385401
+    },
+    "map": {
+      "precision_mean_dist_m": 0.09216669364729703,
+      "precision_pct_within_10cm": 65.05703422053232,
+      "completeness_pct_within_10cm": 76.23859191655802,
+      "occupied_cells": 2630,
+      "free_area_m2": 140.95250000000001
+    }
+  },
+  "acc4nofreeT_r3": {
+    "samples": 1079,
+    "duration_s": 217.846,
+    "slam": {
+      "ate_rmse_m": 0.17168271690723977,
+      "ate_max_m": 0.4693627786604938,
+      "final_err_m": 0.3374085454891044,
+      "yaw_rmse_deg": 2.879929740050679
+    },
+    "odom": {
+      "ate_rmse_m": 0.7738213454028675,
+      "ate_max_m": 1.2106784255274017,
+      "final_err_m": 0.6445191248215777,
+      "yaw_rmse_deg": 6.206802026702267
+    },
+    "map": {
+      "precision_mean_dist_m": 0.03507863489480256,
+      "precision_pct_within_10cm": 83.69565217391305,
+      "completeness_pct_within_10cm": 98.66362451108213,
+      "occupied_cells": 2852,
+      "free_area_m2": 138.21
+    }
+  },
+  "v8_r3": {
+    "samples": 1104,
+    "duration_s": 222.89000000000001,
+    "slam": {
+      "ate_rmse_m": 0.16144626396524758,
+      "ate_max_m": 0.4228725037160564,
+      "final_err_m": 0.2598511838926313,
+      "yaw_rmse_deg": 2.105072177529638
+    },
+    "odom": {
+      "ate_rmse_m": 0.7793722294888357,
+      "ate_max_m": 1.1955043867023063,
+      "final_err_m": 0.7170642268380275,
+      "yaw_rmse_deg": 6.0221879314405875
+    }
+  },
+  "v8T_r3": {
+    "samples": 1089,
+    "duration_s": 219.86,
+    "slam": {
+      "ate_rmse_m": 0.1324527508631019,
+      "ate_max_m": 0.25885976531705324,
+      "final_err_m": 0.19751188571830294,
+      "yaw_rmse_deg": 2.0940676925596886
+    },
+    "odom": {
+      "ate_rmse_m": 0.7214563247441987,
+      "ate_max_m": 1.0864915267962287,
+      "final_err_m": 0.7481870723288394,
+      "yaw_rmse_deg": 5.089387382391753
+    },
+    "map": {
+      "precision_mean_dist_m": 0.05430623312336658,
+      "precision_pct_within_10cm": 73.779296875,
+      "completeness_pct_within_10cm": 76.46675358539765,
+      "occupied_cells": 2048,
+      "free_area_m2": 119.06000000000002
+    }
+  }
+}
