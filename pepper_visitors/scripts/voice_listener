@@ -1,0 +1,7 @@
+#!/bin/bash
+# Lanza pepper_visitors.voice_listener con el entorno de Whisper (faster-whisper + CUDA 12),
+# que no es el Python del sistema: ~/pepper_ws/venvs/voice (o $PEPPER_VOICE_VENV).
+VENV=${PEPPER_VOICE_VENV:-$HOME/pepper_ws/venvs/voice}
+SP=$VENV/lib/python3.12/site-packages
+export LD_LIBRARY_PATH=$SP/nvidia/cublas/lib:$SP/nvidia/cudnn/lib:$LD_LIBRARY_PATH
+exec "$VENV/bin/python" -m pepper_visitors.voice_listener "$@"

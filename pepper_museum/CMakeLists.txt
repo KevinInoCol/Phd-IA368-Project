@@ -3,6 +3,6 @@ project(pepper_museum)
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY launch worlds models DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch worlds models maps DESTINATION share/${PROJECT_NAME})
 
 ament_package()

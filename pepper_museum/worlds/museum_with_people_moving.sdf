@@ -162,7 +162,7 @@
 
     <include>
       <name>female03_Sup_Der</name>
-      <uri>model://citizen_extras_female_03</uri>
+      <uri>model://citizen_extras_female_03_fixed</uri>
       <pose>-3.3 5.8 0.01 0.011 0.0126 1.6451</pose>
     </include>
 
@@ -287,7 +287,7 @@
 
     <include>
       <name>female03_Med_Med</name>
-      <uri>model://citizen_extras_female_03</uri>
+      <uri>model://citizen_extras_female_03_fixed</uri>
       <pose>2.0 -4.0 0.01 0.011 0.0126 1.6451</pose>
     </include>
 

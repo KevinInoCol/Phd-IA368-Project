@@ -20,6 +20,13 @@ trayectorias) y cambia lo que en Harmonic es distinto:
     los ejemplos de actores de gz-sim.
   - loop y auto_start explícitos (en Classic eran true por defecto).
   - Se descartan los bloques <state> (instantánea de la simulación guardada por Gazebo).
+  - female_03 pasa a models/citizen_extras_female_03_fixed: en Harmonic las texturas se
+    cachean por nombre y el original comparte nombres de textura con male_03 y female_02
+    (se veía con la camisa a cuadros en la cara y el vestido negro).
+
+Además genera museum_test_people.sdf (Fase 3): el museo con sólo 4 de las personas estáticas
+de museum_with_people.world, en sus posiciones de la tesis (las 3 apariencias + un male_03
+repetido lejos, para probar "la más cercana").
 """
 
 import copy
@@ -32,6 +39,7 @@ OUT = os.path.join(HERE, "..", "worlds")
 WALK = "model://actor_walk/meshes/walk.dae"
 MUSEUM_POSE = "1.86134 -2.16704 0 0 0 0"
 ACTOR_Z = 1.0
+URI_MAP = {"model://citizen_extras_female_03": "model://citizen_extras_female_03_fixed"}
 
 HEADER = """<?xml version="1.0" ?>
 <!-- {title}
@@ -112,6 +120,9 @@ WORLDS = [
     ("museum_with_people.world", "museum_with_people.sdf", "Museo ISCAS con 23 personas estáticas."),
     ("museum_with_people_moving.world", "museum_with_people_moving.sdf",
      "Museo ISCAS con 10 personas estáticas y 16 actores caminando (trayectorias de la tesis)."),
+    ("museum_with_people.world", "museum_test_people.sdf",
+     "Museo ISCAS con 4 personas estáticas (prueba de la Fase 3).",
+     {"female02_Sup_Med", "female03_Sup_Der", "male03_Inf_Med", "male03_Inf_Izq"}),
 ]
 
 
@@ -142,12 +153,16 @@ def convert_actor(old):
     return new
 
 
-def convert(src_dir, src, dst, title):
+def convert(src_dir, src, dst, title, keep=None):
     world = ET.parse(os.path.join(src_dir, src)).getroot().find("world")
     body, counts = [], {"include": 0, "light": 0, "actor": 0}
     for c in world:
         if c.tag == "include":
-            body.append(text(copy.deepcopy(c), 4))
+            if keep is not None and c.findtext("name") not in keep:
+                continue
+            inc = copy.deepcopy(c)
+            inc.find("uri").text = URI_MAP.get(inc.findtext("uri"), inc.findtext("uri"))
+            body.append(text(inc, 4))
         elif c.tag == "light" and c.get("name") != "sun":
             body.append(text(copy.deepcopy(c), 4))
         elif c.tag == "actor":
@@ -166,8 +181,8 @@ def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     os.makedirs(OUT, exist_ok=True)
-    for src, dst, title in WORLDS:
-        convert(sys.argv[1], src, dst, title)
+    for src, dst, title, *keep in WORLDS:
+        convert(sys.argv[1], src, dst, title, *keep)
 
 
 if __name__ == "__main__":

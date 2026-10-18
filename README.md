@@ -12,7 +12,10 @@ configuraciones de la base.
 |---|---|---|
 | 1 | SLAM 2D con los **3 láseres bajos** de Pepper | ✅ primera versión (2026-10-15) |
 | 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | 🔄 entorno listo (2026-10-18); falta evaluar el SLAM |
-| 3 | Voz por micrófono → Pepper busca con la cámara a la persona llamada y la sigue mirando | ⏳ |
+| 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | 🔄 clasificador de visitantes (97.7 %) y voz listos (2026-10-18); falta buscar, acercarse y mirar |
+
+Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
+publicada en **https://pepper-ia368.vercel.app**.
 
 ---
 
@@ -247,6 +250,9 @@ Classic: `pepper_virtual/pepper_gazebo_plugin/worlds/museum*.world` y sus launch
 | `worlds/museum.sdf` | museo ISCAS vacío |
 | `worlds/museum_with_people.sdf` | museo + 23 personas estáticas |
 | `worlds/museum_with_people_moving.sdf` | museo + 10 personas estáticas + **16 actores caminando** con las trayectorias de la tesis (2–8 waypoints, 10–31 s, en bucle) |
+| `worlds/museum_test_people.sdf` | museo + 4 de las personas estáticas, en sus posiciones de la tesis (prueba de la Fase 3) |
+| `models/citizen_extras_female_03_fixed` | copia de `female_03` con texturas de nombre único (ver abajo) |
+| `tools/museum_floorplan.py` → `maps/museum_walls.txt` | plano 2D: la malla del museo cortada a 20 cm del suelo, en celdas de 10 cm |
 | `models/iscas_museum` | malla y texturas del museo (modelo "ISCAS Museum" de Changkun Chai, de la antigua base de modelos de Gazebo; no estaba en el workspace de la tesis, se tomó de una copia en GitHub, `COONEO/neor_mini`) |
 | `models/actor_walk` | animación `walk.dae` de los actores (de `gazebosim/gazebo-classic`, `media/models`) |
 | `tools/convert_worlds.py` | conversor de los `.world` de la tesis a `.sdf` de Harmonic (regenera `worlds/`) |
@@ -273,8 +279,76 @@ ros2 launch pepper_museum museum.launch.py world:=museum gui:=false     # vacío
 - **Arranque lento:** la malla del museo (8 MB) y los actores hacen que el arranque vaya a
   RTF ~0.02 y el spawner de la base agota su timeout con `joint_state_controller`. El launch lo
   reintenta y lo activa (sin él no hay `/pepper/joint_states` ni TF de brazos y cabeza).
+  Con la GPU funcionando (driver NVIDIA para el kernel 7.0.0-38), el museo con los 16 actores
+  arranca en ~25 s y corre a **RTF ≈ 1.0**.
+- **Texturas con el mismo nombre:** Harmonic reutiliza las texturas por nombre de archivo, y
+  `citizen_extras_female_03` comparte nombres con `male_03` (cara ↔ camisa a cuadros) y con
+  `female_02` (ropa ↔ vestido negro): se veía con la camisa en la cara y vestida de negro. El
+  conversor usa la copia `citizen_extras_female_03_fixed`; el modelo de la base (también en la
+  oficina) sigue igual.
 
 **Pendiente**: SLAM (configuración de la Fase 1) en el museo con personas estáticas frente a
 personas en movimiento: medir cuánto ensucian el mapa y la localización, y si la acumulación
 deja "estelas".
 
+
+---
+
+## Fase 3 — Un visitante llama, Pepper acude
+
+Hablar por el micrófono del PC representa a un visitante **cercano** que llama a Pepper para
+preguntarle sobre el museo. Pepper debe buscar a su alrededor, elegir a la persona **estática**
+más cercana (las que caminan son la dificultad de SLAM y navegación, no visitantes), acercarse a
+~1 m y seguir mirándola hasta la siguiente pregunta. Si no hay nadie cerca, debe decirlo.
+
+### Quiénes son los visitantes
+
+Los mundos usan sólo tres modelos de persona, copiados: `male_03` (camisa a cuadros roja,
+jeans), `female_02` (vestido negro) y `female_03` (chaqueta marrón, jeans). Las copias son
+idénticas, así que la identidad es el modelo. La cara es mala señal en esta simulación (la
+cabeza ocupa ~40 px a 2 m y ~25 px a 3 m, y Pepper a menudo ve a la gente de espaldas): el
+reconocimiento usa el **cuerpo entero**, recortado por YOLO.
+
+### Paquete `pepper_visitors`
+
+| Pieza | Qué hace |
+|---|---|
+| `capture_dataset` | teletransporta a Pepper por el museo (`/world/default/set_pose`) y guarda la imagen de la cámara frontal + su pose ground truth |
+| `tools/label_dataset.py` | YOLO11m detecta personas; cada caja se compara con la caja **proyectada** de cada visitante (pose de Pepper + cámara) → recorte etiquetado sin intervención. División por persona (test = visitantes que el modelo nunca vio) |
+| `tools/train_classifier.py` | fine-tuning de `yolo11n-cls` (4 clases: 3 modelos + "otro" = actores) y línea base de color; pesos en `models/visitor_cls.pt` |
+| `voice_listener` | micrófono (PipeWire) → frases por energía → Whisper large-v3-turbo en la GPU → `/pepper/voice/transcript` y, si hay palabra de llamada, `/pepper/visitor_call` |
+
+```bash
+# Dataset (con la simulación del museo corriendo con ese mundo)
+ros2 run pepper_visitors capture_dataset --world museum_with_people --out datasets/visitors/raw/museum_with_people --n 900
+ros2 run pepper_visitors capture_dataset --world museum_with_people_moving --out datasets/visitors/raw/museum_with_people_moving --n 400
+# Etiquetado y entrenamiento (entorno de yolo_ros)
+PY=~/pepper_ws/src/yolo_ros/yolo_ros/.venv/bin/python
+$PY pepper_visitors/tools/label_dataset.py datasets/visitors/raw datasets/visitors/cls
+$PY pepper_visitors/tools/train_classifier.py datasets/visitors/cls results/fase3/classifier
+# Voz (usa ~/pepper_ws/venvs/voice: faster-whisper + CUDA 12)
+ros2 run pepper_visitors voice_listener --ros-args -p device:=<node.name del micrófono en PipeWire>
+```
+
+El entorno de voz se crea con `uv venv --system-site-packages ~/pepper_ws/venvs/voice` e
+instalando `faster-whisper nvidia-cublas-cu12 "nvidia-cudnn-cu12==9.*" brotli` (brotli propio
+porque el del sistema es viejo para huggingface_hub).
+
+### Resultados del clasificador (2026-10-18)
+
+Dataset: 1300 capturas (900 con las 23 personas estáticas, 400 con los actores) → 2011 recortes
+(train 1268, val 357, test 386). Test = 4 visitantes en sitios no vistos + actores.
+
+| | Exactitud test | ≤ 2 m | 2–3.5 m | > 3.5 m | female_02 | female_03 | male_03 | otro |
+|---|---|---|---|---|---|---|---|---|
+| Línea base: histograma de color | 96.1 % | 100 % | 99.0 % | 92.5 % | 88.8 % | 100 % | 97.0 % | 97.6 % |
+| **yolo11n-cls fine-tuning** | **97.7 %** | 98.6 % | 97.1 % | **97.7 %** | **98.9 %** | 96.0 % | 98.5 % | 97.6 % |
+
+Con tres aspectos tan distintos, el color de la ropa ya acierta mucho; el fine-tuning se
+justifica por la robustez **a distancia** (92.5 → 97.7 % a más de 3.5 m) y con el vestido negro.
+Casi todos los errores son cajas con dos visitantes superpuestos; uno es un error de etiqueta
+(un hombre estático marcado como actor). Métricas completas en `results/fase3/classifier/metrics.json`.
+
+**Pendiente**: buscar (barrido de cabeza/cuerpo, descartar a quien se mueve, la más cercana con
+la cámara de profundidad), acercarse con Nav2 (necesita el mapa del museo de la Fase 2) y
+seguir mirando con `Head_controller`; probar la llamada con voz real.

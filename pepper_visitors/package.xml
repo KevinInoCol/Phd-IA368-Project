@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypelocation="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>pepper_visitors</name>
+  <version>0.1.0</version>
+  <description>IA368 - Fase 3: un visitante llama a Pepper por voz; Pepper busca a la persona estática más cercana, se acerca y la mira. Incluye el dataset sintético y el clasificador de aspecto de las personas.</description>
+  <maintainer email="kevin.inofuente.colque.27@gmail.com">KevinInoCol</maintainer>
+  <license>Apache-2.0</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>pepper_museum</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

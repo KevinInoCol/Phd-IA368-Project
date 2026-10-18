@@ -4,3 +4,9 @@ __pycache__/
 
 # Logs de cada experimento (stdout de los nodos); los resultados (CSV, mapas, resúmenes) sí se suben
 results/**/logs/
+
+# Datasets generados (imágenes); se regeneran con pepper_visitors capture_dataset + label_dataset
+datasets/
+
+# Pesos intermedios del entrenamiento (el bueno se copia a pepper_visitors/models/visitor_cls.pt)
+results/fase3/classifier/train/weights/

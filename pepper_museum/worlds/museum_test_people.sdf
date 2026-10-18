@@ -1,0 +1,531 @@
+<?xml version="1.0" ?>
+<!-- Museo ISCAS con 4 personas estáticas (prueba de la Fase 3).
+     Convertido de la tesis (pepper_sim_ws, Gazebo Classic: worlds/museum_with_people.world) con
+     pepper_museum/tools/convert_worlds.py. No editar a mano: regenerar. -->
+<sdf version="1.6">
+  <world name="default">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <surface><friction><ode><mu>100</mu><mu2>50</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <include>
+      <uri>model://iscas_museum</uri>
+      <name>iscas_museum</name>
+      <pose>1.86134 -2.16704 0 0 0 0</pose>
+    </include>
+
+    <light type="point" name="male03light_Sup_Izq">
+      <pose>-5.6 -7.50 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female02_Sup_Med</name>
+      <uri>model://citizen_extras_female_02</uri>
+      <pose>-4.000000 -3.500000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="female02light_Sup_Med">
+      <pose>-3.8 -3.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female02light_Sup_Med_Junto">
+      <pose>-2.5 -2.63 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male03bislight_Sup_Der_Junto">
+      <pose>-2.9 3.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>female03_Sup_Der</name>
+      <uri>model://citizen_extras_female_03_fixed</uri>
+      <pose>-3.3 5.8 0.01 0.011 0.0126 1.6451</pose>
+    </include>
+
+    <light type="point" name="female03light_Sup_Der">
+      <pose>-3.0 6.2 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female02bislight_Inf_Der">
+      <pose>3.8 6.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Inf_Med</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>6.0 0.53 0.01 0.0125 0.0023 -1.718</pose>
+    </include>
+
+    <light type="point" name="male03light_Inf_Med">
+      <pose>5.6 0.53 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <include>
+      <name>male03_Inf_Izq</name>
+      <uri>model://citizen_extras_male_03</uri>
+      <pose>6.000000 -10.500000 0.000000 0.000000 0.000000 0.000000</pose>
+    </include>
+
+    <light type="point" name="male03bislight_Inf_Izq">
+      <pose>6.2 -10.8 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male03light_Inf_Med_2">
+      <pose>7.7 -5.00 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female03light_Med_Med">
+      <pose>2.3 -3.8 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female_05_light">
+      <pose>3.2 -3.0 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female_06_light">
+      <pose>3.2 3.0 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_05_light">
+      <pose>-0.2 7.00 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_06_light">
+      <pose>-5.2 3.0 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_07_light">
+      <pose>7.8 7.0 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_08_light">
+      <pose>7.8 3.0 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_09_light">
+      <pose>-5.2 -10.5 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_10_light">
+      <pose>0.8 -6.0 1.6 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_11_light">
+      <pose>4.0 -5.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_12_light">
+      <pose>6.0 -3.2 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_13_light">
+      <pose>7.5 -10.7 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="male_14_light">
+      <pose>0.2 2.3 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <light type="point" name="female_10_light">
+      <pose>2.0 -10.3 1.5 0 0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.0</range>
+        <linear>0.01</linear>
+        <constant>0.3</constant>
+        <quadratic>0.0</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>0.8</outer_angle>
+        <falloff>1.2</falloff>
+      </spot>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>25.5204 -24.0365 14.7272 0 0.275643 2.3562</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+  </world>
+</sdf>
