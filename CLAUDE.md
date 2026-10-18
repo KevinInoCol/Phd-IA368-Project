@@ -4,30 +4,42 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-18)
+## Estado y próximos pasos (actualizado 2026-10-18, cierre de sesión)
 
-Sesión 2026-10-17/18:
-- Fase 1: demo visual (`demo.launch.py` + RViz con los 3 láseres en color); odometría degradada
-  (`odom_noise`) y batería de 18 corridas → el SLAM baja el error de 0.78 m (odometría sola) a
-  0.11 m; README actualizado; `docs/proyecto.html` (página de presentación).
-- Fase 2: museo y actores de la tesis portados a Harmonic (`pepper_museum`), verificado.
-- GPU: instalados los módulos NVIDIA para el kernel 7.0.0-38; verificado tras reiniciar (abajo).
+**Hecho hasta ahora**
+- Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada
+  (0.78 m → 0.11 m con acc4nofreeT); demo en RViz. Todo en README y en el HTML.
+- Fase 2 🔄 (entorno listo): museo y 16 actores de la tesis en Harmonic (`pepper_museum`); GPU
+  arreglada → RTF ≈ 1.0 con los actores; female_03 corregida (texturas cacheadas por nombre);
+  plano 2D del museo (`maps/museum_walls.txt`). **No hay aún ningún experimento de SLAM en el museo.**
+- Fase 3 🔄 (sesión 2026-10-18), escenario acordado abajo ("Escenario de la Fase 3"):
+  1. ✅ female_03 arreglada · 2. ✅ mundo `museum_test_people` (4 visitantes)
+  3. ✅ dataset sintético: 1300 capturas → 2011 recortes etiquetados solos (división por persona)
+  4. ✅ clasificador `pepper_visitors/models/visitor_cls.pt`: 97.7 % test vs 96.1 % línea base de
+     color (a > 3.5 m: 97.7 vs 92.5 %). Errores = dos personas superpuestas en la caja.
+  5. ✅ `voice_listener` (Whisper large-v3-turbo GPU, micrófono de la cámara web por PipeWire).
+     Probado sólo con audio de fondo (bien transcrito, no disparó llamada); filtro de frases
+     inventadas ("¡Gracias!", "Amén"…) añadido. **Falta probarlo con una llamada real del usuario.**
+- Documentación: `docs/proyecto.html` con 3 pestañas (una por fase), publicado en Vercel;
+  README con las 3 fases; todo commiteado y pusheado (último commit: voice_listener).
 
-Sesión 2026-10-18 (Fase 3): pasos 1–4 hechos (female_03, mundo de prueba, dataset, clasificador:
-color 96.1 % vs yolo11n-cls 97.7 % en test; a > 3.5 m 92.5 vs 97.7 %) + `voice_listener` (Whisper
-turbo GPU). HTML con 3 pestañas en Vercel. **Falta probar la llamada con voz real** (sólo se oyó
-audio de fondo, que no disparó llamada).
-
-Próximos pasos, en orden:
-1. ~~GPU y RTF del museo~~ hecho (2026-10-18): RTF ≈ 1.0 en el museo con personas en movimiento.
-   Fase 3 siguiente: buscar (barrido + descartar personas en movimiento + más cercana con
-   profundidad), acercarse (Nav2: requiere mapa del museo → hacer antes la ruta/mapa de la Fase 2)
-   y mirar (Head_controller).
-2. Fase 2: ruta por el museo (puntos libres de muebles y de las trayectorias de los actores) y
-   SLAM acc4nofreeT en museo con personas estáticas vs en movimiento (¿estelas por acumulación?).
-   `run_experiment.sh` y `demo.launch.py` hoy sólo lanzan la oficina: añadirles el mundo.
-3. Actualizar `docs/proyecto.html` / README con lo que salga de la Fase 2.
-4. Opcional: exploración autónoma (fronteras + Nav2) en vez de la ruta fija.
+**Lo que falta, en orden recomendado**
+1. Probar la voz con el usuario: lanzar `ros2 run pepper_visitors voice_listener --ros-args -p
+   device:=alsa_input.usb-Web_Camera_Web_Camera_202404120005-02.mono-fallback` y que diga
+   "Hola Pepper…" → debe publicar `/pepper/visitor_call`. Ajustar `keywords`/`energy_factor` si hace falta.
+2. Fase 2 (la Fase 3 la necesita para Nav2): añadir el mundo como parámetro a
+   `run_experiment.sh` y `demo.launch.py` (hoy sólo oficina; pose inicial del museo (-1.5, 1));
+   ruta por el museo (puntos libres de vitrinas, usar `maps/museum_walls.txt`; cruzar pasillos
+   con actores); mapa de referencia con el hokuyo en `museum` vacío (para `evaluate.py --ref`);
+   batería acc4nofreeT (+ v8T) en museo vacío / estático / dinámico, 3 rep.; ¿estelas? Si las
+   hay: filtrar puntos que se mueven entre scans. Guardar un mapa del museo para Nav2.
+3. Fase 3 restante: nodo que, al recibir `/pepper/visitor_call`, busca (barrido de HeadYaw y
+   luego giro de la base), detecta con YOLO + `visitor_cls.pt`, descarta personas que se mueven
+   (seguimiento entre frames), elige la estática más cercana con la cámara de profundidad
+   (`/pepper/camera/depth/...`), va con Nav2 a ~1 m de frente y la sigue con `Head_controller`;
+   "no veo a nadie" si no hay nadie. Probar en `museum_test_people` y luego en el museo completo.
+4. Actualizar README, pestañas del HTML (y redesplegar en Vercel) y hacer push al cerrar cada bloque.
+5. Opcional: exploración autónoma (fronteras + Nav2) en vez de la ruta fija.
 
 Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
 carpeta; la base está en su propio repo). Identidad git local: KevinInoCol
