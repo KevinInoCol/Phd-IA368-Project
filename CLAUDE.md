@@ -20,8 +20,11 @@ Próximos pasos, en orden:
    SLAM acc4nofreeT en museo con personas estáticas vs en movimiento (¿estelas por acumulación?).
    `run_experiment.sh` y `demo.launch.py` hoy sólo lanzan la oficina: añadirles el mundo.
 3. Actualizar `docs/arquitectura_fase1.html` / README con lo que salga de la Fase 2.
-4. Opcional: exploración autónoma (fronteras + Nav2) en vez de la ruta fija; `git init` del
-   proyecto (hoy NO es un repositorio git) y subirlo a GitHub.
+4. Opcional: exploración autónoma (fronteras + Nav2) en vez de la ruta fija.
+
+Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
+carpeta; la base está en su propio repo). Identidad git local: KevinInoCol
+<kevin.inofuente.colque.27@gmail.com>. `results/**/logs/` y `__pycache__` en `.gitignore`.
 
 Preferencias del usuario: páginas como HTML autónomo en `docs/` (no artifacts), con estilo de
 presentación; responde en español.
