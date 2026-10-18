@@ -25,13 +25,16 @@ import unicodedata
 
 import numpy as np
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from std_msgs.msg import String
 
 RATE = 16000
 CHUNK = 480  # 30 ms
 # Frases que Whisper inventa con ruido o silencio (vienen de subtítulos de su entrenamiento)
-HALLUCINATIONS = ("gracias por ver", "suscribete", "subtitulos", "amara.org", "gracias.")
+HALLUCINATIONS = ("gracias por ver", "suscribete", "subtitulos", "amara.org")
+# ...y frases sueltas que salen solas con ruido (se comparan con la frase entera, sin puntuación)
+NOISE_ONLY = {"gracias", "amen", "muchas gracias", "aplausos", "musica", "risas"}
 
 
 def normalize(text):
@@ -115,9 +118,10 @@ class VoiceListener(Node):
             segs, _ = self.model.transcribe(audio, language=self.language, vad_filter=True, beam_size=5)
             text = " ".join(s.text.strip() for s in segs).strip()
             norm = normalize(text)
-            if not text or any(h in norm for h in HALLUCINATIONS):
+            plain = " ".join("".join(c if c.isalnum() else " " for c in norm).split())
+            if not plain or any(h in norm for h in HALLUCINATIONS) or plain in NOISE_ONLY:
                 continue
-            words = set("".join(c if c.isalnum() else " " for c in norm).split())
+            words = set(plain.split())
             call = bool(words & {normalize(k) for k in self.keywords})
             self.get_logger().info(f'"{text}" ({len(audio) / RATE:.1f} s de audio, '
                                    f'{time.time() - t:.2f} s){"  → LLAMADA" if call else ""}')
@@ -131,7 +135,7 @@ def main():
     node = VoiceListener()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         pass
     node.destroy_node()
     rclpy.try_shutdown()
