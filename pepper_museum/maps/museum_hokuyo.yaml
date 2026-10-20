@@ -1,0 +1,10 @@
+# Museo vacío mapeado con el hokuyo (slam_toolbox, ruta "museum" de route_driver, 2026-10-20).
+# Frame map = mundo + (1.5, -1): nace en la pose de arranque de Pepper (-1.5, 1). Referencia de
+# evaluate.py --ref y mapa para Nav2 en el museo (las personas no están: son obstáculos móviles).
+image: museum_hokuyo.pgm
+mode: trinary
+resolution: 0.050
+origin: [-5.786, -13.904, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

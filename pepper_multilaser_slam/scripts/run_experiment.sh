@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Corre un experimento de SLAM completo en la oficina y guarda trayectoria + mapa.
+# Corre un experimento de SLAM completo (oficina o museo) y guarda trayectoria + mapa.
 #
 #   run_experiment.sh <método> <carpeta_salida>
 #
@@ -16,7 +16,12 @@
 #   ODOM_NOISE     medio | alto: el SLAM usa la odometría degradada de odom_noise.py
 #                  (/pepper/odom_noisy, TF odom_noisy -> base_noisy) en vez de /pepper/odom.
 #                  No vale para hokuyo (su scan va en el frame del sensor).
-#   ROUTE_TIMEOUT  segundos (por defecto 600)
+#   WORLD          office (por defecto) | museum | museum_with_people | museum_with_people_moving |
+#                  museum_test_people. En el museo: museum.launch.py de pepper_museum (Pepper en
+#                  (-1.5, 1)) y la ruta "museum" de route_driver.
+#   DYN=1          scan_fusion con dynamic_filter (descarta lo que aparece en espacio visto libre:
+#                  gente caminando). Sólo métodos acc*/free.
+#   ROUTE_TIMEOUT  segundos (por defecto 600; 900 en el museo)
 set -u
 METHOD=$1
 OUT=$(realpath -m "$2")
@@ -28,8 +33,12 @@ source /opt/ros/jazzy/setup.bash
 source "$HOME/pepper_ws/install/setup.bash"
 set -u
 
-WORLD=$(ros2 pkg prefix pepper_gazebo_plugin)/share/pepper_gazebo_plugin/worlds/simple_office_with_people.world
-if [ "${GUI:-0}" = "1" ]; then WORLD_ARG="$WORLD"; else WORLD_ARG="-s $WORLD"; fi
+WORLD=${WORLD:-office}
+case "$WORLD" in
+  office)   ROUTE=office; TIMEOUT=${ROUTE_TIMEOUT:-600} ;;
+  museum*)  ROUTE=museum; TIMEOUT=${ROUTE_TIMEOUT:-900} ;;
+  *) echo "mundo desconocido: $WORLD"; exit 1 ;;
+esac
 
 PIDS=()
 cleanup() {
@@ -40,11 +49,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "[$METHOD] simulación"
-# El launch de la oficina del paquete base concatena "-r " + world en gz_args: con "-s <world>"
-# Gazebo corre sin interfaz gráfica (los sensores se siguen renderizando en el servidor).
-setsid ros2 launch pepper_gazebo_plugin pepper_gazebo_plugin_empty.launch.py \
-  world:="$WORLD_ARG" x:=-0.5 y:=1.0 > "$LOG/sim.log" 2>&1 &
+echo "[$METHOD] simulación ($WORLD)"
+if [ "$WORLD" = office ]; then
+  # El launch de la oficina del paquete base concatena "-r " + world en gz_args: con "-s <world>"
+  # Gazebo corre sin interfaz gráfica (los sensores se siguen renderizando en el servidor).
+  OFFICE=$(ros2 pkg prefix pepper_gazebo_plugin)/share/pepper_gazebo_plugin/worlds/simple_office_with_people.world
+  if [ "${GUI:-0}" = "1" ]; then WORLD_ARG="$OFFICE"; else WORLD_ARG="-s $OFFICE"; fi
+  setsid ros2 launch pepper_gazebo_plugin pepper_gazebo_plugin_empty.launch.py \
+    world:="$WORLD_ARG" x:=-0.5 y:=1.0 > "$LOG/sim.log" 2>&1 &
+else
+  if [ "${GUI:-0}" = "1" ]; then G=true; else G=false; fi
+  setsid ros2 launch pepper_museum museum.launch.py world:=$WORLD gui:=$G > "$LOG/sim.log" 2>&1 &
+fi
 PIDS+=($!)
 
 # Esperar a que lleguen los láseres y el ground truth
@@ -54,6 +70,12 @@ for i in $(seq 60); do
   sleep 2
 done
 sleep 8   # controladores cargados y brazos abajo
+if [ "$WORLD" != office ]; then
+  # museum.launch.py reactiva joint_state_controller a los 20 s si el spawner agotó su tiempo
+  for i in $(seq 30); do grep -q "joint_state_controller \(activado\|no se pudo\)" "$LOG/sim.log" && break
+    ros2 control list_controllers -c /pepper/controller_manager 2>/dev/null | \
+      grep -q "joint_state_controller.* active" && break; sleep 2; done
+fi
 
 echo "[$METHOD] SLAM"
 if [ "${TUNED:-0}" = "1" ]; then
@@ -81,7 +103,8 @@ esac
 if [ -n "$ACC" ]; then
   setsid ros2 run pepper_multilaser_slam scan_fusion --ros-args -p use_sim_time:=true \
     -p accumulate:=$ACC -p free_space:=$FREE -p odom_frame:=$ODOM_FRAME -p base_frame:=$BASE_FRAME \
-    -p sensor_frame:=base_footprint > "$LOG/fusion.log" 2>&1 &
+    -p sensor_frame:=base_footprint -p dynamic_filter:=$([ "${DYN:-0}" = 1 ] && echo true || echo false) \
+    > "$LOG/fusion.log" 2>&1 &
   PIDS+=($!)
 fi
 setsid ros2 launch pepper_multilaser_slam slam.launch.py scan:=$SCAN max_laser_range:=$RANGE \
@@ -97,8 +120,8 @@ sleep 2
 
 echo "[$METHOD] recorrido"
 START=$(date +%s)
-timeout "${ROUTE_TIMEOUT:-600}" ros2 run pepper_multilaser_slam route_driver \
-  --ros-args -p use_sim_time:=true > "$LOG/route.log" 2>&1
+timeout "$TIMEOUT" ros2 run pepper_multilaser_slam route_driver \
+  --ros-args -p use_sim_time:=true -p route:=$ROUTE > "$LOG/route.log" 2>&1
 echo "[$METHOD] recorrido: código $?, $(( $(date +%s) - START )) s"
 sleep 5   # último update del mapa (map_update_interval = 2 s)
 

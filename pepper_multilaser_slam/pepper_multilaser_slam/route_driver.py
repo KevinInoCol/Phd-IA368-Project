@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recorrido repetible por la oficina para comparar métodos de SLAM.
+"""Recorrido repetible (oficina o museo) para comparar métodos de SLAM.
 
 Guía a Pepper por una lista de puntos (coordenadas del mundo de Gazebo) usando el ground truth
 (/pepper/odom_groundtruth), de modo que todos los experimentos siguen exactamente la misma ruta.
@@ -8,6 +8,7 @@ El SLAM no ve el ground truth: sólo recibe láseres y odometría ruidosa (/pepp
 Pepper gira hasta mirar al siguiente punto y avanza de frente (el láser frontal mira hacia
 donde va, como haría el robot real). La ruta da la vuelta a la sala inferior, cruza la puerta,
 recorre la sala superior y vuelve al punto de partida para provocar un cierre de lazo.
+Parámetro `route`: office (por defecto) | museum.
 
 Al terminar publica velocidad cero y sale con código 0.
 """
@@ -27,6 +28,17 @@ OFFICE_ROUTE = [
     (1.5, 6.2), (1.5, 3.6), (2.8, 2.5), (2.8, -1.5), (0.5, -1.0), (-0.5, 1.0),
 ]
 
+# Museo ISCAS (pepper_museum): Pepper aparece en (-1.5, 1). Sube a la sala de arriba a la
+# izquierda, cruza por arriba del bloque central, baja por x = 7 (por donde caminan actores),
+# rodea la vitrina baja de la derecha, vuelve por el pasillo inferior y sube por x = -1.7 hasta el
+# inicio (cierre de lazo). ~58 m; a ≥ 0.75 m de las paredes (maps/museum_walls.txt) y ≥ 1 m de
+# todas las personas estáticas de museum_with_people, museum_with_people_moving y museum_test_people.
+MUSEUM_ROUTE = [
+    (-2.0, 3.0), (-2.0, 7.0), (-5.5, 7.0), (-2.0, 7.0), (1.0, 4.3), (5.0, 4.3), (7.0, 3.8),
+    (7.0, -6.5), (9.3, -6.7), (9.3, -9.0), (-1.7, -9.0), (-1.7, -0.5), (-1.5, 1.0),
+]
+ROUTES = {"office": OFFICE_ROUTE, "museum": MUSEUM_ROUTE}
+
 
 def wrap(a):
     return math.atan2(math.sin(a), math.cos(a))
@@ -38,7 +50,7 @@ class RouteDriver(Node):
         self.v_max = self.declare_parameter("linear_speed", 0.3).value
         self.w_max = self.declare_parameter("angular_speed", 0.6).value
         self.tol = self.declare_parameter("goal_tolerance", 0.15).value
-        self.route = list(OFFICE_ROUTE)
+        self.route = list(ROUTES[self.declare_parameter("route", "office").value])
         self.i = 0
         self.pose = None
         self.done = False

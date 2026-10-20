@@ -217,7 +217,12 @@ def main():
     if maps:
         ncol = min(4, len(maps))
         nrow = math.ceil(len(maps) / ncol)
-        fig_m, axs = plt.subplots(nrow, ncol, figsize=(3.6 * ncol, 5.2 * nrow), squeeze=False)
+        # Encuadre: las paredes del mapa de referencia (o del primer mapa) con 0.5 m de margen
+        occ = (ref or load_map(maps[0][1]))["occ_pts"]
+        (x0, y0), (x1, y1) = occ.min(0) - 0.5, occ.max(0) + 0.5
+        aspect = (y1 - y0) / (x1 - x0)
+        fig_m, axs = plt.subplots(nrow, ncol, figsize=(3.6 * ncol, 3.6 * aspect * nrow + 0.4 * nrow),
+                                  squeeze=False)
         axs = axs.ravel()
         for ax in axs[len(maps):]:
             ax.axis("off")
@@ -228,8 +233,8 @@ def main():
             ax.imshow(m["img"], cmap="gray", vmin=0, vmax=255,
                       extent=[ox, ox + w * m["res"], oy, oy + h * m["res"]])
             ax.set_title(group_of(n), fontsize=10)
-            ax.set_xlim(-5, 5.5)
-            ax.set_ylim(-6.2, 9.2)
+            ax.set_xlim(x0, x1)
+            ax.set_ylim(y0, y1)
         fig_m.tight_layout()
         fig_m.savefig(os.path.join(out, "maps.png"), dpi=130)
 

@@ -1,0 +1,25 @@
+{
+  "hokuyo_ref": {
+    "samples": 1167,
+    "duration_s": 235.61900000000003,
+    "slam": {
+      "ate_rmse_m": 0.07366127541466758,
+      "ate_max_m": 0.12256520305535375,
+      "final_err_m": 0.020866779818649588,
+      "yaw_rmse_deg": 0.506293054621971
+    },
+    "odom": {
+      "ate_rmse_m": 0.0930072167450821,
+      "ate_max_m": 0.2719446256133777,
+      "final_err_m": 0.2719446256133777,
+      "yaw_rmse_deg": 1.2216529389833883
+    },
+    "map": {
+      "precision_mean_dist_m": 0.0,
+      "precision_pct_within_10cm": 100.0,
+      "completeness_pct_within_10cm": 100.0,
+      "occupied_cells": 5616,
+      "free_area_m2": 341.48
+    }
+  }
+}

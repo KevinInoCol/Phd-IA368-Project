@@ -24,6 +24,14 @@ Este nodo añade dos opciones:
     slam_toolbox por defecto) y apenas gana área libre, porque la acumulación ya limpia casi todo.
     Se deja como opción para documentar el resultado.
 
+  - Filtro de objetos en movimiento (dynamic_filter, por defecto desactivado; Fase 2, museo con
+    gente caminando): una rejilla en odom (celdas de grid_res) guarda el último instante en que
+    cada celda fue atravesada por un rayo (hasta dyn_margin antes del impacto, o hasta range_max
+    si no hubo eco). Un impacto en una celda vista libre hace menos de dyn_window s es algo que
+    apareció en espacio libre: se descarta. Lo mismo con los impactos acumulados: si un rayo
+    posterior pasa por donde estaban, se borran (la persona ya se fue). Una persona quieta nunca
+    deja ver libre su celda, así que se conserva. Evita las estelas de la acumulación.
+
 Los sectores que ningún láser cubre (y los rayos sin eco si free_space=false) quedan en +inf,
 que Karto ignora tanto en el mapa como en el matching.
 
@@ -87,6 +95,16 @@ class ScanFusion(Node):
         self.range_max_out = float(self.declare_parameter("range_max", 8.0).value)
         self.tf_wait = float(self.declare_parameter("tf_wait", 0.5).value)
         self.output_topic = self.declare_parameter("output_topic", "/pepper/scan_fused").value
+        self.dynamic_filter = bool(self.declare_parameter("dynamic_filter", False).value)
+        self.dyn_window = float(self.declare_parameter("dyn_window", 5.0).value)
+        self.dyn_margin = float(self.declare_parameter("dyn_margin", 0.25).value)
+        self.grid_res = float(self.declare_parameter("grid_res", 0.1).value)
+        grid_size = float(self.declare_parameter("grid_size", 100.0).value)
+        self.grid_n = int(grid_size / self.grid_res)
+        # Último instante (s) en que cada celda se vio libre; origen de la rejilla en odom
+        self.last_free = np.full((self.grid_n, self.grid_n), -np.inf, dtype=np.float64)
+        self.grid_origin = -grid_size / 2.0
+        self.dropped = [0, 0]   # impactos actuales descartados, totales (para el log)
 
         self.angle_increment = 2.0 * math.pi / self.num_rays
         self.angle_min = -math.pi
@@ -107,7 +125,8 @@ class ScanFusion(Node):
         self.create_timer(0.02, self.process_pending)
         self.get_logger().info(
             f"scan_fusion: {', '.join(SCAN_TOPICS)} -> {self.output_topic} "
-            f"({self.num_rays} rayos, accumulate={self.accumulate}, free_space={self.free_space})")
+            f"({self.num_rays} rayos, accumulate={self.accumulate}, free_space={self.free_space}, "
+            f"dynamic_filter={self.dynamic_filter})")
 
     def scans_cb(self, left, front, right):
         self.pending.append((front.header.stamp, (left, front, right)))
@@ -130,7 +149,7 @@ class ScanFusion(Node):
             break
 
     def sensor_points(self, scan):
-        """(impactos, rayos libres) del scan en base_footprint: arrays (K, 2) y (L, 2)."""
+        """(impactos, rayos libres, origen del láser) en base_footprint: (K, 2), (L, 2), (2,)."""
         try:
             tf = self.tf_buffer.lookup_transform(self.sensor_frame, scan.header.frame_id, Time())
         except TransformException as ex:
@@ -151,7 +170,32 @@ class ScanFusion(Node):
 
         hits = to_base(r[hit], a[hit])
         frees = to_base(np.full(int(free.sum()), scan.range_max), a[free])
-        return hits, frees
+        return hits, frees, m[:2, 3]
+
+    def cells(self, pts):
+        """Índices (fila, columna) de la rejilla de puntos en odom y máscara de los que caen dentro."""
+        ij = np.floor((pts - self.grid_origin) / self.grid_res).astype(int)
+        ok = (ij >= 0).all(axis=1) & (ij < self.grid_n).all(axis=1)
+        return ij, ok
+
+    def seen_free_after(self, pts, t):
+        """Máscara de los puntos (odom) cuya celda se vio libre después de t."""
+        ij, ok = self.cells(pts)
+        out = np.zeros(len(pts), bool)
+        out[ok] = self.last_free[ij[ok, 1], ij[ok, 0]] > t
+        return out
+
+    def mark_free(self, origin, ends, t):
+        """Marca libres (instante t) las celdas de los segmentos origen -> extremos (odom)."""
+        if not len(ends):
+            return
+        d = ends - origin
+        length = np.hypot(d[:, 0], d[:, 1])
+        n = int(np.ceil(length.max() / (self.grid_res / 2))) + 1
+        s = np.linspace(0.0, 1.0, n)
+        pts = (origin[None, None, :] + d[:, None, :] * s[None, :, None]).reshape(-1, 2)
+        ij, ok = self.cells(pts)
+        self.last_free[ij[ok, 1], ij[ok, 0]] = t
 
     def fuse(self, stamp, scans):
         parts = [self.sensor_points(s) for s in scans]
@@ -159,6 +203,7 @@ class ScanFusion(Node):
             return
         hits = np.vstack([p[0] for p in parts])
         frees = np.vstack([p[1] for p in parts])
+        t = Time.from_msg(stamp).nanoseconds * 1e-9
 
         try:
             odom_base = tf_to_matrix(self.tf_buffer.lookup_transform(
@@ -167,10 +212,39 @@ class ScanFusion(Node):
             self.get_logger().warn(f"Sin TF odom: {ex}", throttle_duration_sec=5.0)
             return
 
+        def to_odom(p):
+            return (odom_base @ np.column_stack([p, np.ones(len(p))]).T).T[:, :2]
+
         # Guardar los impactos actuales en odom y traer todos los guardados a la base actual
-        h = np.column_stack([hits, np.ones(len(hits))])
-        self.history.append((odom_base @ h.T).T[:, :2])
-        acc = np.vstack(self.history)
+        cur = to_odom(hits)
+        if self.dynamic_filter:
+            moving = self.seen_free_after(cur, t - self.dyn_window)
+            self.dropped[0] += int(moving.sum())
+            self.dropped[1] += len(cur)
+            cur = cur[~moving]
+            # Rayos de este scan: libres hasta dyn_margin antes del impacto o hasta range_max
+            for (h, f, o) in parts:
+                o_odom = to_odom(o[None, :])[0]
+                if len(h):
+                    v = h - o
+                    r = np.hypot(v[:, 0], v[:, 1])
+                    keep = r > self.dyn_margin
+                    short = o + v[keep] * ((r[keep] - self.dyn_margin) / r[keep])[:, None]
+                    self.mark_free(o_odom, to_odom(short), t)
+                if len(f):
+                    v = f - o
+                    r = np.hypot(v[:, 0], v[:, 1])
+                    short = o + v * ((r - self.dyn_margin) / r)[:, None]
+                    self.mark_free(o_odom, to_odom(short), t)
+            # Impactos guardados por los que ya pasó un rayo: la persona se movió
+            self.history = deque([(ht, hp[~self.seen_free_after(hp, ht + 1e-3)])
+                                  for ht, hp in self.history], maxlen=self.accumulate)
+            if self.dropped[1] > 20000:
+                self.get_logger().info(f"dynamic_filter: {100.0 * self.dropped[0] / self.dropped[1]:.1f} % "
+                                       "de impactos descartados")
+                self.dropped = [0, 0]
+        self.history.append((t, cur))
+        acc = np.vstack([hp for _, hp in self.history])
         base_odom = np.linalg.inv(odom_base)
         acc = (base_odom @ np.column_stack([acc, np.ones(len(acc))]).T).T[:, :2]
 
