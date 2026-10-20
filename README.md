@@ -11,8 +11,8 @@ configuraciones de la base.
 | Fase | Objetivo | Estado |
 |---|---|---|
 | 1 | SLAM 2D con los **3 láseres bajos** de Pepper | ✅ primera versión (2026-10-15) |
-| 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | 🔄 entorno listo (2026-10-18); falta evaluar el SLAM |
-| 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | 🔄 clasificador de visitantes (97.7 %) y voz listos (2026-10-18); falta buscar, acercarse y mirar |
+| 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | ✅ SLAM evaluado en el museo vacío, estático y dinámico; estelas y filtro dinámico (2026-10-20) |
+| 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada en el museo con gente caminando: 10/10 llamadas (2026-10-20); falta probar la voz con un micrófono real |
 
 Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
 publicada en **https://pepper-ia368.vercel.app**.
@@ -287,9 +287,52 @@ ros2 launch pepper_museum museum.launch.py world:=museum gui:=false     # vacío
   conversor usa la copia `citizen_extras_female_03_fixed`; el modelo de la base (también en la
   oficina) sigue igual.
 
-**Pendiente**: SLAM (configuración de la Fase 1) en el museo con personas estáticas frente a
-personas en movimiento: medir cuánto ensucian el mapa y la localización, y si la acumulación
-deja "estelas".
+### Experimentos en el museo
+
+Las herramientas de la Fase 1 aceptan el mundo como parámetro:
+
+```bash
+# Experimento sin GUI: WORLD = office (por defecto) | museum | museum_with_people | museum_with_people_moving
+WORLD=museum_with_people_moving TUNED=1 pepper_multilaser_slam/scripts/run_experiment.sh acc4nofree results/museo/dinamico/acc4nofreeT_r1
+# ... con el filtro de objetos en movimiento de scan_fusion
+WORLD=museum_with_people_moving TUNED=1 DYN=1 pepper_multilaser_slam/scripts/run_experiment.sh acc4nofree results/museo/dinamico/acc4nofreeTD_r1
+# Evaluación frente al mapa del hokuyo en el museo vacío, y estelas
+ros2 run pepper_multilaser_slam evaluate results/museo/dinamico/*_r? --ref pepper_museum/maps/museum_hokuyo.yaml --out results/museo/dinamico
+python3 pepper_museum/tools/trails.py pepper_museum/maps/museum_hokuyo.yaml pepper_museum/worlds/museum_with_people_moving.sdf results/museo/dinamico/*_r?
+# Demo visual en el museo
+ros2 launch pepper_multilaser_slam demo.launch.py world:=museum_with_people_moving route_delay:=45
+```
+
+| Pieza nueva | Qué hace |
+|---|---|
+| `route_driver` `route:=museum` | 13 puntos, ~58 m: sube a la sala de arriba a la izquierda, cruza por arriba del bloque central, baja por x = 7 (donde caminan actores), vuelve por el pasillo inferior y cierra el lazo en el inicio. A ≥ 0.75 m de las paredes y ≥ 1 m de todas las personas de los tres mundos |
+| `maps/museum_hokuyo.yaml` | el museo vacío mapeado con el hokuyo por esa ruta (ATE 0.074 m; 94.6 % de sus celdas a ≤ 15 cm del plano de la malla). Referencia de `evaluate` y mapa de Nav2 de la Fase 3 |
+| `scan_fusion` `dynamic_filter` | rejilla en `odom` con el último instante en que cada celda fue atravesada por un rayo; un impacto en una celda vista libre hace < 5 s es algo que apareció (se descarta) y un impacto acumulado por el que ya pasó un rayo se borra (la persona se fue) |
+| `tools/trails.py` | celdas del mapa que no están en la referencia, repartidas entre "junto a actores" (estelas), "junto a personas estáticas" y "otras" (error del SLAM) |
+
+### Resultados en el museo (2026-10-20)
+
+3 repeticiones por configuración (detalle y conclusiones en
+[`results/museo/summary.md`](results/museo/summary.md)):
+
+| Mundo | Config. | ATE SLAM [m] | Error final [m] | ATE odometría [m] | Estela [m²] |
+|---|---|---|---|---|---|
+| vacío | acc4nofreeT | 0.40 ± 0.18 | 0.15 | 0.19 | — |
+| vacío | v8T | 0.53 ± 0.35 | 0.25 | 0.17 | — |
+| estático | acc4nofreeT | 0.31 ± 0.07 | 0.15 | 0.18 | — |
+| dinámico | acc4nofreeT | 0.41 ± 0.05 | 0.09 | 0.16 | **≈ 1.0** |
+| dinámico | acc4nofreeTD (filtro) | 0.47 ± 0.08 | 0.31 | 0.15 | **≈ 0.1** |
+| dinámico | v8T | 0.36 ± 0.23 | 0.50 | 0.18 | ≈ 0.3 |
+| vacío, odometría con ruido alto | acc4nofreeT | **0.18 ± 0.14** | 0.15 | **1.22** | — |
+
+1. **El tamaño del museo pesa más que la gente.** Con la odometría simulada (poco ruidosa), el
+   SLAM con los láseres de Pepper (7 m, 45 rayos) se desvía a mitad de ruta en los tramos
+   abiertos: las trayectorias se "encogen" ~0.4 m, como en un pasillo sin referencias a lo largo.
+   Su ATE es peor que el de la odometría sola, aunque el cierre de lazo deja un error final menor.
+2. **Con odometría mala el SLAM es imprescindible:** 1.22 m de la odometría frente a 0.18 m.
+3. **La gente que camina deja estelas, y la acumulación las triplica** (≈ 1 m² frente a ≈ 0.3 m²).
+4. **El filtro dinámico las elimina**, pero no mejora la localización y quita algo de mapa real y
+   parte de las personas quietas (los láseres, bajos, ven entre sus piernas).
 
 
 ---
@@ -317,6 +360,9 @@ reconocimiento usa el **cuerpo entero**, recortado por YOLO.
 | `tools/label_dataset.py` | YOLO11m detecta personas; cada caja se compara con la caja **proyectada** de cada visitante (pose de Pepper + cámara) → recorte etiquetado sin intervención. División por persona (test = visitantes que el modelo nunca vio) |
 | `tools/train_classifier.py` | fine-tuning de `yolo11n-cls` (4 clases: 3 modelos + "otro" = actores) y línea base de color; pesos en `models/visitor_cls.pt` |
 | `voice_listener` | micrófono (PipeWire) → frases por energía → Whisper large-v3-turbo en la GPU → `/pepper/voice/transcript` y, si hay palabra de llamada, `/pepper/visitor_call` |
+| `visitor_approach` | al recibir `/pepper/visitor_call`: busca (cabeza + base), elige a la persona estática más cercana con la cámara de profundidad, va con Nav2 a 1 m y la sigue con la cabeza |
+| `launch/visitors_demo.launch.py` | museo + Nav2 (AMCL en el mapa del museo de la Fase 2) + `visitor_approach` (+ `voice_listener` con `voice:=true`) |
+| `tools/eval_approach.py` | evalúa las llamadas registradas frente al ground truth del mundo |
 
 ```bash
 # Dataset (con la simulación del museo corriendo con ese mundo)
@@ -349,6 +395,46 @@ justifica por la robustez **a distancia** (92.5 → 97.7 % a más de 3.5 m) y co
 Casi todos los errores son cajas con dos visitantes superpuestos; uno es un error de etiqueta
 (un hombre estático marcado como actor). Métricas completas en `results/fase3/classifier/metrics.json`.
 
-**Pendiente**: buscar (barrido de cabeza/cuerpo, descartar a quien se mueve, la más cercana con
-la cámara de profundidad), acercarse con Nav2 (necesita el mapa del museo de la Fase 2) y
-seguir mirando con `Head_controller`; probar la llamada con voz real.
+### Buscar, acercarse y mirar: `visitor_approach`
+
+```bash
+# Simulación + Nav2 (AMCL en maps/museum_hokuyo.yaml) + visitor_approach; voice:=true añade el micrófono
+ros2 launch pepper_visitors visitors_demo.launch.py                                   # museum_test_people
+ros2 launch pepper_visitors visitors_demo.launch.py world:=museum_with_people_moving x:=1.0 y:=4.3
+# La llamada sin micrófono
+ros2 topic pub --once /pepper/visitor_call std_msgs/String "data: hola pepper"
+# Evaluación de las llamadas registradas (log_file:=...) frente al ground truth
+python3 pepper_visitors/tools/eval_approach.py calls.jsonl pepper_museum/worlds/museum_with_people_moving.sdf
+```
+
+Al recibir `/pepper/visitor_call` (corre en el entorno de yolo_ros: `scripts/visitor_approach`):
+
+1. **Barrido de cabeza** (HeadYaw 0, ±1, ±2 rad; `/pepper/Head_controller/command`) y luego
+   **giro de la base 180°** (Spin de Nav2) para mirar la espalda: la cabeza deja ~64° sin ver.
+2. En cada posición, ~2 s de **YOLO11m**; la posición de cada persona sale de la **cámara de
+   profundidad**: su nube se proyecta en la imagen frontal (TF) y se toma el torso de la caja.
+3. **Estática o andando:** asociación uno a uno entre frames; estática si ≥ 70 % de sus
+   posiciones quedan a < 12 cm de la mediana. Se descarta la posición que cae sobre algo del
+   **mapa del museo vacío** (una persona tapada por un pedestal: la profundidad mide el pedestal).
+4. La **más cercana** a ≤ 6 m que el clasificador (votando con 5 recortes) no tome por "otro";
+   su clase sirve para saludar ("Te veo, la persona de camisa a cuadros roja"). Si no hay nadie:
+   "No veo a nadie cerca" en `/pepper/say`.
+5. **Nav2** a 1 m de ella, de frente (si no se puede, otros ángulos alrededor), y la **sigue con
+   la cabeza** hasta la siguiente llamada. Cada llamada queda en `log_file` (JSON).
+
+### Resultados de la búsqueda y el acercamiento (2026-10-20)
+
+Museo con 10 personas quietas y 16 caminando, una llamada desde cada una de 10 poses de arranque
+(detalle y versiones anteriores en [`results/fase3/approach/summary.md`](results/fase3/approach/summary.md)):
+
+| Llegó a ~1 m | Eligió la estática más cercana | Personas cercanas encontradas | Falsos estáticos | Error de posición (profundidad) | Distancia final | Tiempo por llamada |
+|---|---|---|---|---|---|---|
+| **10 / 10** | **9 / 10** (la otra: empate de 3 cm) | 22 / 22 | 0 | 0.16 m (máx. 0.33) | 1.04 m | 35 s |
+
+Cuatro problemas encontrados en la evaluación y corregidos: personas a la espalda (búsqueda de
+360°), una persona tapada por un pedestal (comprobación con el mapa), un actor que se colaba en la
+pista de una persona quieta (asociación uno a uno + mayoría) y actores parados unos segundos en
+las esquinas de su trayectoria (clase "otro"). Queda: el clasificador tomó a `female_03` por
+`male_03` las dos veces que fue el objetivo (sólo afecta al saludo).
+
+**Pendiente**: probar la llamada con voz real (micrófono nuevo).

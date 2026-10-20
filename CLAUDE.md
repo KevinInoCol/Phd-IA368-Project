@@ -4,42 +4,32 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-18, cierre de sesión)
+## Estado y próximos pasos (actualizado 2026-10-20)
 
-**Hecho hasta ahora**
-- Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada
-  (0.78 m → 0.11 m con acc4nofreeT); demo en RViz. Todo en README y en el HTML.
-- Fase 2 🔄 (entorno listo): museo y 16 actores de la tesis en Harmonic (`pepper_museum`); GPU
-  arreglada → RTF ≈ 1.0 con los actores; female_03 corregida (texturas cacheadas por nombre);
-  plano 2D del museo (`maps/museum_walls.txt`). **No hay aún ningún experimento de SLAM en el museo.**
-- Fase 3 🔄 (sesión 2026-10-18), escenario acordado abajo ("Escenario de la Fase 3"):
-  1. ✅ female_03 arreglada · 2. ✅ mundo `museum_test_people` (4 visitantes)
-  3. ✅ dataset sintético: 1300 capturas → 2011 recortes etiquetados solos (división por persona)
-  4. ✅ clasificador `pepper_visitors/models/visitor_cls.pt`: 97.7 % test vs 96.1 % línea base de
-     color (a > 3.5 m: 97.7 vs 92.5 %). Errores = dos personas superpuestas en la caja.
-  5. ✅ `voice_listener` (Whisper large-v3-turbo GPU, micrófono de la cámara web por PipeWire).
-     Probado sólo con audio de fondo (bien transcrito, no disparó llamada); filtro de frases
-     inventadas ("¡Gracias!", "Amén"…) añadido. **Falta probarlo con una llamada real del usuario.**
-- Documentación: `docs/proyecto.html` con 3 pestañas (una por fase), publicado en Vercel;
-  README con las 3 fases; todo commiteado y pusheado (último commit: voice_listener).
+**Hecho**
+- Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada.
+- Fase 2 ✅ (2026-10-20): mundo como parámetro (`WORLD=` en `run_experiment.sh`, `world:=` en
+  `demo.launch.py`), ruta `museum` (13 puntos, ~58 m), referencia hokuyo
+  (`pepper_museum/maps/museum_hokuyo.yaml`, también mapa de Nav2), 29 corridas, estelas
+  (`tools/trails.py`) y filtro `dynamic_filter` de `scan_fusion` (`DYN=1`). Resultados en
+  `results/museo/summary.md`. Conclusión: en el museo el SLAM con los láseres de Pepper se
+  desvía a mitad de ruta (tramos abiertos, paredes a > 7 m) y su ATE (0.3–0.5 m) es peor que la
+  odometría simulada (~0.17 m), pero cierra el lazo (error final 0.09–0.15 vs 0.3–0.4 m); con
+  odometría mala 1.22 → 0.18 m. La acumulación triplica las estelas (≈1 vs 0.3 m²); el filtro
+  las elimina pero no mejora la localización.
+- Fase 3 ✅ salvo la voz real (2026-10-20): `visitor_approach` + `visitors_demo.launch.py`;
+  10/10 llamadas en el museo dinámico, 9/10 la más cercana (la otra: empate de 3 cm), 0 falsos
+  estáticos, error de posición 0.16 m, 35 s por llamada. Detalle y versiones en
+  `results/fase3/approach/summary.md`. Problema abierto: el clasificador toma a `female_03` por
+  `male_03` en vivo (sólo afecta al saludo).
+- README, HTML (3 pestañas) y Vercel actualizados; commit + push.
 
-**Lo que falta, en orden recomendado**
-1. Probar la voz con el usuario: lanzar `ros2 run pepper_visitors voice_listener --ros-args -p
-   device:=alsa_input.usb-Web_Camera_Web_Camera_202404120005-02.mono-fallback` y que diga
-   "Hola Pepper…" → debe publicar `/pepper/visitor_call`. Ajustar `keywords`/`energy_factor` si hace falta.
-2. Fase 2 (la Fase 3 la necesita para Nav2): añadir el mundo como parámetro a
-   `run_experiment.sh` y `demo.launch.py` (hoy sólo oficina; pose inicial del museo (-1.5, 1));
-   ruta por el museo (puntos libres de vitrinas, usar `maps/museum_walls.txt`; cruzar pasillos
-   con actores); mapa de referencia con el hokuyo en `museum` vacío (para `evaluate.py --ref`);
-   batería acc4nofreeT (+ v8T) en museo vacío / estático / dinámico, 3 rep.; ¿estelas? Si las
-   hay: filtrar puntos que se mueven entre scans. Guardar un mapa del museo para Nav2.
-3. Fase 3 restante: nodo que, al recibir `/pepper/visitor_call`, busca (barrido de HeadYaw y
-   luego giro de la base), detecta con YOLO + `visitor_cls.pt`, descarta personas que se mueven
-   (seguimiento entre frames), elige la estática más cercana con la cámara de profundidad
-   (`/pepper/camera/depth/...`), va con Nav2 a ~1 m de frente y la sigue con `Head_controller`;
-   "no veo a nadie" si no hay nadie. Probar en `museum_test_people` y luego en el museo completo.
-4. Actualizar README, pestañas del HTML (y redesplegar en Vercel) y hacer push al cerrar cada bloque.
-5. Opcional: exploración autónoma (fronteras + Nav2) en vez de la ruta fija.
+**Lo que falta**
+1. **Voz real** (el usuario está comprando un micrófono mejor; esperar): `ros2 launch
+   pepper_visitors visitors_demo.launch.py voice:=true device:=<node.name de PipeWire>` y decir
+   "Hola Pepper…". Ajustar `keywords`/`energy_factor` si hace falta.
+2. Opcional: clasificador de `female_03` en vivo (más recortes con la luz/ángulos del museo);
+   localizar mejor en espacios grandes; exploración autónoma (fronteras + Nav2).
 
 Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
 carpeta; la base está en su propio repo). Identidad git local: KevinInoCol
@@ -74,8 +64,8 @@ editar launch/scripts mientras corre una batería de experimentos** (cambia su c
 | Fase | Qué | Estado |
 |---|---|---|
 | 1 | SLAM 2D con los 3 láseres bajos de Pepper | ✅ primera versión (2026-10-15) |
-| 2 | Objetos dinámicos: museo con personas en movimiento. Entorno portado de la tesis (paquete `pepper_museum`) | 🔄 entorno listo (2026-10-18); falta evaluar SLAM |
-| 3 | Voz por micrófono → Pepper busca a la persona estática más cercana, se acerca y la sigue mirando hasta la siguiente pregunta | 🔄 female_03 arreglada, mundo de prueba, dataset + clasificador (97.7 %), voz (2026-10-18); falta buscar/acercarse/mirar |
+| 2 | Objetos dinámicos: museo con personas en movimiento. Entorno portado de la tesis (paquete `pepper_museum`) | ✅ SLAM evaluado, estelas y filtro dinámico (2026-10-20) |
+| 3 | Voz por micrófono → Pepper busca a la persona estática más cercana, se acerca y la sigue mirando hasta la siguiente pregunta | ✅ buscar/acercarse/mirar 10/10 (2026-10-20); falta la voz con micrófono real |
 
 ## Fase 1 — paquete `pepper_multilaser_slam` (ament_python)
 
@@ -164,7 +154,12 @@ Fuente: tesis del autor en `~/Robotica/Referencia pepper_sim_ws-20261018T020618Z
 - Museo: 16 actores en bucle (trayectorias de la tesis, 10–31 s); 10 personas estáticas en el
   mundo "moving", 23 en "with_people". Actores sin colisión física; los láseres sí los ven.
 - Verificado: actores caminan (cámara frontal) y cambian rangos de los láseres con Pepper quieto.
-- Pendiente: SLAM en museo estático vs dinámico (estelas por acumulación), ruta por el museo.
+- Ruta `museum` en `route_driver.py` (verificada sin simular contra paredes y personas de los 3
+  mundos). Mapa del museo: frame `map` = mundo + (1.5, −1). `run_experiment.sh` en el museo usa
+  `museum.launch.py` (timeout de ruta 900 s). slam_toolbox a veces no se activa al arrancar
+  (`change_state` timeout → trayectoria vacía, sin mapa): repetir la corrida.
+- `trails.py`: las celdas "junto a actores" en el mundo con 23 personas quietas están
+  contaminadas (esas personas están cerca de las trayectorias); la base se mide en el vacío.
 
 
 ## Fase 3 — evaluación inicial (2026-10-18)
@@ -210,8 +205,16 @@ Sólo personas **estáticas** (las que caminan son dificultad para SLAM/navegaci
 | `capture_dataset` (nodo) | teletransporta a Pepper (`/world/default/set_pose`), guarda imagen + pose ground truth. Estáticas: por turnos entre clases, 1–6 m, ±17°; mundo con actores: apunta a sus trayectorias |
 | `tools/label_dataset.py` (venv yolo_ros) | YOLO11m + caja esperada → recortes etiquetados. División **por persona**: VAL female_10, female_06, male_05, male_13; TEST female02_Inf_Der, female03_Med_Med, male_10, male_12. Actores ("otro") por imagen |
 | `tools/train_classifier.py` (venv yolo_ros) | línea base color (HSV + centroide) vs fine-tune `yolo11n-cls` (`~/pepper_ws/weights/yolo11n-cls.pt`); pesos → `pepper_visitors/models/visitor_cls.pt` |
+| `visitor_approach` (envoltorio `scripts/visitor_approach`, venv yolo_ros) | llamada → barrido HeadYaw {0, ±1, ±2} + Spin 180° (`full_search`) → YOLO + profundidad (nube proyectada en la imagen frontal, torso de la caja) → pistas uno a uno, estática si ≥ 70 % a < 0.12 m → descarta posiciones sobre `/map` (persona tapada) y clase "otro" (votación de 5 recortes) → la más cercana ≤ 6 m → Nav2 a 1 m → cabeza la sigue a 10 Hz. `/pepper/say`, `/pepper/visitor_target`, `log_file` JSON |
+| `launch/visitors_demo.launch.py` | museum.launch.py + `pepper_nav amcl.launch.py` (map `museum_hokuyo.yaml`, scan hokuyo por defecto) + `/initialpose` = (x+1.5, y−1) + visitor_approach (+ voice_listener con `voice:=true`) |
+| `tools/eval_approach.py` | llamadas del `log_file` frente al ground truth del mundo (la más cercana con línea de vista, error de posición, falsos estáticos) |
 
 Dataset en `datasets/visitors/` (gitignored): `raw/<mundo>/{images,meta.jsonl}`, `cls/`. Venv: `~/pepper_ws/src/yolo_ros/yolo_ros/.venv/bin/python`.
 `/clock` de Gazebo es best effort: suscribirse con `qos_profile_sensor_data`.
 Para parar la simulación desde scripts no usar `pkill -f "ros2 launch..."` dentro de un comando que
-contenga ese texto (se mata a sí mismo, exit 144).
+contenga ese texto (se mata a sí mismo, exit 144). Lo mismo con `pgrep -f`: el patrón también
+casa con rutas del propio comando (el `.` de la regex casa con `/`). Lo seguro: parar desde un
+script en un archivo, en una llamada aparte, con un patrón tipo `"python -m pepper_visitors[.]visitor_approach"`.
+- El Head_controller escucha en `/pepper/Head_controller/command` (no `joint_trajectory`).
+- Teletransporte para pruebas: `gz service -s /world/default/set_pose` con `name: "pepper_MP"` y
+  después `/initialpose` en map (mundo + (1.5, −1)) para AMCL.

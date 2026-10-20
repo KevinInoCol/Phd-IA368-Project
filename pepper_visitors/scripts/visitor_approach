@@ -1,0 +1,5 @@
+#!/bin/bash
+# Lanza pepper_visitors.visitor_approach con el entorno de yolo_ros (ultralytics + CUDA), que no es
+# el Python del sistema: ~/pepper_ws/src/yolo_ros/yolo_ros/.venv (o $PEPPER_YOLO_VENV).
+VENV=${PEPPER_YOLO_VENV:-$HOME/pepper_ws/src/yolo_ros/yolo_ros/.venv}
+exec "$VENV/bin/python" -m pepper_visitors.visitor_approach "$@"
