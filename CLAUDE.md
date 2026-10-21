@@ -54,11 +54,16 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
   terminó sola y volvió al inicio. Mapa: 137.6 m² libres (hokuyo 138), completitud 85.8 %,
   precisión 79 %.
 - La primera batería automática dio 0 objetivos (el arranque de 0.5 m no bastaba) → se paró.
-  Al irse quedó corriendo una prueba en `results/exploracion/oficina/acc4nofreeT_r1` con el
-  arranque repetido: **mirar su `logs/route.log`** (objetivos, "Aún sin fronteras…").
+  Prueba automática con el arranque repetido (`results/exploracion/oficina/acc4nofreeT_r1`, no
+  commiteada): **arranca (21 objetivos), pero sale mal**: 14 fallidos (11 failed, 4 timeout), ATE
+  SLAM 2.3 m, yaw RMSE 102°, área libre 94 m² (de 138). La odometría sola también da 2.4 m de ATE
+  (lo normal es ~0.15): **sospecha de choque o atasco físico** (¿Pepper contra una pared, un mueble
+  o una persona?, ¿BackUp/DriveOnHeading repetidos?) que rompe la odometría y luego el SLAM.
+  **Siguiente paso:** mirar `trajectory.csv` (dónde se separan gt y odom), `logs/route.log` y
+  `logs/nav2.log` (collision_monitor, controller, recoveries) y repetir con `GUI=1` para verlo.
 
 **Lo que falta**
-1. Exploración: si la prueba de la oficina va bien, batería `EXPLORE=1 TUNED=1`: oficina ×3,
+1. Exploración: depurar la prueba fallida de la oficina (arriba); cuando salga bien, batería `EXPLORE=1 TUNED=1`: oficina ×3,
    museo vacío ×2, museo dinámico ×2. Comandos en el historial: bucle `run()` con reintento
    como en las baterías del museo. `evaluate` ya da "Recorrido [m]" y "Duración [s]"; comparar
    con la ruta guiada (oficina `results/acc4nofreeT_r*`, museo `results/museo/*/acc4nofreeT_r*`).
