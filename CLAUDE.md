@@ -27,16 +27,45 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
   `~/pepper_ws/weights/piper`, sumidero `pepper_test_audio`) → 35/36 llamadas, 0/24 falsas, ~1.2 s;
   `hotwords: "Pepper"` por defecto. De punta a punta con `visitors_demo ... voice:=true
   device:=pepper_test_audio capture_sink:=true` + `pw-play`: OK (`results/fase3/voice/summary.md`).
-- README, HTML (3 pestañas) y Vercel actualizados; commit + push.
+- README, HTML (3 pestañas) y Vercel actualizados hasta la prueba de voz; commit + push.
+
+**En curso al cerrar la sesión del 2026-10-21: exploración autónoma (fronteras + Nav2)**
+- Código (commiteado, sin documentar aún en README/HTML):
+  - `pepper_multilaser_slam/frontier_explorer.py`: fronteras sobre `/map`, Nav2 NavigateToPose,
+    replanteo si ya no quedan celdas de frontera a < 0.6 m del objetivo, lista negra, vuelta al
+    inicio.
+  - `launch/explore.launch.py`: `nav2_bringup/navigation_launch.py` con los params de pepper_nav
+    y `topic` → `/pepper/scan_fused`; sin AMCL, porque localiza slam_toolbox.
+  - `run_experiment.sh EXPLORE=1`: Nav2 en segundo plano y explorador con timeout (900 s en la
+    oficina, 1500 s en el museo).
+- Problemas encontrados y corregidos:
+  - **slam_toolbox no añade scans si el robot sólo gira**, y Karto necesita 2 lecturas por
+    celda. Sin moverse no hay mapa ni fronteras. Arranque: Spin 360° + DriveOnHeading 0.5 m
+    (o BackUp); si sigue sin fronteras, giro de 90° + 0.5 m, hasta 6 veces (este último cambio
+    **sin probar todavía**).
+  - Esperar a que `bt_navigator` esté active (`/bt_navigator/get_state`) antes de enviar
+    objetivos.
+  - Ignorar fronteras a < 0.8 m: los láseres no ven a < 0.3 m y queda un anillo desconocido.
+  - Los grupos de frontera son enormes (rayos dispersos) y su representante se mueve; por eso
+    "explored" se decide por celdas cercanas, no por el representante.
+  - `slam.launch.py`: vigilante que configura/activa slam_toolbox si se perdió el evento de
+    transición (`failed to send response to .../change_state`).
+- Resultado de depuración en la oficina (tras avanzar 1 m a mano): 22 objetivos, 0 fallidos,
+  terminó sola y volvió al inicio. Mapa: 137.6 m² libres (hokuyo 138), completitud 85.8 %,
+  precisión 79 %.
+- La primera batería automática dio 0 objetivos (el arranque de 0.5 m no bastaba) → se paró.
+  Al irse quedó corriendo una prueba en `results/exploracion/oficina/acc4nofreeT_r1` con el
+  arranque repetido: **mirar su `logs/route.log`** (objetivos, "Aún sin fronteras…").
 
 **Lo que falta**
-1. **Exploración autónoma** (fronteras + Nav2 sobre el mapa del SLAM) en vez de la ruta guiada por
-   ground truth — acordado con el usuario el 2026-10-21 como siguiente tarea.
-2. **Voz real** (el usuario está comprando un micrófono mejor; esperar): `ros2 launch
-   pepper_visitors visitors_demo.launch.py voice:=true device:=<node.name de PipeWire>` y decir
-   "Hola Pepper…". Ajustar `energy_factor`/`min_rms` si hace falta.
-3. Opcional: clasificador de `female_03` en vivo (más recortes con la luz/ángulos del museo);
-   localizar mejor en espacios grandes.
+1. Exploración: si la prueba de la oficina va bien, batería `EXPLORE=1 TUNED=1`: oficina ×3,
+   museo vacío ×2, museo dinámico ×2. Comandos en el historial: bucle `run()` con reintento
+   como en las baterías del museo. `evaluate` ya da "Recorrido [m]" y "Duración [s]"; comparar
+   con la ruta guiada (oficina `results/acc4nofreeT_r*`, museo `results/museo/*/acc4nofreeT_r*`).
+   Después README, pestaña del HTML (¿Fase 1/2?), Vercel y push.
+2. **Voz real** (esperar al micrófono nuevo del usuario): `visitors_demo.launch.py voice:=true
+   device:=<node.name>`; ajustar `energy_factor`/`min_rms`.
+3. Opcional: clasificador de `female_03` en vivo; localizar mejor en espacios grandes.
 
 Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
 carpeta; la base está en su propio repo). Identidad git local: KevinInoCol

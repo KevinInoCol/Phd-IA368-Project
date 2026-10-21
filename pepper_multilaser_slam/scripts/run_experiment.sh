@@ -21,6 +21,8 @@
 #                  (-1.5, 1)) y la ruta "museum" de route_driver.
 #   DYN=1          scan_fusion con dynamic_filter (descarta lo que aparece en espacio visto libre:
 #                  gente caminando). Sólo métodos acc*/free.
+#   EXPLORE=1      sin ruta: exploración autónoma (Nav2 sin AMCL + frontier_explorer, sin ground
+#                  truth). La trayectoria y el mapa se registran igual.
 #   ROUTE_TIMEOUT  segundos (por defecto 600; 900 en el museo)
 set -u
 METHOD=$1
@@ -39,6 +41,9 @@ case "$WORLD" in
   museum*)  ROUTE=museum; TIMEOUT=${ROUTE_TIMEOUT:-900} ;;
   *) echo "mundo desconocido: $WORLD"; exit 1 ;;
 esac
+if [ "${EXPLORE:-0}" = "1" ]; then
+  case "$WORLD" in office) TIMEOUT=${ROUTE_TIMEOUT:-900} ;; *) TIMEOUT=${ROUTE_TIMEOUT:-1500} ;; esac
+fi
 
 PIDS=()
 cleanup() {
@@ -123,8 +128,16 @@ sleep 2
 
 echo "[$METHOD] recorrido"
 START=$(date +%s)
-timeout "$TIMEOUT" ros2 run pepper_multilaser_slam route_driver \
-  --ros-args -p use_sim_time:=true -p route:=$ROUTE > "$LOG/route.log" 2>&1
+if [ "${EXPLORE:-0}" = "1" ]; then
+  [ -n "${ODOM_NOISE:-}" ] && { echo "EXPLORE no admite ODOM_NOISE (Nav2 usa odom/base_footprint)"; exit 1; }
+  setsid ros2 launch pepper_multilaser_slam explore.launch.py explorer:=false > "$LOG/nav2.log" 2>&1 &
+  PIDS+=($!)
+  timeout "$TIMEOUT" ros2 run pepper_multilaser_slam frontier_explorer \
+    --ros-args -p use_sim_time:=true -p max_time:=$(( TIMEOUT - 120 )).0 > "$LOG/route.log" 2>&1
+else
+  timeout "$TIMEOUT" ros2 run pepper_multilaser_slam route_driver \
+    --ros-args -p use_sim_time:=true -p route:=$ROUTE > "$LOG/route.log" 2>&1
+fi
 echo "[$METHOD] recorrido: código $?, $(( $(date +%s) - START )) s"
 sleep 5   # último update del mapa (map_update_interval = 2 s)
 

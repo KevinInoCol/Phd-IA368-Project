@@ -132,7 +132,9 @@ def grouped_table(results):
             ("ATE odometría [m]", lambda r: r["odom"]["ate_rmse_m"], 3),
             ("Precisión mapa (% ≤10 cm)", lambda r: r["map"]["precision_pct_within_10cm"], 1),
             ("Completitud (% ≤10 cm)", lambda r: r["map"]["completeness_pct_within_10cm"], 1),
-            ("Área libre [m²]", lambda r: r["map"]["free_area_m2"], 1)]
+            ("Área libre [m²]", lambda r: r["map"]["free_area_m2"], 1),
+            ("Recorrido [m]", lambda r: r["path_m"], 0),
+            ("Duración [s]", lambda r: r["duration_s"], 0)]
     lines = ["| Configuración | n | " + " | ".join(c[0] for c in cols) + " |",
              "|---|---|" + "---|" * len(cols)]
     for g, rs in groups.items():
@@ -174,6 +176,7 @@ def main():
         slam, (sx, sy, serr) = traj_metrics(tr, "slam")
         odom, (oxx, oyy, oerr) = traj_metrics(tr, "odom")
         r = {"samples": int(len(tr["t"])), "duration_s": float(tr["t"][-1] - tr["t"][0]),
+             "path_m": float(np.sum(np.hypot(np.diff(tr["gt_x"]), np.diff(tr["gt_y"])))),
              "slam": slam, "odom": odom}
         map_yaml = os.path.join(exp, "map.yaml")
         if ref is not None and os.path.exists(map_yaml):

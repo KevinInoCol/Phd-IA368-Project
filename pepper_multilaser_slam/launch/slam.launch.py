@@ -11,7 +11,8 @@ configurarlo y activarlo.
 """
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, EmitEvent, OpaqueFunction, RegisterEventHandler
+from launch.actions import (DeclareLaunchArgument, EmitEvent, ExecuteProcess, OpaqueFunction,
+                            RegisterEventHandler, TimerAction)
 from launch.events import matches_action
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import LifecycleNode
@@ -19,6 +20,20 @@ from launch_ros.event_handlers import OnStateTransition
 from launch_ros.events.lifecycle import ChangeState
 from launch_ros.substitutions import FindPackageShare
 from lifecycle_msgs.msg import Transition
+
+
+ACTIVATE_SLAM = """
+for i in $(seq 30); do
+  case "$(ros2 lifecycle get /slam_toolbox 2>/dev/null)" in
+    active*) exit 0 ;;
+    inactive*) ros2 lifecycle set /slam_toolbox activate >/dev/null 2>&1 \\
+                 && echo "[slam] slam_toolbox activado por el respaldo" ;;
+    unconfigured*) ros2 lifecycle set /slam_toolbox configure >/dev/null 2>&1 ;;
+  esac
+  sleep 2
+done
+echo "[slam] slam_toolbox no se pudo activar"
+"""
 
 
 def make_slam(context):
@@ -45,7 +60,12 @@ def make_slam(context):
         entities=[EmitEvent(event=ChangeState(
             lifecycle_node_matcher=matches_action(slam),
             transition_id=Transition.TRANSITION_ACTIVATE))]))
-    return [slam, configure, activate]
+    # Respaldo: a veces se pierde la respuesta de change_state o el evento de transición en el
+    # arranque ("failed to send response to /slam_toolbox/change_state (timeout)") y el nodo se
+    # queda inactive, sin mapa ni TF map -> odom. Se comprueba el estado y se completa a mano.
+    watchdog = TimerAction(period=6.0, actions=[ExecuteProcess(cmd=["bash", "-c", ACTIVATE_SLAM],
+                                                               output="screen")])
+    return [slam, configure, activate, watchdog]
 
 
 def generate_launch_description():

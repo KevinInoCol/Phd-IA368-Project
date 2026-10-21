@@ -29,6 +29,7 @@ setup(
             "trajectory_recorder = pepper_multilaser_slam.trajectory_recorder:main",
             "evaluate = pepper_multilaser_slam.evaluate:main",
             "odom_noise = pepper_multilaser_slam.odom_noise:main",
+            "frontier_explorer = pepper_multilaser_slam.frontier_explorer:main",
         ],
     },
 )
