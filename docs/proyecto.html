@@ -1112,6 +1112,25 @@ odom                      <span class="by">árbol real, aparte</span>
       <li class="ours"><span class="k">PASO 5 · topics</span><h3>Publicar</h3><p><code>/pepper/voice/transcript</code> con cada frase; <code>/pepper/visitor_call</code> sólo con las llamadas.</p></li>
       <li><span class="k">PRUEBA</span><h3>Audio de fondo</h3><p>Un video sonando cerca se transcribió bien ("Mira eso", "¡Aplausos!") y no despertó a Pepper: no llevaba ninguna palabra de llamada.</p></li>
     </ol>
+    <div class="head" style="gap:14px;margin-top:8px">
+      <h3>Sin micrófono: voces sintetizadas en un altavoz virtual</h3>
+      <p>Mientras llega un micrófono mejor, <code>tools/voice_test.py</code> sintetiza con Piper 6 llamadas y 4 frases que no lo son, en dos voces (España y México). Las reproduce en un sumidero virtual de PipeWire, y <code>voice_listener</code> lo escucha con <code>capture_sink:=true</code>: la misma cadena que con un micrófono, desde el audio.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Condición</th><th>Llamadas detectadas</th><th>Falsas llamadas</th><th>Latencia</th></tr></thead>
+        <tbody>
+          <tr><td>limpio</td><td class="num new">12 / 12</td><td class="num">0 / 8</td><td class="num">1.15 s</td></tr>
+          <tr><td>ruido de sala, SNR 10 dB</td><td class="num new">12 / 12</td><td class="num">0 / 8</td><td class="num">1.25 s</td></tr>
+          <tr><td>ruido de sala, SNR 5 dB</td><td class="num">11 / 12</td><td class="num">0 / 8</td><td class="num">1.41 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="takeaways">
+      <div class="take"><h3>Robusta al ruido</h3><p>Ni una falsa llamada en 24 frases neutras. Con un ruido casi tan fuerte como la voz (5 dB) sólo se pierde una llamada.</p></div>
+      <div class="take"><h3>"Pepper" no es una palabra española</h3><p>Whisper escribía "Pepe", "peper" o "Espera". Con <code>hotwords</code> acierta el nombre el doble de veces (10/18 frente a 4/18).</p></div>
+      <div class="take"><h3>De la voz a la persona</h3><p>"Hola Pepper, ¿me puedes contar algo de esta pieza?": llamada 0.6 s después de la frase, y Pepper frente a la persona más cercana, que estaba a su espalda, 39 s después.</p></div>
+    </div>
   </div>
 </section>
 
@@ -1168,9 +1187,10 @@ odom                      <span class="by">árbol real, aparte</span>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Arreglar female_03</h3><p>Copia con texturas de nombre único en <code>pepper_museum</code>; el port base no se toca.</p></li>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Mundo de prueba</h3><p><code>museum_test_people</code>: 4 visitantes de la tesis en sus posiciones originales.</p></li>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Dataset y fine-tuning</h3><p>2011 recortes etiquetados solos; <code>yolo11n-cls</code> acierta el 97.7 % con personas no vistas.</p></li>
-      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Voz</h3><p><code>voice_listener</code> con Whisper en la GPU. Falta probarlo con llamadas reales al micrófono.</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Voz</h3><p><code>voice_listener</code> con Whisper en la GPU.</p></li>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Buscar, acercarse, mirar</h3><p><code>visitor_approach</code> + <code>visitors_demo.launch.py</code>: 10/10 llamadas en el museo con gente caminando.</p></li>
-      <li><span class="k"><span class="st">PENDIENTE</span></span><h3>Llamada con voz real</h3><p>Probar <code>voice_listener</code> con el micrófono nuevo, de la palabra al acercamiento (<code>voice:=true</code>).</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Voz de punta a punta</h3><p>Con voces sintetizadas en un altavoz virtual: 35/36 llamadas, 0 falsas, y de la frase al acercamiento.</p></li>
+      <li><span class="k"><span class="st">PENDIENTE</span></span><h3>Micrófono real</h3><p>Ajustar el nivel (<code>energy_factor</code>, <code>min_rms</code>) a la voz y la sala reales con el micrófono nuevo.</p></li>
       <li><span class="k"><span class="st">ABIERTO</span></span><h3>Saludo con la chaqueta marrón</h3><p>Más recortes de <code>female_03</code> con la luz y los ángulos del museo, o votar también entre llamadas.</p></li>
     </ol>
   </div>

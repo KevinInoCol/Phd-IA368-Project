@@ -12,7 +12,7 @@ configuraciones de la base.
 |---|---|---|
 | 1 | SLAM 2D con los **3 láseres bajos** de Pepper | ✅ primera versión (2026-10-15) |
 | 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | ✅ SLAM evaluado en el museo vacío, estático y dinámico; estelas y filtro dinámico (2026-10-20) |
-| 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada en el museo con gente caminando: 10/10 llamadas (2026-10-20); falta probar la voz con un micrófono real |
+| 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada: 10/10 llamadas (2026-10-20); voz probada de punta a punta con audio sintetizado (2026-10-21); falta el micrófono real |
 
 Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
 publicada en **https://pepper-ia368.vercel.app**.
@@ -363,6 +363,7 @@ reconocimiento usa el **cuerpo entero**, recortado por YOLO.
 | `visitor_approach` | al recibir `/pepper/visitor_call`: busca (cabeza + base), elige a la persona estática más cercana con la cámara de profundidad, va con Nav2 a 1 m y la sigue con la cabeza |
 | `launch/visitors_demo.launch.py` | museo + Nav2 (AMCL en el mapa del museo de la Fase 2) + `visitor_approach` (+ `voice_listener` con `voice:=true`) |
 | `tools/eval_approach.py` | evalúa las llamadas registradas frente al ground truth del mundo |
+| `tools/voice_test.py` | prueba `voice_listener` sin micrófono: frases sintetizadas con Piper (llamadas y no llamadas, dos voces, ruido opcional) que suenan en un sumidero virtual de PipeWire |
 
 ```bash
 # Dataset (con la simulación del museo corriendo con ese mundo)
@@ -437,4 +438,33 @@ pista de una persona quieta (asociación uno a uno + mayoría) y actores parados
 las esquinas de su trayectoria (clase "otro"). Queda: el clasificador tomó a `female_03` por
 `male_03` las dos veces que fue el objetivo (sólo afecta al saludo).
 
-**Pendiente**: probar la llamada con voz real (micrófono nuevo).
+### Voz sin micrófono (2026-10-21)
+
+`voice_listener` puede escuchar el monitor de un sumidero (`capture_sink:=true`) en vez de un
+micrófono. `tools/voice_test.py` crea el sumidero `pepper_test_audio`, sintetiza con
+[Piper](https://github.com/OHF-Voice/piper1-gpl) 6 llamadas y 4 frases que no lo son, en dos
+voces (España y México), las reproduce ahí y mide lo que publica `voice_listener`:
+
+```bash
+# Piper (una vez): uv venv ~/pepper_ws/venvs/tts && uv pip install --python ~/pepper_ws/venvs/tts/bin/python piper-tts
+#                  cd ~/pepper_ws/weights/piper && ~/pepper_ws/venvs/tts/bin/python -m piper.download_voices es_ES-davefx-medium es_MX-claude-high
+ros2 run pepper_visitors voice_listener --ros-args -p device:=pepper_test_audio -p capture_sink:=true
+python3 pepper_visitors/tools/voice_test.py [--snr 10]
+# De punta a punta: la demo con la voz en el sumidero, y una frase
+ros2 launch pepper_visitors visitors_demo.launch.py world:=museum_with_people_moving voice:=true device:=pepper_test_audio capture_sink:=true
+pw-play --target pepper_test_audio datasets/voice_test/es_MX-claude-high_00.wav
+```
+
+| Condición | Llamadas detectadas | Falsas llamadas | Latencia |
+|---|---|---|---|
+| limpio | 12/12 | 0/8 | 1.15 s |
+| ruido rosa, SNR 10 dB | 12/12 | 0/8 | 1.25 s |
+| ruido rosa, SNR 5 dB | 11/12 | 0/8 | 1.41 s |
+
+Con `hotwords: "Pepper"` (nuevo, por defecto) Whisper escribe bien el nombre el doble de veces
+(10/18 frente a 4/18) sin falsas llamadas. De punta a punta, «Hola Pepper, ¿me puedes contar
+algo de esta pieza?» en el museo con gente caminando: llamada 0.6 s después de la frase, y Pepper
+frente a la persona estática más cercana (a su espalda) 39 s después de empezar a hablar.
+Detalle en [`results/fase3/voice/summary.md`](results/fase3/voice/summary.md).
+
+**Pendiente**: ajustar el nivel (`energy_factor`, `min_rms`) con el micrófono real.

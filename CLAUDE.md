@@ -4,7 +4,7 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-20)
+## Estado y próximos pasos (actualizado 2026-10-21)
 
 **Hecho**
 - Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada.
@@ -22,14 +22,21 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
   estáticos, error de posición 0.16 m, 35 s por llamada. Detalle y versiones en
   `results/fase3/approach/summary.md`. Problema abierto: el clasificador toma a `female_03` por
   `male_03` en vivo (sólo afecta al saludo).
+- Voz sin micrófono ✅ (2026-10-21): `voice_listener capture_sink:=true` escucha el monitor de un
+  sumidero; `tools/voice_test.py` (Piper, venv `~/pepper_ws/venvs/tts`, voces en
+  `~/pepper_ws/weights/piper`, sumidero `pepper_test_audio`) → 35/36 llamadas, 0/24 falsas, ~1.2 s;
+  `hotwords: "Pepper"` por defecto. De punta a punta con `visitors_demo ... voice:=true
+  device:=pepper_test_audio capture_sink:=true` + `pw-play`: OK (`results/fase3/voice/summary.md`).
 - README, HTML (3 pestañas) y Vercel actualizados; commit + push.
 
 **Lo que falta**
-1. **Voz real** (el usuario está comprando un micrófono mejor; esperar): `ros2 launch
+1. **Exploración autónoma** (fronteras + Nav2 sobre el mapa del SLAM) en vez de la ruta guiada por
+   ground truth — acordado con el usuario el 2026-10-21 como siguiente tarea.
+2. **Voz real** (el usuario está comprando un micrófono mejor; esperar): `ros2 launch
    pepper_visitors visitors_demo.launch.py voice:=true device:=<node.name de PipeWire>` y decir
-   "Hola Pepper…". Ajustar `keywords`/`energy_factor` si hace falta.
-2. Opcional: clasificador de `female_03` en vivo (más recortes con la luz/ángulos del museo);
-   localizar mejor en espacios grandes; exploración autónoma (fronteras + Nav2).
+   "Hola Pepper…". Ajustar `energy_factor`/`min_rms` si hace falta.
+3. Opcional: clasificador de `female_03` en vivo (más recortes con la luz/ángulos del museo);
+   localizar mejor en espacios grandes.
 
 Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
 carpeta; la base está en su propio repo). Identidad git local: KevinInoCol
@@ -216,5 +223,9 @@ contenga ese texto (se mata a sí mismo, exit 144). Lo mismo con `pgrep -f`: el 
 casa con rutas del propio comando (el `.` de la regex casa con `/`). Lo seguro: parar desde un
 script en un archivo, en una llamada aparte, con un patrón tipo `"python -m pepper_visitors[.]visitor_approach"`.
 - El Head_controller escucha en `/pepper/Head_controller/command` (no `joint_trajectory`).
+- **Matar nodos con `kill -9` deja segmentos de Fast DDS en `/dev/shm`**; acumulados, se pierden
+  respuestas de servicios: AMCL/map_server/slam_toolbox no se activan (`failed to send response to
+  .../change_state (timeout)`). Remedio: `fastdds shm clean` con todo parado (ya lo hace el
+  `cleanup` de `run_experiment.sh`).
 - Teletransporte para pruebas: `gz service -s /world/default/set_pose` con `name: "pepper_MP"` y
   después `/initialpose` en map (mundo + (1.5, −1)) para AMCL.

@@ -2,6 +2,9 @@
 
     ros2 run pepper_visitors voice_listener                      # micrófono por defecto
     ros2 run pepper_visitors voice_listener --ros-args -p device:=<node.name de PipeWire>
+    ros2 run pepper_visitors voice_listener --ros-args -p device:=<sumidero> -p capture_sink:=true
+        # escucha lo que suena en un sumidero (su monitor) en vez de un micrófono: pruebas con
+        # audio grabado o sintetizado (tools/voice_test.py)
 
 Corre con el entorno ~/pepper_ws/venvs/voice (faster-whisper en la GPU); el ejecutable
 `voice_listener` instalado es un envoltorio que lo usa.
@@ -46,6 +49,7 @@ class VoiceListener(Node):
     def __init__(self):
         super().__init__("voice_listener")
         self.device = self.declare_parameter("device", "").value
+        self.capture_sink = self.declare_parameter("capture_sink", False).value
         self.model_name = self.declare_parameter("model", "large-v3-turbo").value
         self.language = self.declare_parameter("language", "es").value
         self.keywords = self.declare_parameter(
@@ -55,6 +59,8 @@ class VoiceListener(Node):
         self.min_rms = self.declare_parameter("min_rms", 0.004).value
         self.silence_end = self.declare_parameter("silence_end", 0.8).value
         self.max_len = self.declare_parameter("max_utterance", 10.0).value
+        # Palabras que Whisper debe esperar (sin esto, "Pepper" sale como "Pepe" o "Espera")
+        self.hotwords = self.declare_parameter("hotwords", "Pepper").value
 
         self.pub_text = self.create_publisher(String, "/pepper/voice/transcript", 10)
         self.pub_call = self.create_publisher(String, "/pepper/visitor_call", 10)
@@ -78,6 +84,8 @@ class VoiceListener(Node):
         cmd = ["pw-record", "--rate", str(RATE), "--channels", "1", "--format", "s16"]
         if self.device:
             cmd += ["--target", self.device]
+        if self.capture_sink:
+            cmd += ["-P", "{ stream.capture.sink=true }"]
         proc = subprocess.Popen(cmd + ["-"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         pre = collections.deque(maxlen=int(0.3 * RATE / CHUNK))  # 0.3 s antes del inicio
         floor, n_floor = 0.0, 0
@@ -115,7 +123,8 @@ class VoiceListener(Node):
         while rclpy.ok():
             audio = self.segments.get()
             t = time.time()
-            segs, _ = self.model.transcribe(audio, language=self.language, vad_filter=True, beam_size=5)
+            segs, _ = self.model.transcribe(audio, language=self.language, vad_filter=True, beam_size=5,
+                                            hotwords=self.hotwords or None)
             text = " ".join(s.text.strip() for s in segs).strip()
             norm = normalize(text)
             plain = " ".join("".join(c if c.isalnum() else " " for c in norm).split())

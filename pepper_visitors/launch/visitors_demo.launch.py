@@ -4,6 +4,8 @@
     ros2 launch pepper_visitors visitors_demo.launch.py x:=-2.0 y:=-1.5          # otra pose de arranque
     ros2 launch pepper_visitors visitors_demo.launch.py world:=museum_with_people_moving
     ros2 launch pepper_visitors visitors_demo.launch.py voice:=true              # llamada por micrófono
+    ros2 launch pepper_visitors visitors_demo.launch.py voice:=true device:=pepper_test_audio capture_sink:=true
+        # llamada con audio sintetizado (tools/voice_test.py crea el sumidero y reproduce las frases)
 
 y la llamada (sin micrófono):
 
@@ -52,7 +54,8 @@ def generate_launch_description():
     )
     voice = Node(
         package="pepper_visitors", executable="voice_listener", output="screen",
-        parameters=[{"device": LaunchConfiguration("device")}],
+        parameters=[{"device": LaunchConfiguration("device"),
+                     "capture_sink": LaunchConfiguration("capture_sink")}],
         condition=IfCondition(LaunchConfiguration("voice")),
     )
     return LaunchDescription([
@@ -65,6 +68,8 @@ def generate_launch_description():
                               description="láser de AMCL y costmaps: /pepper/hokuyo_scan o /pepper/laser_2"),
         DeclareLaunchArgument("voice", default_value="false"),
         DeclareLaunchArgument("device", default_value="", description="micrófono (node.name de PipeWire)"),
+        DeclareLaunchArgument("capture_sink", default_value="false",
+                              description="escuchar el monitor del sumidero `device` (pruebas sin micrófono)"),
         DeclareLaunchArgument("log_file", default_value="", description="JSON por llamada"),
         sim,
         # Nav2 y la percepción cuando la simulación ya publica reloj, TF y sensores

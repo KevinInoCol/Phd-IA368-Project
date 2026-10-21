@@ -46,6 +46,9 @@ cleanup() {
   sleep 4
   for p in "${PIDS[@]}"; do kill -KILL -- "-$p" 2>/dev/null; done
   pkill -KILL -f "gz sim" 2>/dev/null
+  # kill -KILL deja segmentos de memoria compartida de Fast DDS en /dev/shm; acumulados, hacen
+  # que se pierdan respuestas de servicios (p. ej. el change_state de slam_toolbox o de AMCL)
+  fastdds shm clean > /dev/null 2>&1
 }
 trap cleanup EXIT
 

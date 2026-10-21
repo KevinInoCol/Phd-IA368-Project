@@ -1,0 +1,165 @@
+{
+  "snr_db": 5.0,
+  "rows": [
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Hola Pepper, ¿me puedes contar algo de esta pieza?",
+      "is_call": true,
+      "transcript": "Hola Pepe, ¿me puedes contar algo de esta pieza?",
+      "called": true,
+      "latency_s": 1.19
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Oye, robot, ven un momento por favor.",
+      "is_call": true,
+      "transcript": "Oye robot, en un momento por favor",
+      "called": true,
+      "latency_s": 1.18
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Disculpa, tengo una pregunta sobre el museo.",
+      "is_call": true,
+      "transcript": "Disculpa, tengo una pregunta sobre el museo.",
+      "called": true,
+      "latency_s": 1.18
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Pepper, ¿dónde está la salida?",
+      "is_call": true,
+      "transcript": "¿Dónde está la salida?",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Perdón, ¿me ayudas?",
+      "is_call": true,
+      "transcript": "Perdón, ¿me ayudas?",
+      "called": true,
+      "latency_s": 1.13
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Ven aquí, Pepper.",
+      "is_call": true,
+      "transcript": "ven aquí",
+      "called": true,
+      "latency_s": 3.7
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Qué bonito está el museo hoy.",
+      "is_call": false,
+      "transcript": "que bonito está el museo hoy",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Mira esa escultura de allá.",
+      "is_call": false,
+      "transcript": "Mira esa escultura de allá",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Vamos a almorzar después de la visita.",
+      "is_call": false,
+      "transcript": "vamos a almorzar después de la visita",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_ES-davefx-medium",
+      "text": "Me gustan mucho los cuadros de esta sala.",
+      "is_call": false,
+      "transcript": "",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Hola Pepper, ¿me puedes contar algo de esta pieza?",
+      "is_call": true,
+      "transcript": "Hola Pepper, ¿me puedes contar algo de esta pieza?",
+      "called": true,
+      "latency_s": 1.14
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Oye, robot, ven un momento por favor.",
+      "is_call": true,
+      "transcript": "Oye, Robot, ven un momento por favor.",
+      "called": true,
+      "latency_s": 1.16
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Disculpa, tengo una pregunta sobre el museo.",
+      "is_call": true,
+      "transcript": "Disculpa, tengo, una pregunta sobre el museo",
+      "called": true,
+      "latency_s": 1.2
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Pepper, ¿dónde está la salida?",
+      "is_call": true,
+      "transcript": "Pepper, ¿Dónde está la salida?",
+      "called": true,
+      "latency_s": 1.22
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Perdón, ¿me ayudas?",
+      "is_call": true,
+      "transcript": "Perdón, ¿me ayudas?",
+      "called": true,
+      "latency_s": 1.15
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Ven aquí, Pepper.",
+      "is_call": true,
+      "transcript": "ven aquí, Pepepepepepepepepepepepepepepepepepepepe",
+      "called": true,
+      "latency_s": 1.28
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Qué bonito está el museo hoy.",
+      "is_call": false,
+      "transcript": "Que bonito esta el museo hoy",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Mira esa escultura de allá.",
+      "is_call": false,
+      "transcript": "Mira esa escultura de allá",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Vamos a almorzar después de la visita.",
+      "is_call": false,
+      "transcript": "Vamos a almorzar después de la visita.",
+      "called": false,
+      "latency_s": null
+    },
+    {
+      "voice": "es_MX-claude-high",
+      "text": "Me gustan mucho los cuadros de esta sala.",
+      "is_call": false,
+      "transcript": "Me gustan mucho los cuadros de esta sala.",
+      "called": false,
+      "latency_s": null
+    }
+  ]
+}
