@@ -237,6 +237,9 @@ td.why { white-space: normal; color: var(--muted); min-width: 260px; }
 footer .wrap { padding-block: 32px 48px; font-size: 0.85rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
 .flags { display: inline-flex; gap: 5px; margin-right: 9px; vertical-align: -2px; }
 .flags svg { width: 21px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+.authors { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin: 4px 0 12px; font-size: 0.98rem; color: var(--ink); }
+.authors b { font: 500 0.72rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.authors span + span::before { content: "·"; color: var(--muted); margin: 0 9px 0 -9px; }
 </style>
 </head>
 <body>
@@ -265,6 +268,7 @@ footer .wrap { padding-block: 32px 48px; font-size: 0.85rem; color: var(--muted)
         <div class="kpi"><b>45</b><span>rayos por scan, en total</span></div>
       </div>
       <div class="meta"><span>ROS 2 Jazzy</span><span>Gazebo Harmonic</span><span>slam_toolbox 2D</span><span>Prof. Eric Rohmer</span></div>
+      <p class="authors"><b>Autores</b><span>Kevin Adier Inofuente Colque</span><span>Ervin Alain Bolivar Huayta</span></p>
     </div>
     <figure class="sector-fig" style="margin:0">
       <svg viewBox="0 0 260 270" role="img" aria-label="Vista superior de Pepper con los tres sectores de 60 grados de sus láseres y los huecos entre ellos">
@@ -1201,7 +1205,7 @@ odom                      <span class="by">árbol real, aparte</span>
 
 <footer>
   <div class="wrap">
-    <span>IA368 · Robótica · Prof. Eric Rohmer · octubre de 2026</span>
+    <span>IA368 · Robótica · Prof. Eric Rohmer · octubre de 2026 · Kevin Adier Inofuente Colque y Ervin Alain Bolivar Huayta</span>
     <span class="mono">pepper_multilaser_slam · pepper_museum · ROS 2 Jazzy · Gazebo Harmonic</span>
   </div>
 </footer>

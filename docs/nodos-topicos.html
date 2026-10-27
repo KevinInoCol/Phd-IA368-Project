@@ -166,6 +166,9 @@ tr:hover td { background: color-mix(in srgb, var(--panel-2) 60%, transparent); }
 footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
 .flags { display: inline-flex; gap: 5px; margin-right: 9px; vertical-align: -2px; }
 .flags svg { width: 21px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+.authors { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin: 4px 0 12px; font-size: 0.98rem; color: var(--ink); }
+.authors b { font: 500 0.72rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.authors span + span::before { content: "·"; color: var(--muted); margin: 0 9px 0 -9px; }
 </style>
 </head>
 <body>
@@ -188,6 +191,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
       <h1>Nodos y <span>tópicos</span></h1>
       <p class="lead">Quién publica qué y quién lo escucha. La demo del museo con la app está medida en vivo con
         <code>ros2 node info</code>; la vista de SLAM y exploración sale del código y de los launch del proyecto.</p>
+      <p class="authors"><b>Autores</b><span>Kevin Adier Inofuente Colque</span><span>Ervin Alain Bolivar Huayta</span></p>
     </div>
     <div class="stats">
       <div class="stat"><b>28</b><span>nodos en las dos vistas</span></div>
@@ -1703,7 +1707,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
 
 <footer>
   <div class="wrap">
-    <span>IA368 · Proyecto de Robótica · Pepper en ROS 2 Jazzy</span>
+    <span>IA368 · Proyecto de Robótica · Pepper en ROS 2 Jazzy · Kevin Adier Inofuente Colque y Ervin Alain Bolivar Huayta</span>
     <span><a href="arquitectura.html">Ver la arquitectura completa</a></span>
   </div>
 </footer>
