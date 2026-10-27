@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura de Pepper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mismo sistema que docs/proyecto.html: oscuro primero, ámbar = lo que aporta este proyecto,
+   colores de los láseres = los de RViz. Violeta = la nube (Gemini). */
+:root {
+  --bg: #0c131c;
+  --panel: #121c27;
+  --panel-2: #182433;
+  --ink: #e6edf3;
+  --muted: #8fa0b0;
+  --line: #273647;
+  --accent: #f2b544;
+  --accent-soft: rgba(242, 181, 68, 0.14);
+  --cloud: #b48cff;
+  --cloud-soft: rgba(180, 140, 255, 0.14);
+  --sim: #4fc3c9;
+  --sim-soft: rgba(79, 195, 201, 0.12);
+  --l-left: #ff6b5e;
+  --l-front: #4cd38a;
+  --l-right: #5b9dff;
+  --base: #7d8fa1;
+  --base-soft: rgba(125, 143, 161, 0.12);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef2f6; --panel: #ffffff; --panel-2: #f4f7fa; --ink: #122030; --muted: #556677;
+    --line: #cfd9e3; --accent: #b7790f; --accent-soft: rgba(183, 121, 15, 0.12);
+    --cloud: #7a4fd6; --cloud-soft: rgba(122, 79, 214, 0.1); --sim: #16858b; --sim-soft: rgba(22, 133, 139, 0.1);
+    --l-left: #d63a2f; --l-front: #1c9354; --l-right: #2c64d4; --base: #6a7b8c; --base-soft: rgba(106, 123, 140, 0.1);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #eef2f6; --panel: #ffffff; --panel-2: #f4f7fa; --ink: #122030; --muted: #556677;
+  --line: #cfd9e3; --accent: #b7790f; --accent-soft: rgba(183, 121, 15, 0.12);
+  --cloud: #7a4fd6; --cloud-soft: rgba(122, 79, 214, 0.1); --sim: #16858b; --sim-soft: rgba(22, 133, 139, 0.1);
+  --l-left: #d63a2f; --l-front: #1c9354; --l-right: #2c64d4; --base: #6a7b8c; --base-soft: rgba(106, 123, 140, 0.1);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; height: auto; }
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+section { border-top: 1px solid var(--line); }
+section > .wrap { padding-block: clamp(48px, 8vw, 96px); display: grid; gap: 32px; }
+section > .wrap > *, .hero > .wrap > * { min-width: 0; }
+
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); line-height: 0.98; font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.7rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; max-width: 64ch; }
+.lead { font-size: 1.15rem; color: var(--muted); }
+.eyebrow {
+  font: 500 0.78rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); display: flex; gap: 12px; align-items: center;
+}
+.eyebrow .n { color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+.head { display: grid; gap: 14px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.cols > * { min-width: 0; }
+.figs { display: grid; gap: 28px; }
+.figs .frame { background: #fff; }
+@media (max-width: 860px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- navegación ---------- */
+nav.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+nav.top .wrap { display: flex; gap: 6px; align-items: center; height: 52px; overflow-x: auto; scrollbar-width: none; }
+nav.top .wrap::-webkit-scrollbar { display: none; }
+nav.top .brand { font: 700 0.95rem var(--display); margin-right: auto; white-space: nowrap; padding-right: 12px; }
+nav.top .brand span { color: var(--accent); }
+nav.top a {
+  color: var(--muted); text-decoration: none; font: 500 0.8rem var(--mono); white-space: nowrap;
+  padding: 6px 10px; border-radius: 6px;
+}
+nav.top a:hover { color: var(--ink); background: var(--panel-2); }
+
+/* ---------- portada ---------- */
+.hero > .wrap { padding-block: clamp(40px, 7vw, 80px) clamp(32px, 5vw, 56px); gap: 28px; }
+.hero h1 span { color: var(--accent); }
+.hero-fig { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+.hero-fig img { width: 100%; }
+.hero-fig figcaption {
+  position: absolute; left: 14px; bottom: 14px; right: 14px;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: 500 0.78rem/1 var(--mono); padding: 7px 10px; border-radius: 999px;
+  background: rgba(12, 19, 28, 0.82); color: #e6edf3; border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 4px; }
+.stat b { font: 800 clamp(1.4rem, 2.6vw, 1.9rem)/1.05 var(--display); color: var(--accent); }
+.stat span { color: var(--muted); font-size: 0.86rem; line-height: 1.35; }
+
+/* ---------- diagrama ---------- */
+.diagram { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
+.diagram-scroll { overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 860px; height: auto; }
+.flowbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.flowbar .lbl { color: var(--muted); font: 500 0.8rem var(--mono); margin-right: 4px; }
+.flowbar button {
+  font: 500 0.85rem var(--sans); color: var(--ink); background: var(--panel); cursor: pointer;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px;
+}
+.flowbar button:hover { border-color: var(--muted); }
+.flowbar button[aria-pressed="true"] { background: var(--accent); color: #1a1205; border-color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 18px; color: var(--muted); font-size: 0.86rem; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; border: 2px solid; }
+
+svg .box rect { stroke-width: 1.5; rx: 10; }
+svg .proj rect { fill: var(--accent-soft); stroke: var(--accent); }
+svg .base rect { fill: var(--base-soft); stroke: var(--base); }
+svg .cloud rect { fill: var(--cloud-soft); stroke: var(--cloud); }
+svg .sim rect.outer { fill: var(--sim-soft); stroke: var(--sim); }
+svg .t { font: 700 15px var(--display); fill: var(--ink); }
+svg .s { font: 400 11px var(--mono); fill: var(--muted); }
+svg .h { font: 500 11px var(--mono); letter-spacing: 0.14em; fill: var(--muted); }
+svg .k { font: 500 10px var(--mono); fill: var(--muted); }
+svg .lane { fill: none; stroke: var(--line); stroke-dasharray: 4 5; }
+svg .ros-bg { fill: var(--panel-2); stroke: var(--line); }
+svg .w { fill: none; stroke: var(--muted); stroke-width: 1.6; }
+svg .w.cl { stroke: var(--cloud); }
+svg .lab { font: 500 10px var(--mono); fill: var(--ink); }
+svg .lab-bg { fill: var(--panel); }
+svg [data-f] { transition: opacity 0.25s; }
+svg.focus [data-f].dim { opacity: 0.12; }
+svg.focus .w.on { stroke: var(--accent); stroke-width: 2.4; stroke-dasharray: 7 6; animation: flow 0.9s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -13; } }
+@media (prefers-reduced-motion: reduce) { svg.focus .w.on { animation: none; } }
+.flownote { min-height: 3.2em; color: var(--muted); max-width: 90ch; }
+.flownote b { color: var(--ink); }
+
+/* ---------- capas ---------- */
+.layers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .layers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .layers { grid-template-columns: minmax(0, 1fr); } }
+.layer { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 12px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.layer .tag { font: 500 0.72rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--c); }
+.layer ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.92rem; display: grid; gap: 4px; }
+.layer ul b { color: var(--ink); font-weight: 600; }
+
+/* ---------- figuras ---------- */
+figure { margin: 0; display: grid; gap: 8px; }
+figure .frame { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+figcaption { color: var(--muted); font-size: 0.86rem; }
+.gal3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.gal3 .frame img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+@media (max-width: 860px) { .gal3 { grid-template-columns: minmax(0, 1fr); } }
+.gal2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; align-items: start; }
+@media (max-width: 860px) { .gal2 { grid-template-columns: minmax(0, 1fr); } }
+.tag-on-img { position: relative; }
+.tag-on-img .chip { position: absolute; left: 10px; top: 10px; }
+
+.facts { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.facts li { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.facts li b { font: 500 0.8rem var(--mono); color: var(--muted); padding-top: 2px; }
+@media (max-width: 520px) { .facts li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 0; }
+
+/* ---------- pipeline ---------- */
+.pipe { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; counter-reset: st; }
+@media (max-width: 860px) { .pipe { grid-auto-flow: row; gap: 10px; } }
+.step { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 16px; margin-right: 22px; display: grid; gap: 6px; align-content: start; }
+.step:last-child { margin-right: 0; }
+.step::before { counter-increment: st; content: counter(st, decimal-leading-zero); font: 500 0.72rem var(--mono); color: var(--accent); }
+.step::after {
+  content: ""; position: absolute; right: -17px; top: 50%; width: 12px; height: 12px;
+  border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); transform: translateY(-50%) rotate(45deg);
+}
+.step:last-child::after { display: none; }
+@media (max-width: 860px) { .step { margin-right: 0; } .step::after { display: none; } }
+.step h3 { font-size: 1rem; }
+.step p { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+.step.cloudy { border-color: var(--cloud); }
+.step.cloudy::before { color: var(--cloud); }
+.step .ms { font: 500 0.75rem var(--mono); color: var(--l-front); }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.kpi b { font: 800 1.6rem/1.1 var(--display); }
+.kpi b small { font-size: 0.95rem; color: var(--muted); font-weight: 500; }
+.kpi span { color: var(--muted); font-size: 0.84rem; line-height: 1.35; }
+.kpi .from { text-decoration: line-through; color: var(--muted); font-weight: 500; font-size: 1.1rem; }
+
+/* ---------- teléfonos ---------- */
+.phones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+@media (max-width: 860px) { .phones { grid-template-columns: repeat(3, 260px); overflow-x: auto; padding-bottom: 8px; } }
+.phone { display: grid; gap: 10px; justify-items: center; }
+.phone .shell {
+  width: 100%; max-width: 300px; padding: 10px; border-radius: 34px;
+  background: linear-gradient(160deg, #2a3646, #121a24); border: 1px solid #3a4858;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+.phone .shell img { border-radius: 24px; width: 100%; }
+.phone figcaption { text-align: center; max-width: 30ch; }
+
+/* ---------- hoja de ruta ---------- */
+.road { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .road { grid-template-columns: minmax(0, 1fr); } }
+.road .col { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 12px; align-content: start; }
+.road .col h3 { display: flex; align-items: center; gap: 8px; }
+.road .col h3 i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.road ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.road li { font-size: 0.92rem; color: var(--muted); padding-left: 14px; border-left: 2px solid var(--c); }
+.road li b { color: var(--ink); font-weight: 600; display: block; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; }
+.stack span { font: 500 0.82rem var(--mono); padding: 7px 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); }
+.stack span.p { border-color: var(--accent); color: var(--accent); }
+.stack span.c { border-color: var(--cloud); color: var(--cloud); }
+footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Secciones">
+  <div class="wrap">
+    <div class="brand">Pepper <span>·</span> arquitectura</div>
+    <a href="#mapa">Mapa</a>
+    <a href="#capas">Capas</a>
+    <a href="#mundo">Museo</a>
+    <a href="#sensores">Sensores</a>
+    <a href="#slam">SLAM</a>
+    <a href="#visitante">Visitante</a>
+    <a href="#app">App</a>
+    <a href="#estado">Estado</a>
+    <a href="nodos-topicos.html">Nodos y tópicos ↗</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>IA368 · Robótica</span><span class="n">Proyecto 2026</span></div>
+      <h1>Pepper en el museo: <span>arquitectura completa</span></h1>
+      <p class="lead">De los láseres y las cámaras de un Pepper simulado hasta una app en el teléfono que conversa
+        con Gemini. Así encajan la simulación, los nodos de ROS 2, el puente HTTP y la nube.</p>
+    </div>
+    <figure class="hero-fig">
+      <img src="@@iso" alt="Vista en perspectiva del Museo ISCAS en Gazebo, con paneles, el bloque central, la escalera y visitantes" width="1600" height="900">
+      <figcaption>
+        <span class="chip"><i></i>Gazebo Harmonic</span>
+        <span class="chip"><i style="background:var(--l-front)"></i>ROS 2 Jazzy</span>
+        <span class="chip"><i style="background:var(--l-right)"></i>Nav2 + slam_toolbox</span>
+        <span class="chip"><i style="background:var(--cloud)"></i>Gemini 3.5 Flash</span>
+      </figcaption>
+    </figure>
+    <div class="stats">
+      <div class="stat"><b>0.59 → 0.13 m</b><span>error de trayectoria del SLAM con 3 láseres (oficina)</span></div>
+      <div class="stat"><b>1.0 → 0.1 m²</b><span>estelas de personas en el mapa con el filtro dinámico</span></div>
+      <div class="stat"><b>10 / 10</b><span>llamadas atendidas: Pepper llega a ~1 m del visitante</span></div>
+      <div class="stat"><b>97.7 %</b><span>exactitud del clasificador de visitantes (yolo11n-cls)</span></div>
+      <div class="stat"><b>~1 s</b><span>de la voz del teléfono al texto, con Whisper en la GPU</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="mapa">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>01</span><span class="n">Mapa general</span></div>
+      <h2>Cuatro capas, un solo robot</h2>
+      <p class="lead">El usuario habla con Pepper desde el teléfono; el puente traduce HTTP a tópicos de ROS 2;
+        los nodos perciben, mapean y navegan; Gazebo simula el robot y el museo. Elige un flujo para seguirlo.</p>
+    </div>
+    <div class="flowbar" role="group" aria-label="Resaltar un flujo">
+      <span class="lbl">Ver flujo:</span>
+      <button type="button" data-flow="" aria-pressed="true">Todo</button>
+      <button type="button" data-flow="slam" aria-pressed="false">① SLAM y mapa</button>
+      <button type="button" data-flow="visit" aria-pressed="false">② Un visitante llama</button>
+      <button type="button" data-flow="app" aria-pressed="false">③ App: “¿Qué ves?”</button>
+    </div>
+    <div class="diagram">
+      <div class="diagram-scroll">
+      <svg id="arch" viewBox="0 0 1200 660" role="img" aria-label="Diagrama de arquitectura: app, puente, Gemini, nodos de ROS 2 y simulación en Gazebo, con los tópicos que los conectan">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/>
+          </marker>
+          <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--cloud)"/>
+          </marker>
+        </defs>
+
+        <!-- carriles -->
+        <text class="h" x="115" y="36" text-anchor="middle">TELÉFONO</text>
+        <text class="h" x="385" y="36" text-anchor="middle">PUENTE · NUBE</text>
+        <text class="h" x="737" y="36" text-anchor="middle">ROS 2 JAZZY</text>
+        <text class="h" x="1080" y="36" text-anchor="middle">SIMULACIÓN</text>
+        <rect class="ros-bg" x="528" y="52" width="420" height="540" rx="14"/>
+
+        <!-- cables (debajo de las cajas) -->
+        <g data-f="app"><path class="w" d="M210,178 H266" marker-end="url(#ah)"/><path class="w" d="M270,212 H214" marker-end="url(#ah)"/>
+          <text class="k" x="240" y="170" text-anchor="middle">HTTP</text><text class="k" x="240" y="232" text-anchor="middle">MJPEG</text></g>
+        <g data-f="app"><path class="w cl" d="M365,280 V326" marker-end="url(#ahc)"/><path class="w cl" d="M405,330 V284" marker-end="url(#ahc)"/>
+          <text class="k" x="357" y="308" text-anchor="end">imagen + texto</text><text class="k" x="413" y="308">herramientas</text></g>
+        <g data-f="app"><path class="w" d="M500,128 H541" marker-end="url(#ah)"/><path class="w" d="M545,146 H504" marker-end="url(#ah)"/>
+          <text class="k" x="522" y="122" text-anchor="middle">voz</text><text class="k" x="522" y="162" text-anchor="middle">texto</text></g>
+        <g data-f="app"><path class="w" d="M845,80 V62 H450 V106" marker-end="url(#ah)"/>
+          <rect class="lab-bg" x="586" y="54" width="112" height="16"/><text class="lab" x="642" y="66" text-anchor="middle">/yolo/dbg_image</text></g>
+        <g data-f="app"><path class="w" d="M980,125 H934" marker-end="url(#ah)"/></g>
+        <g data-f="slam"><path class="w" d="M980,196 H630 V216" marker-end="url(#ah)"/>
+          <rect class="lab-bg" x="718" y="188" width="196" height="16"/><text class="lab" x="816" y="200" text-anchor="middle">/pepper/scan_left · front · right</text></g>
+        <g data-f="slam"><path class="w" d="M715,265 H756" marker-end="url(#ah)"/><text class="k" x="736" y="257" text-anchor="middle">fused</text></g>
+        <g data-f="slam visit"><path class="w" d="M845,310 V356" marker-end="url(#ah)"/><text class="k" x="853" y="337">/map · TF</text></g>
+        <g data-f="visit"><path class="w" d="M545,158 H536 V405 H541" marker-end="url(#ah)"/>
+          <text class="k" x="531" y="300" text-anchor="middle" transform="rotate(-90 531 300)">/pepper/visitor_call</text></g>
+        <g data-f="visit"><path class="w" d="M980,482 H630 V464" marker-end="url(#ah)"/>
+          <rect class="lab-bg" x="632" y="474" width="148" height="16"/><text class="lab" x="706" y="486" text-anchor="middle">cámara frontal + profundidad</text></g>
+        <g data-f="visit"><path class="w" d="M715,410 H756" marker-end="url(#ah)"/><text class="k" x="736" y="402" text-anchor="middle">goal</text></g>
+        <g data-f="slam visit"><path class="w" d="M930,410 H976" marker-end="url(#ah)"/><text class="k" x="955" y="402" text-anchor="middle">cmd_vel</text></g>
+        <g data-f="slam"><path class="w" d="M845,502 V466" marker-end="url(#ah)"/><text class="k" x="853" y="498">objetivos</text></g>
+        <g data-f="app"><path class="w" d="M500,250 H514 V622 H1080 V574" marker-end="url(#ah)"/>
+          <rect class="lab-bg" x="626" y="614" width="352" height="16"/><text class="lab" x="802" y="626" text-anchor="middle">cámaras · odometría  ⇄  /pepper/cmd_vel · cabeza · /pepper/say</text></g>
+
+        <!-- teléfono -->
+        <g class="box proj" data-f="app">
+          <rect x="20" y="110" width="190" height="170"/>
+          <text class="t" x="38" y="140">📱 App Flutter</text>
+          <text class="s" x="38" y="166">cámara en vivo + YOLO</text>
+          <text class="s" x="38" y="184">teleoperación · cabeza</text>
+          <text class="s" x="38" y="202">chat con Pepper</text>
+          <text class="s" x="38" y="220">micrófono → voz</text>
+          <text class="s" x="38" y="250">Android · escritorio</text>
+          <text class="s" x="38" y="266">LAN o ngrok (+clave)</text>
+        </g>
+        <!-- puente -->
+        <g class="box proj" data-f="app">
+          <rect x="270" y="106" width="230" height="174"/>
+          <text class="t" x="288" y="136">pepper_bridge.py</text>
+          <text class="s" x="288" y="160">nodo ROS 2 + HTTP :8080</text>
+          <text class="s" x="288" y="180">/stream/front · /stream/yolo</text>
+          <text class="s" x="288" y="198">/api/chat · /api/voice</text>
+          <text class="s" x="288" y="216">/api/cmd_vel · /api/head</text>
+          <text class="s" x="288" y="246">respaldo sin nube:</text>
+          <text class="s" x="288" y="262">intérprete de órdenes</text>
+        </g>
+        <!-- nube -->
+        <g class="box cloud" data-f="app">
+          <rect x="270" y="330" width="230" height="150"/>
+          <text class="t" x="288" y="360">☁ Gemini 3.5 Flash</text>
+          <text class="s" x="288" y="384">Vertex AI · global</text>
+          <text class="s" x="288" y="404">imagen de la cámara</text>
+          <text class="s" x="288" y="422">+ contexto del museo</text>
+          <text class="s" x="288" y="440">move_robot · move_head</text>
+          <text class="s" x="288" y="458">stop · get_robot_pose</text>
+        </g>
+        <!-- ROS -->
+        <g class="box proj" data-f="app visit">
+          <rect x="545" y="80" width="170" height="90"/>
+          <text class="t" x="561" y="108">voice_listener</text>
+          <text class="s" x="561" y="130">Whisper large-v3-turbo</text>
+          <text class="s" x="561" y="148">GPU · español</text>
+        </g>
+        <g class="box base" data-f="app">
+          <rect x="760" y="80" width="170" height="90"/>
+          <text class="t" x="776" y="108">yolo_ros</text>
+          <text class="s" x="776" y="130">YOLO11m · personas</text>
+          <text class="s" x="776" y="148">y objetos (cajas)</text>
+        </g>
+        <g class="box proj" data-f="slam">
+          <rect x="545" y="220" width="170" height="90"/>
+          <text class="t" x="561" y="248">scan_fusion</text>
+          <text class="s" x="561" y="270">3 láseres → 360°</text>
+          <text class="s" x="561" y="288">acumula 4 · filtro din.</text>
+        </g>
+        <g class="box base" data-f="slam visit">
+          <rect x="760" y="220" width="170" height="90"/>
+          <text class="t" x="776" y="248">slam_toolbox</text>
+          <text class="s" x="776" y="270">o AMCL sobre el</text>
+          <text class="s" x="776" y="288">mapa guardado</text>
+        </g>
+        <g class="box proj" data-f="visit">
+          <rect x="545" y="360" width="170" height="104"/>
+          <text class="t" x="561" y="388">visitor_approach</text>
+          <text class="s" x="561" y="410">YOLO11m + clasificador</text>
+          <text class="s" x="561" y="428">profundidad → posición</text>
+          <text class="s" x="561" y="446">va a 1 m y la mira</text>
+        </g>
+        <g class="box base" data-f="slam visit">
+          <rect x="760" y="360" width="170" height="104"/>
+          <text class="t" x="776" y="388">Nav2</text>
+          <text class="s" x="776" y="410">planner · controller</text>
+          <text class="s" x="776" y="428">costmaps · recoveries</text>
+          <text class="s" x="776" y="446">collision_monitor</text>
+        </g>
+        <g class="box proj" data-f="slam">
+          <rect x="760" y="502" width="170" height="70"/>
+          <text class="t" x="776" y="530">frontier_explorer</text>
+          <text class="s" x="776" y="552">exploración (en curso)</text>
+        </g>
+        <!-- simulación -->
+        <g class="box sim" data-f="slam visit app">
+          <rect class="outer" x="980" y="80" width="200" height="492" rx="12"/>
+          <text class="t" x="996" y="110">Gazebo Harmonic</text>
+          <text class="s" x="996" y="130">Pepper · port V9 (base)</text>
+          <text class="h" x="996" y="162">SENSORES</text>
+          <circle cx="1001" cy="180" r="5" fill="var(--l-left)"/><text class="s" x="1013" y="184">láser izquierdo</text>
+          <circle cx="1001" cy="200" r="5" fill="var(--l-front)"/><text class="s" x="1013" y="204">láser frontal</text>
+          <circle cx="1001" cy="220" r="5" fill="var(--l-right)"/><text class="s" x="1013" y="224">láser derecho</text>
+          <circle cx="1001" cy="240" r="5" fill="var(--sim)"/><text class="s" x="1013" y="244">cámara frontal 640×480</text>
+          <circle cx="1001" cy="260" r="5" fill="var(--sim)"/><text class="s" x="1013" y="264">profundidad · inferior</text>
+          <circle cx="1001" cy="280" r="5" fill="var(--sim)"/><text class="s" x="1013" y="284">sonares · odometría</text>
+          <text class="h" x="996" y="318">ACTUADORES</text>
+          <text class="s" x="996" y="338">base omnidireccional</text>
+          <text class="s" x="996" y="356">cabeza HeadYaw/Pitch</text>
+          <text class="h" x="996" y="390">MUNDOS</text>
+          <text class="s" x="996" y="410">Museo ISCAS · 19×22 m</text>
+          <text class="s" x="996" y="428">4 a 26 personas</text>
+          <text class="s" x="996" y="446">16 actores caminando</text>
+          <text class="s" x="996" y="464">oficina (Fase 1)</text>
+        </g>
+      </svg>
+      </div>
+    </div>
+    <p class="flownote" id="flownote" aria-live="polite"><b>Todo el sistema.</b> Pulsa un flujo para resaltar los nodos y los tópicos que intervienen.</p>
+    <div class="legend">
+      <span><i style="border-color:var(--accent);background:var(--accent-soft)"></i>hecho en este proyecto</span>
+      <span><i style="border-color:var(--base);background:var(--base-soft)"></i>base (port V9) y paquetes de ROS 2</span>
+      <span><i style="border-color:var(--cloud);background:var(--cloud-soft)"></i>nube</span>
+      <span><i style="border-color:var(--sim);background:var(--sim-soft)"></i>simulación</span>
+    </div>
+  </div>
+</section>
+
+<section id="capas">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>02</span><span class="n">Las capas</span></div>
+      <h2>Qué hace cada parte</h2>
+      <p class="lead">La base (el port de Pepper a ROS 2 Jazzy) no se copia ni se modifica: el proyecto la incluye
+        con sus launch y añade encima tres paquetes de ROS 2 y la app.</p>
+    </div>
+    <div class="layers">
+      <div class="layer" style="--c:var(--sim)">
+        <span class="tag">Simulación</span>
+        <h3>Gazebo Harmonic</h3>
+        <ul>
+          <li><b>Pepper</b> del port V9: URDF, sensores y controladores</li>
+          <li><b>pepper_museum</b>: el Museo ISCAS portado de Gazebo Classic, con personas y actores que caminan</li>
+          <li>oficina de la base para la Fase 1</li>
+        </ul>
+      </div>
+      <div class="layer" style="--c:var(--accent)">
+        <span class="tag">ROS 2 · proyecto</span>
+        <h3>Tres paquetes nuevos</h3>
+        <ul>
+          <li><b>pepper_multilaser_slam</b>: fusión de láseres, SLAM ajustado, evaluación y exploración</li>
+          <li><b>pepper_museum</b>: mundos, mapa del museo para Nav2</li>
+          <li><b>pepper_visitors</b>: voz, clasificador y acercamiento al visitante</li>
+        </ul>
+      </div>
+      <div class="layer" style="--c:var(--base)">
+        <span class="tag">ROS 2 · reutilizado</span>
+        <h3>Piezas estándar</h3>
+        <ul>
+          <li><b>slam_toolbox</b> (Karto) para el mapa</li>
+          <li><b>Nav2</b> + <b>AMCL</b> para navegar y localizarse</li>
+          <li><b>yolo_ros</b> (Ultralytics) para detectar</li>
+          <li>ros_gz_bridge, ros2_control</li>
+        </ul>
+      </div>
+      <div class="layer" style="--c:var(--cloud)">
+        <span class="tag">Teléfono · nube</span>
+        <h3>pepper_app</h3>
+        <ul>
+          <li><b>App Flutter</b>: cámara, YOLO, mando, chat y micrófono</li>
+          <li><b>pepper_bridge</b>: HTTP ⇄ tópicos, sin rosbridge</li>
+          <li><b>Gemini 3.5 Flash</b> en Vertex AI: ve la cámara y usa herramientas; las credenciales nunca van en el APK</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mundo">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>03</span><span class="n">El entorno</span></div>
+      <h2>El Museo ISCAS, un museo de tecnología del software</h2>
+      <p class="lead">Una planta de unos 19 × 22 m: un gran pasillo rodea un bloque central de exposición, con salas
+        laterales, una estructura circular y una escalera. Los paneles hablan de sistemas operativos, historia del
+        software, procesamiento de texto en chino o la industria del software.</p>
+    </div>
+    <div class="gal2">
+      <figure>
+        <div class="frame tag-on-img"><img src="@@top" alt="Vista cenital del museo con los visitantes y Pepper" width="1000" height="1000" loading="lazy"><span class="chip"><i></i>vista cenital</span></div>
+        <figcaption>Vista cenital renderizada en Gazebo: bloque central, estructura circular a la izquierda, escalera a la derecha y los 4 visitantes del mundo de prueba.</figcaption>
+      </figure>
+      <div style="display:grid;gap:14px">
+        <figure>
+          <div class="frame tag-on-img"><img src="@@tp" alt="Pepper junto a una visitante de chaqueta marrón frente a un panel sobre sistemas operativos" width="1400" height="788" loading="lazy"><span class="chip"><i></i>Pepper atiende a una visitante</span></div>
+          <figcaption>Tras la llamada, Pepper llegó a ~1 m de la visitante y la sigue mirando; al lado, el panel “操作系统与中文平台” (sistemas operativos y plataforma china).</figcaption>
+        </figure>
+        <ul class="facts">
+          <li><b>museum</b><span>museo vacío: con él se construyó el mapa de referencia</span></li>
+          <li><b>…_with_people</b><span>23 personas estáticas</span></li>
+          <li><b>…_people_moving</b><span>10 estáticas + 16 actores que caminan en bucle (Fase 2)</span></li>
+          <li><b>…_test_people</b><span>4 visitantes en las posiciones de la tesis (Fase 3)</span></li>
+          <li><b>mapa guardado</b><span><code>museum_hokuyo.yaml</code>, que usan Nav2 y AMCL</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sensores">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>04</span><span class="n">Percepción</span></div>
+      <h2>Lo que ve Pepper</h2>
+      <p class="lead">Tres láseres bajos con huecos entre ellos, una cámara frontal, una de profundidad y una inferior.
+        Las tres imágenes son del mismo instante de la simulación.</p>
+    </div>
+    <div class="gal3">
+      <figure>
+        <div class="frame tag-on-img"><img src="@@yolo" alt="Cámara frontal con la caja de YOLO: person 0.96" width="640" height="480" loading="lazy"><span class="chip"><i style="background:var(--l-front)"></i>YOLO · person 0.96</span></div>
+        <figcaption>Cámara frontal con la detección de <code>yolo_ros</code>: es la vista “YOLO” de la app.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame tag-on-img"><img src="@@depth" alt="Imagen de profundidad en falso color: la visitante en naranja, la pared en azul" width="640" height="480" loading="lazy"><span class="chip"><i style="background:var(--l-left)"></i>profundidad</span></div>
+        <figcaption>Cámara de profundidad (cerca = rojo, lejos = azul): da la posición de la persona en el mapa.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame tag-on-img"><img src="@@cls" alt="Recortes de visitantes con la clase predicha por el clasificador" width="512" height="512" loading="lazy"><span class="chip"><i style="background:var(--l-right)"></i>clasificador</span></div>
+        <figcaption><code>yolo11n-cls</code> ajustado con un dataset sintético del museo: distingue a los 3 visitantes estáticos de los actores.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="slam">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>05</span><span class="n">Flujo ① · Fases 1 y 2</span></div>
+      <h2>De tres láseres dispersos a un mapa limpio</h2>
+      <p class="lead">Los láseres de Pepper son cortos y dejan huecos. La fusión acumula varios barridos, slam_toolbox
+        se ajusta para sensores dispersos y un filtro quita a la gente que camina.</p>
+    </div>
+    <div class="pipe">
+      <div class="step"><h3>3 láseres</h3><p><span class="dot" style="background:var(--l-left)"></span><span class="dot" style="background:var(--l-front)"></span><span class="dot" style="background:var(--l-right)"></span>izquierdo, frontal y derecho, con huecos entre ellos</p></div>
+      <div class="step"><h3>scan_fusion</h3><p>un barrido de 360° a 1°/rayo en <code>base_footprint</code>, acumulando 4 barridos</p></div>
+      <div class="step"><h3>Filtro dinámico</h3><p>un impacto en una celda que se vio libre hace &lt; 5 s es alguien que pasa: se descarta</p></div>
+      <div class="step"><h3>slam_toolbox</h3><p>configuración de la base + ajustes para sensores dispersos</p></div>
+      <div class="step"><h3>/map → Nav2</h3><p>mapa para navegar, o AMCL sobre el mapa guardado del museo</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b><span class="from">0.59</span> 0.13 <small>m</small></b><span>ATE en la oficina: versión base vs. acumulación + ajuste</span></div>
+      <div class="kpi"><b>0.78 → 0.11 <small>m</small></b><span>con odometría ruidosa: la odometría sola vs. el SLAM</span></div>
+      <div class="kpi"><b>92 %</b><span>completitud del mapa frente al del hokuyo (720 rayos)</span></div>
+      <div class="kpi"><b><span class="from">1.0</span> 0.1 <small>m²</small></b><span>estelas de los 16 actores sin y con el filtro</span></div>
+    </div>
+    <div class="figs">
+      <figure>
+        <div class="frame"><img src="@@slam" alt="Tres mapas de la oficina: hokuyo de referencia, v8 ruidoso y acc4nofreeT limpio" width="1400" height="674" loading="lazy"></div>
+        <figcaption>Oficina: referencia con el hokuyo, la versión base (v8) y la recomendada (acumula 4 + slam_toolbox ajustado).</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="@@trails" alt="Mapas del museo con las estelas de los actores marcadas en rojo; con el filtro casi desaparecen" width="1600" height="636" loading="lazy"></div>
+        <figcaption>Museo con gente caminando: en rojo, celdas que dejan los actores. Con el filtro dinámico (derecha) casi desaparecen.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="visitante">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>06</span><span class="n">Flujo ② · Fase 3</span></div>
+      <h2>“¡Hola, Pepper!”: un visitante llama</h2>
+      <p class="lead">Una palabra de llamada pone en marcha la búsqueda: Pepper mira alrededor, elige a la persona
+        estática más cercana, se acerca con Nav2 y la sigue mirando.</p>
+    </div>
+    <div class="pipe">
+      <div class="step"><h3>Voz</h3><p><code>voice_listener</code> con Whisper en la GPU; “pepper”, “hola”, “oye”… → <code>/pepper/visitor_call</code></p></div>
+      <div class="step"><h3>Buscar</h3><p>barrido de la cabeza y, si hace falta, giro de 180° de la base</p></div>
+      <div class="step"><h3>Reconocer</h3><p>YOLO11m encuentra personas; el clasificador separa visitantes de actores</p></div>
+      <div class="step"><h3>Ubicar</h3><p>la nube de profundidad da su posición (x, y) en el mapa</p></div>
+      <div class="step"><h3>Acercarse y mirar</h3><p>Nav2 lleva a Pepper a ~1 m; la cabeza la sigue a 10 Hz</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>10 / 10</b><span>llamadas: llegó a ~1 m</span></div>
+      <div class="kpi"><b>9 / 10</b><span>eligió a la más cercana (la otra: empate de 3 cm)</span></div>
+      <div class="kpi"><b>0.16 <small>m</small></b><span>error medio de posición con profundidad</span></div>
+      <div class="kpi"><b>1.04 <small>m</small></b><span>distancia final media</span></div>
+      <div class="kpi"><b>35 <small>s</small></b><span>por llamada</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="app">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>07</span><span class="n">Flujo ③ · App</span></div>
+      <h2>“¿Qué ves?”: hablar con Pepper desde el teléfono</h2>
+      <p class="lead">El teléfono es el micrófono de Pepper. La frase se transcribe en el PC y Gemini responde mirando
+        la imagen real de la cámara: sólo dice que ve a alguien si de verdad está ahí.</p>
+    </div>
+    <div class="phones">
+      <figure class="phone">
+        <div class="shell"><img src="@@app_cam" alt="App: cámara frontal en vivo, pose de Pepper y mando de movimiento" width="376" height="802" loading="lazy"></div>
+        <figcaption>Cámara en vivo, pose y lo último que dijo Pepper, con el mando y la parada de emergencia.</figcaption>
+      </figure>
+      <figure class="phone">
+        <div class="shell"><img src="@@app_yolo" alt="App: cámara frontal con la caja de YOLO sobre la visitante" width="376" height="802" loading="lazy"></div>
+        <figcaption>La misma cámara con las cajas de YOLO.</figcaption>
+      </figure>
+      <figure class="phone">
+        <div class="shell"><img src="@@app_chat" alt="App: chat donde Pepper describe a la visitante que ve" width="376" height="802" loading="lazy"></div>
+        <figcaption>Chat real: “¿Qué ves?” y “¿Ves a la persona frente a ti?”.</figcaption>
+      </figure>
+    </div>
+    <div class="pipe">
+      <div class="step"><h3>Grabar</h3><p>la app graba WAV 16 kHz mono y lo manda a <code>/api/voice</code></p></div>
+      <div class="step"><h3>Transcribir</h3><p>el bridge publica <code>/pepper/voice/audio</code>; Whisper devuelve el texto</p><span class="ms">0.7–1.2 s</span></div>
+      <div class="step cloudy"><h3>Pensar</h3><p>Gemini recibe la frase, la imagen de la cámara y la descripción del museo</p></div>
+      <div class="step cloudy"><h3>Actuar</h3><p>llama herramientas (girar, mover la cabeza, pose); tras moverse recibe una imagen nueva</p></div>
+      <div class="step"><h3>Responder</h3><p>la respuesta sale en el chat y en <code>/pepper/say</code></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="estado">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>08</span><span class="n">Estado</span></div>
+      <h2>Dónde estamos y qué viene</h2>
+    </div>
+    <div class="road">
+      <div class="col" style="--c:var(--l-front)">
+        <h3><i></i>Hecho</h3>
+        <ul>
+          <li><b>Fase 1 · SLAM con 3 láseres</b>fusión + slam_toolbox ajustado, probado con odometría ruidosa</li>
+          <li><b>Fase 2 · museo dinámico</b>29 corridas de SLAM, estelas medidas y filtro dinámico</li>
+          <li><b>Fase 3 · el visitante llama</b>voz, clasificador, acercamiento y mirada</li>
+          <li><b>App</b>cámara, YOLO, mando, chat con visión y voz desde el teléfono</li>
+        </ul>
+      </div>
+      <div class="col" style="--c:var(--accent)">
+        <h3><i></i>En curso</h3>
+        <ul>
+          <li><b>Exploración por fronteras</b>Pepper mapea solo con Nav2; falta depurar el arranque automático y hacer la batería de pruebas</li>
+        </ul>
+      </div>
+      <div class="col" style="--c:var(--cloud)">
+        <h3><i></i>Siguiente</h3>
+        <ul>
+          <li><b>approach_person</b>“acércate a esa persona” desde la app, reutilizando visitor_approach</li>
+          <li><b>go_to_place</b>“ve a la otra sala”: lugares con nombre en el mapa y Nav2</li>
+          <li><b>Revisión y commit de la app</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack">
+      <span>Ubuntu 24.04</span><span>ROS 2 Jazzy</span><span>Gazebo Harmonic</span><span>ros2_control</span>
+      <span>slam_toolbox</span><span>Nav2 · AMCL</span><span>yolo_ros · YOLO11</span><span>faster-whisper</span>
+      <span class="p">scan_fusion</span><span class="p">visitor_approach</span><span class="p">frontier_explorer</span>
+      <span class="p">Flutter · Dart</span><span class="c">Gemini 3.5 Flash · Vertex AI</span><span>ngrok</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>IA368 · Proyecto de Robótica · Pepper en ROS 2 Jazzy</span>
+    <span><a href="nodos-topicos.html" style="color:var(--accent)">Ver nodos y tópicos</a> · Imágenes: capturas de la simulación y de la app, 2026-10-27</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const svg = document.getElementById('arch');
+  const note = document.getElementById('flownote');
+  const notes = {
+    '': '<b>Todo el sistema.</b> Pulsa un flujo para resaltar los nodos y los tópicos que intervienen.',
+    slam: '<b>① SLAM y mapa.</b> Gazebo publica los 3 láseres → scan_fusion los une en 360° → slam_toolbox construye /map → Nav2 lo usa (y frontier_explorer elige a dónde explorar).',
+    visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m.',
+    app: '<b>③ App: “¿Qué ves?”.</b> El teléfono manda la voz al bridge → voice_listener la transcribe → Gemini recibe el texto y la imagen de la cámara, y responde o mueve a Pepper por el bridge.'
+  };
+  const parts = svg.querySelectorAll('[data-f]');
+  document.querySelectorAll('.flowbar button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.flow;
+      document.querySelectorAll('.flowbar button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+      svg.classList.toggle('focus', !!f);
+      parts.forEach(el => {
+        const on = !f || el.dataset.f.split(' ').includes(f);
+        el.classList.toggle('dim', !on);
+        el.querySelectorAll('.w').forEach(w => w.classList.toggle('on', !!f && on));
+      });
+      note.innerHTML = notes[f];
+    });
+  });
+})();
+</script>
+</body>
+</html>

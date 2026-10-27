@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nodos y tópicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mismo sistema que proyecto.html y arquitectura.html: ámbar = este proyecto, turquesa = base de
+   Pepper (port V9), gris = paquetes estándar de ROS 2, violeta = acciones. */
+:root {
+  --bg: #0c131c; --panel: #121c27; --panel-2: #182433; --ink: #e6edf3; --muted: #8fa0b0; --line: #273647;
+  --accent: #f2b544; --accent-soft: rgba(242, 181, 68, 0.14);
+  --sim: #4fc3c9; --cloud: #b48cff; --base: #7d8fa1; --ok: #4cd38a;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef2f6; --panel: #ffffff; --panel-2: #f4f7fa; --ink: #122030; --muted: #556677; --line: #cfd9e3;
+    --accent: #b7790f; --accent-soft: rgba(183, 121, 15, 0.12); --sim: #16858b; --cloud: #7a4fd6; --base: #6a7b8c; --ok: #1c9354;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #eef2f6; --panel: #ffffff; --panel-2: #f4f7fa; --ink: #122030; --muted: #556677; --line: #cfd9e3;
+  --accent: #b7790f; --accent-soft: rgba(183, 121, 15, 0.12); --sim: #16858b; --cloud: #7a4fd6; --base: #6a7b8c; --ok: #1c9354;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+section { border-top: 1px solid var(--line); }
+section > .wrap { padding-block: clamp(44px, 7vw, 88px); display: grid; gap: 28px; }
+section > .wrap > *, header > .wrap > * { min-width: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.98; font-weight: 800; letter-spacing: -0.02em; }
+h1 span { color: var(--accent); }
+h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); line-height: 1.08; font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; max-width: 70ch; }
+.lead { font-size: 1.12rem; color: var(--muted); }
+.eyebrow { font: 500 0.78rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); display: flex; gap: 12px; }
+.eyebrow .n { color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+.head { display: grid; gap: 14px; }
+a { color: var(--accent); }
+
+nav.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+nav.top .wrap { display: flex; gap: 6px; align-items: center; height: 52px; overflow-x: auto; scrollbar-width: none; }
+nav.top .wrap::-webkit-scrollbar { display: none; }
+nav.top .brand { font: 700 0.95rem var(--display); margin-right: auto; white-space: nowrap; padding-right: 12px; }
+nav.top .brand span { color: var(--accent); }
+nav.top a { color: var(--muted); text-decoration: none; font: 500 0.8rem var(--mono); white-space: nowrap; padding: 6px 10px; border-radius: 6px; }
+nav.top a:hover { color: var(--ink); background: var(--panel-2); }
+
+header > .wrap { padding-block: clamp(40px, 7vw, 76px) clamp(28px, 4vw, 44px); display: grid; gap: 24px; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 2px; }
+.stat b { font: 800 clamp(1.6rem, 3vw, 2.2rem)/1.05 var(--display); color: var(--accent); }
+.stat span { color: var(--muted); font-size: 0.86rem; line-height: 1.35; }
+
+/* ---------- barra del grafo ---------- */
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tabs { display: inline-flex; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; }
+.tabs button { font: 500 0.88rem var(--sans); color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--accent); color: #1a1205; }
+.tool { display: inline-flex; gap: 6px; align-items: center; margin-left: auto; }
+.tool input { font: 400 0.9rem var(--mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; width: 230px; max-width: 46vw; }
+.tool button { font: 600 1rem var(--mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; }
+.tool button.wide { width: auto; padding: 0 12px; font-size: 0.8rem; }
+.tool button:hover, .tabs button:hover { border-color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font-size: 0.85rem; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 22px; height: 14px; border-radius: 4px; border: 2px solid; display: inline-block; }
+.legend i.sq { border-radius: 0; }
+.legend i.ln { border-width: 0; border-top: 2px dashed var(--muted); height: 0; border-radius: 0; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
+@media (max-width: 1000px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+.canvas { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; height: min(72vh, 640px); overflow: auto; cursor: grab; touch-action: pan-x pan-y; }
+.canvas.drag { cursor: grabbing; }
+.canvas .view { display: none; padding: 10px; }
+.canvas .view.on { display: block; }
+.hint { font: 500 0.75rem var(--mono); color: var(--muted); margin-top: 8px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; align-content: start; min-height: 220px; }
+.panel .k { font: 500 0.72rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.panel h3 { font: 600 1.02rem var(--mono); overflow-wrap: anywhere; }
+.panel p { color: var(--muted); font-size: 0.92rem; }
+.panel .row { display: grid; gap: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 0.78rem var(--mono); padding: 4px 8px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--line); color: var(--ink); cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip.proj { border-color: var(--accent); color: var(--accent); }
+.chip.base { border-color: var(--sim); color: var(--sim); }
+.chip.action { border-color: var(--cloud); color: var(--cloud); }
+.badge { display: inline-block; font: 600 0.7rem var(--mono); padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; }
+.badge.proj { color: var(--accent); } .badge.base { color: var(--sim); } .badge.std { color: var(--base); } .badge.action { color: var(--cloud); } .badge.topic { color: var(--ok); }
+
+/* ---------- SVG de Graphviz ---------- */
+svg.graph { display: block; height: auto; }
+svg.graph text { font-family: var(--mono); fill: var(--ink); }
+svg.graph .node path, svg.graph .node polygon { fill: var(--panel-2); stroke: var(--base); stroke-width: 1.2; }
+svg.graph .node.proj path, svg.graph .node.proj polygon { fill: color-mix(in srgb, var(--accent) 18%, var(--panel)); stroke: var(--accent); stroke-width: 1.6; }
+svg.graph .node.base path, svg.graph .node.base polygon { fill: color-mix(in srgb, var(--sim) 14%, var(--panel)); stroke: var(--sim); stroke-width: 1.4; }
+svg.graph .node.std path, svg.graph .node.std polygon { fill: var(--panel-2); stroke: var(--base); stroke-width: 1.4; }
+svg.graph .node.topic polygon { fill: var(--panel); stroke: var(--line); stroke-width: 1.2; }
+svg.graph .node.topic text { fill: var(--muted); }
+svg.graph .node.action polygon { fill: color-mix(in srgb, var(--cloud) 12%, var(--panel)); stroke: var(--cloud); stroke-dasharray: 4 3; }
+svg.graph .node.action text { fill: var(--cloud); }
+svg.graph .node { cursor: pointer; transition: opacity 0.2s; }
+svg.graph .edge { transition: opacity 0.2s; }
+svg.graph .edge path { stroke: var(--muted); stroke-opacity: 0.55; }
+svg.graph .edge polygon { fill: var(--muted); stroke: var(--muted); fill-opacity: 0.7; stroke-opacity: 0.7; }
+svg.graph .cluster path, svg.graph .cluster polygon { fill: none; stroke: var(--line); stroke-width: 1.4; }
+svg.graph .cluster text { fill: var(--muted); font-weight: 600; letter-spacing: 0.1em; }
+svg.graph.sel .node:not(.hl), svg.graph.sel .edge:not(.hl) { opacity: 0.1; }
+svg.graph .edge.hl path { stroke: var(--accent); stroke-opacity: 1; stroke-width: 2.2; }
+svg.graph .edge.hl polygon { fill: var(--accent); stroke: var(--accent); fill-opacity: 1; stroke-opacity: 1; }
+svg.graph .node.cur path, svg.graph .node.cur polygon { stroke: var(--accent); stroke-width: 3; }
+svg.graph .node:hover path, svg.graph .node:hover polygon { stroke-width: 2.4; }
+
+/* ---------- notas ---------- */
+.notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .notes { grid-template-columns: minmax(0, 1fr); } }
+.note { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 12px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+.note p { color: var(--muted); font-size: 0.93rem; }
+.note .flow { font: 500 0.8rem/1.7 var(--mono); color: var(--ink); }
+.note .flow b { color: var(--accent); font-weight: 600; }
+
+/* ---------- TF ---------- */
+.tfbox { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; overflow-x: auto; }
+.tfbox svg { display: block; width: 100%; max-width: 1100px; min-width: 760px; height: auto; margin: 0 auto; }
+.tfbox svg text { font-family: var(--mono); fill: var(--ink); }
+.tfbox .node path, .tfbox .node polygon { fill: var(--panel-2); stroke: var(--base); }
+.tfbox .node.tfk path, .tfbox .node.tfk polygon { fill: color-mix(in srgb, var(--accent) 18%, var(--panel)); stroke: var(--accent); stroke-width: 1.6; }
+.tfbox .node.tfs path, .tfbox .node.tfs polygon { fill: color-mix(in srgb, var(--sim) 14%, var(--panel)); stroke: var(--sim); }
+.tfbox .edge path { stroke: var(--muted); }
+.tfbox .edge polygon { fill: var(--muted); stroke: var(--muted); }
+.tfbox .edge text { fill: var(--accent); font-size: 9px; }
+
+/* ---------- tabla ---------- */
+.tbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tbar input { font: 400 0.9rem var(--mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; flex: 1 1 220px; max-width: 340px; }
+.tbar .count { color: var(--muted); font: 500 0.8rem var(--mono); margin-left: auto; }
+.tablewrap { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 860px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.72rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--panel-2); position: sticky; top: 0; }
+td.name { font-family: var(--mono); font-weight: 600; white-space: nowrap; }
+td.type { font-family: var(--mono); color: var(--muted); font-size: 0.82rem; }
+td.hz { font-family: var(--mono); white-space: nowrap; }
+td .chips { gap: 4px; }
+td .chip { font-size: 0.72rem; padding: 2px 6px; }
+tr:hover td { background: color-mix(in srgb, var(--panel-2) 60%, transparent); }
+.foot { color: var(--muted); font-size: 0.85rem; }
+footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Secciones">
+  <div class="wrap">
+    <div class="brand">Pepper <span>·</span> nodos y tópicos</div>
+    <a href="#grafo">Grafo</a>
+    <a href="#claves">Claves</a>
+    <a href="#tf">TF</a>
+    <a href="#tabla">Tabla</a>
+    <a href="arquitectura.html">Arquitectura ↗</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>IA368 · Robótica</span><span class="n">Grafo de ROS 2</span></div>
+      <h1>Nodos y <span>tópicos</span></h1>
+      <p class="lead">Quién publica qué y quién lo escucha. La demo del museo con la app está medida en vivo con
+        <code>ros2 node info</code>; la vista de SLAM y exploración sale del código y de los launch del proyecto.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>{{NTOT}}</b><span>nodos en las dos vistas</span></div>
+      <div class="stat"><b>{{TTOT}}</b><span>tópicos que importan (sin camera_info, markers ni diagnóstico)</span></div>
+      <div class="stat"><b>{{ATOT}}</b><span>acciones de Nav2</span></div>
+      <div class="stat"><b>57</b><span>frames en el árbol de TF de Pepper</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="grafo">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>01</span><span class="n">Grafo</span></div>
+      <h2>El grafo, como rqt_graph pero legible</h2>
+      <p class="lead">Rectángulos redondeados = nodos; rectángulos = tópicos; flechas violetas = acciones. Pulsa
+        cualquier elemento para ver con quién se conecta; arrastra para moverte.</p>
+    </div>
+    <div class="bar">
+      <div class="tabs" role="tablist" aria-label="Vista">
+        <button role="tab" aria-selected="true" data-view="A">Museo + app · en vivo ({{NA}} nodos)</button>
+        <button role="tab" aria-selected="false" data-view="B">SLAM + exploración ({{NB}} nodos)</button>
+      </div>
+      <div class="tool">
+        <input id="q" type="search" placeholder="buscar: cmd_vel, yolo…" aria-label="Buscar nodo o tópico" list="ids">
+        <datalist id="ids"></datalist>
+        <button type="button" id="zout" aria-label="Alejar">−</button>
+        <button type="button" id="zin" aria-label="Acercar">+</button>
+        <button type="button" id="zfit" class="wide">Ajustar</button>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="border-color:var(--accent);background:var(--accent-soft)"></i>nodo del proyecto</span>
+      <span><i style="border-color:var(--sim)"></i>nodo de la base (port V9)</span>
+      <span><i style="border-color:var(--base)"></i>nodo estándar (Nav2, slam_toolbox, yolo_ros)</span>
+      <span><i class="sq" style="border-color:var(--line)"></i>tópico</span>
+      <span><i style="border-color:var(--cloud);border-style:dashed"></i>acción</span>
+      <span><i class="ln"></i>alternativa (línea base, ruta guiada, odometría con ruido)</span>
+    </div>
+    <div class="stage">
+      <div class="canvas" id="canvas">
+        <div class="view on" data-view="A">{{SVG_A}}</div>
+        <div class="view" data-view="B">{{SVG_B}}</div>
+      </div>
+      <aside class="panel" id="panel" aria-live="polite"></aside>
+    </div>
+    <div class="hint">clic = conexiones · arrastrar = mover · − / + = zoom · Ajustar = ver todo el grafo</div>
+  </div>
+</section>
+
+<section id="claves">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>02</span><span class="n">Lo que conviene saber</span></div>
+      <h2>Tres detalles del grafo</h2>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <h3>Dos voces mandan en <code>/pepper/cmd_vel</code></h3>
+        <p>Nav2 publica la velocidad tras suavizarla y pasarla por el monitor de colisiones; el bridge de la app también
+          publica ahí al teleoperar. La base obedece al último mensaje.</p>
+        <div class="flow">controller_server → /cmd_vel_nav → velocity_smoother → /cmd_vel_smoothed → <b>collision_monitor</b> → /pepper/cmd_vel</div>
+      </div>
+      <div class="note">
+        <h3>Dos láseres según el modo</h3>
+        <p>En la demo del museo, AMCL, los costmaps y el monitor de colisiones usan el hokuyo sobre el mapa guardado.
+          En SLAM y exploración todo usa <code>/pepper/scan_fused</code>, la fusión de los 3 láseres de Pepper.</p>
+        <div class="flow">museo: <b>/pepper/hokuyo_scan</b> · SLAM: <b>/pepper/scan_fused</b></div>
+      </div>
+      <div class="note">
+        <h3>La voz de la app no llama a visitor_approach</h3>
+        <p>El bridge manda el audio a voice_listener y recibe el texto; sólo el micrófono del PC publica
+          <code>/pepper/visitor_call</code>. Así Gemini y la Fase 3 no compiten por la base y la cabeza.</p>
+        <div class="flow">app → /pepper/voice/audio → voice_listener → <b>/pepper/voice/transcript</b> → app</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tf">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>03</span><span class="n">Transformaciones</span></div>
+      <h2>El árbol de TF</h2>
+      <p class="lead">Sobre las flechas, quién publica cada transformación. <code>map → odom</code> la da AMCL en el museo
+        o slam_toolbox al mapear; el resto del cuerpo sale del URDF. Se muestran los frames que usan los sensores.</p>
+    </div>
+    <div class="tfbox">{{SVG_TF}}</div>
+  </div>
+</section>
+
+<section id="tabla">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>04</span><span class="n">Referencia</span></div>
+      <h2>Todos los tópicos, nodos y acciones</h2>
+    </div>
+    <div class="tbar">
+      <div class="tabs" role="tablist" aria-label="Tipo">
+        <button role="tab" aria-selected="true" data-kind="topic">Tópicos</button>
+        <button role="tab" aria-selected="false" data-kind="node">Nodos</button>
+        <button role="tab" aria-selected="false" data-kind="action">Acciones</button>
+      </div>
+      <input id="tq" type="search" placeholder="filtrar…" aria-label="Filtrar la tabla">
+      <span class="count" id="tcount"></span>
+    </div>
+    <div class="tablewrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+    <p class="foot">Hz medidos el 2026-10-27 con <code>ros2 topic hz</code> en tiempo de pared, con Gazebo, Nav2, YOLO,
+      Whisper y la app corriendo a la vez (factor de tiempo real ≈ 0.8). “—” = no medido o sin tráfico en ese momento.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>IA368 · Proyecto de Robótica · Pepper en ROS 2 Jazzy</span>
+    <span><a href="arquitectura.html">Ver la arquitectura completa</a></span>
+  </div>
+</footer>
+
+<script>
+const DATA = {{DATA}};
+(() => {
+  const byGid = {};
+  Object.values(DATA).forEach(d => { byGid[d.gid] = d; });
+  const GROUP = { proj: 'proyecto', base: 'base (port V9)', std: 'estándar' };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const chipCls = id => { const d = DATA[id]; return d.kind === 'node' ? d.group : d.kind; };
+  const chips = ids => ids.length ? '<div class="chips">' + ids.map(i => `<button type="button" class="chip ${chipCls(i)}" data-id="${esc(i)}">${esc(i)}</button>`).join('') + '</div>' : '<p>—</p>';
+  const outputs = id => Object.values(DATA).filter(d => d.pub.includes(id)).map(d => d.id);
+  const inputs = id => Object.values(DATA).filter(d => d.sub.includes(id)).map(d => d.id);
+
+  // ---- grafo
+  const canvas = document.getElementById('canvas');
+  const panel = document.getElementById('panel');
+  let view = 'A';
+  const svgOf = v => canvas.querySelector(`.view[data-view="${v}"] svg`);
+  const graphs = {};
+  ['A', 'B'].forEach(v => {
+    const svg = svgOf(v);
+    const vb = svg.viewBox.baseVal;
+    const edges = [...svg.querySelectorAll('g.edge')].map(g => {
+      const m = g.id.match(/^e_(.+)--(.+)$/);
+      return { el: g, a: m[1], b: m[2] };
+    });
+    graphs[v] = { svg, w: vb.width, h: vb.height, edges, nodes: [...svg.querySelectorAll('g.node')], zoom: 1 };
+    svg.querySelectorAll('title').forEach(t => t.remove());
+  });
+
+  function fitH(v) {  // al abrir: toda la altura, letra legible; se recorre a lo ancho
+    const g = graphs[v];
+    g.zoom = Math.min(1, Math.max(0.5, (canvas.clientHeight - 24) / g.h));
+    apply(v);
+  }
+  function fit(v) {
+    const g = graphs[v];
+    g.zoom = Math.max(0.35, (canvas.clientWidth - 24) / g.w);
+    apply(v);
+  }
+  function apply(v) {
+    const g = graphs[v];
+    g.svg.setAttribute('width', Math.round(g.w * g.zoom));
+    g.svg.setAttribute('height', Math.round(g.h * g.zoom));
+  }
+  function clear(v) {
+    const g = graphs[v];
+    g.svg.classList.remove('sel');
+    g.nodes.forEach(n => n.classList.remove('hl', 'cur'));
+    g.edges.forEach(e => e.el.classList.remove('hl'));
+  }
+  function select(id, scroll) {
+    const d = DATA[id];
+    if (!d) return;
+    if (!d.views.includes(view)) switchView(d.views[0]);
+    const g = graphs[view];
+    clear(view);
+    const near = new Set([d.gid]);
+    g.edges.forEach(e => {
+      if (e.a === d.gid || e.b === d.gid) { e.el.classList.add('hl'); near.add(e.a); near.add(e.b); }
+    });
+    g.svg.classList.add('sel');
+    g.nodes.forEach(n => {
+      if (near.has(n.id)) n.classList.add('hl');
+      if (n.id === d.gid) n.classList.add('cur');
+    });
+    showPanel(d);
+    const el = g.svg.querySelector('#' + CSS.escape(d.gid));
+    if (scroll && el) {
+      const r = el.getBoundingClientRect(), c = canvas.getBoundingClientRect();
+      canvas.scrollTo({ left: canvas.scrollLeft + r.left - c.left - c.width / 2 + r.width / 2,
+                        top: canvas.scrollTop + r.top - c.top - c.height / 2 + r.height / 2, behavior: 'smooth' });
+    }
+  }
+  function showPanel(d) {
+    let h = '';
+    if (d.kind === 'node') {
+      h = `<span class="k">nodo · <span class="badge ${d.group}">${GROUP[d.group]}</span></span><h3>${esc(d.id)}</h3><p>${esc(d.desc)}</p>
+        <div class="row"><span class="k">publica / pide</span>${chips(outputs(d.id))}</div>
+        <div class="row"><span class="k">escucha / sirve</span>${chips(inputs(d.id))}</div>`;
+    } else if (d.kind === 'topic') {
+      h = `<span class="k">tópico · ${esc(d.hz)}${/^[0-9.]+$/.test(d.hz) ? ' Hz' : ''}</span><h3>${esc(d.id)}</h3>
+        <p><code>${esc(d.type)}</code></p><p>${esc(d.desc)}</p>
+        <div class="row"><span class="k">lo publican</span>${chips(d.pub)}</div>
+        <div class="row"><span class="k">lo escuchan</span>${chips(d.sub)}</div>`;
+    } else {
+      h = `<span class="k">acción</span><h3>${esc(d.id)}</h3><p><code>${esc(d.type)}</code></p><p>${esc(d.desc)}</p>
+        <div class="row"><span class="k">clientes</span>${chips(d.pub)}</div>
+        <div class="row"><span class="k">servidor</span>${chips(d.sub)}</div>`;
+    }
+    panel.innerHTML = h;
+  }
+  function idle() {
+    panel.innerHTML = `<span class="k">detalle</span><h3>Elige un nodo o un tópico</h3>
+      <p>Por ejemplo <button type="button" class="chip proj" data-id="visitor_approach">visitor_approach</button>
+      o <button type="button" class="chip" data-id="/pepper/cmd_vel">/pepper/cmd_vel</button>.</p>`;
+  }
+  function switchView(v) {
+    view = v;
+    document.querySelectorAll('[data-view]').forEach(el => {
+      if (el.classList.contains('view')) el.classList.toggle('on', el.dataset.view === v);
+      else el.setAttribute('aria-selected', String(el.dataset.view === v));
+    });
+    if (!graphs[v].fitted) { fitH(v); graphs[v].fitted = true; }
+    clear(v); idle();
+  }
+  Object.keys(graphs).forEach(v => {
+    graphs[v].svg.addEventListener('click', ev => {
+      if (moved) return;
+      const n = ev.target.closest('g.node');
+      if (n && byGid[n.id]) select(byGid[n.id].id, false); else { clear(view); idle(); }
+    });
+  });
+  document.querySelectorAll('.tabs [data-view]').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
+  document.addEventListener('click', ev => {
+    const c = ev.target.closest('.chip[data-id]');
+    if (c) {
+      select(c.dataset.id, true);
+      if (c.closest('#tabla')) document.getElementById('grafo').scrollIntoView();
+    }
+  });
+  const zoomBy = f => {
+    const g = graphs[view];
+    const cx = (canvas.scrollLeft + canvas.clientWidth / 2) / g.zoom, cy = (canvas.scrollTop + canvas.clientHeight / 2) / g.zoom;
+    g.zoom = Math.min(3, Math.max(0.3, g.zoom * f)); apply(view);
+    canvas.scrollLeft = cx * g.zoom - canvas.clientWidth / 2; canvas.scrollTop = cy * g.zoom - canvas.clientHeight / 2;
+  };
+  document.getElementById('zin').onclick = () => zoomBy(1.25);
+  document.getElementById('zout').onclick = () => zoomBy(0.8);
+  document.getElementById('zfit').onclick = () => { fit(view); canvas.scrollTo(0, 0); };
+  // arrastrar para mover
+  let start = null, moved = false;
+  canvas.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    start = { x: e.clientX, y: e.clientY, l: canvas.scrollLeft, t: canvas.scrollTop }; moved = false;
+  });
+  window.addEventListener('pointermove', e => {
+    if (!start) return;
+    const dx = e.clientX - start.x, dy = e.clientY - start.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) { moved = true; canvas.classList.add('drag'); }
+    canvas.scrollLeft = start.l - dx; canvas.scrollTop = start.t - dy;
+  });
+  window.addEventListener('pointerup', () => { start = null; canvas.classList.remove('drag'); setTimeout(() => { moved = false; }, 0); });
+  // búsqueda
+  const dl = document.getElementById('ids');
+  Object.keys(DATA).sort().forEach(id => { const o = document.createElement('option'); o.value = id; dl.appendChild(o); });
+  const q = document.getElementById('q');
+  q.addEventListener('change', () => {
+    const t = q.value.trim().toLowerCase();
+    if (!t) return;
+    const ids = Object.keys(DATA);
+    const hit = ids.find(i => i.toLowerCase() === t) || ids.find(i => DATA[i].views.includes(view) && i.toLowerCase().includes(t)) || ids.find(i => i.toLowerCase().includes(t));
+    if (hit) select(hit, true);
+  });
+  window.addEventListener('resize', () => { if (graphs[view].zoom < 0.5) fit(view); });
+
+  // ---- tabla
+  const tbl = document.getElementById('tbl');
+  let kind = 'topic';
+  const VIEWN = { A: 'museo', B: 'SLAM' };
+  function render() {
+    const t = document.getElementById('tq').value.trim().toLowerCase();
+    const rows = Object.values(DATA).filter(d => d.kind === kind)
+      .filter(d => !t || JSON.stringify([d.id, d.type || '', d.desc, d.pub, d.sub]).toLowerCase().includes(t))
+      .sort((a, b) => a.id.localeCompare(b.id));
+    const views = d => d.views.map(v => `<span class="badge topic">${VIEWN[v]}</span>`).join(' ');
+    let head, body;
+    if (kind === 'topic') {
+      head = '<tr><th>Tópico</th><th>Tipo</th><th>Hz</th><th>Lo publican</th><th>Lo escuchan</th><th>Vista</th></tr>';
+      body = rows.map(d => `<tr><td class="name">${esc(d.id)}</td><td class="type">${esc(d.type)}</td><td class="hz">${esc(d.hz)}</td><td>${chips(d.pub)}</td><td>${chips(d.sub)}</td><td>${views(d)}</td></tr>`);
+    } else if (kind === 'node') {
+      head = '<tr><th>Nodo</th><th>Origen</th><th>Qué hace</th><th>Publica / pide</th><th>Escucha</th></tr>';
+      body = rows.map(d => `<tr><td class="name">${esc(d.id)}</td><td><span class="badge ${d.group}">${GROUP[d.group]}</span></td><td>${esc(d.desc)}</td><td>${chips(outputs(d.id))}</td><td>${chips(inputs(d.id))}</td></tr>`);
+    } else {
+      head = '<tr><th>Acción</th><th>Tipo</th><th>Para qué</th><th>Clientes</th><th>Servidor</th></tr>';
+      body = rows.map(d => `<tr><td class="name">${esc(d.id)}</td><td class="type">${esc(d.type)}</td><td>${esc(d.desc)}</td><td>${chips(d.pub)}</td><td>${chips(d.sub)}</td></tr>`);
+    }
+    tbl.tHead.innerHTML = head;
+    tbl.tBodies[0].innerHTML = body.join('');
+    document.getElementById('tcount').textContent = rows.length + ' filas';
+  }
+  document.querySelectorAll('.tbar [data-kind]').forEach(b => b.addEventListener('click', () => {
+    kind = b.dataset.kind;
+    document.querySelectorAll('.tbar [data-kind]').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    render();
+  }));
+  document.getElementById('tq').addEventListener('input', render);
+
+  switchView('A');
+  render();
+})();
+</script>
+</body>
+</html>
