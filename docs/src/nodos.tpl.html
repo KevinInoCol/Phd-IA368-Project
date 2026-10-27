@@ -250,9 +250,10 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
     </div>
     <div class="notes">
       <div class="note">
-        <h3>Dos voces mandan en <code>/pepper/cmd_vel</code></h3>
+        <h3>Tres voces mandan en <code>/pepper/cmd_vel</code></h3>
         <p>Nav2 publica la velocidad tras suavizarla y pasarla por el monitor de colisiones; el bridge de la app también
-          publica ahí al teleoperar. La base obedece al último mensaje.</p>
+          publica ahí al teleoperar, y visitor_approach, en el giro final para quedar de frente al visitante (cuando
+          Nav2 ya terminó). La base obedece al último mensaje.</p>
         <div class="flow">controller_server → /cmd_vel_nav → velocity_smoother → /cmd_vel_smoothed → <b>collision_monitor</b> → /pepper/cmd_vel</div>
       </div>
       <div class="note">
@@ -262,10 +263,12 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
         <div class="flow">museo: <b>/pepper/hokuyo_scan</b> · SLAM: <b>/pepper/scan_fused</b></div>
       </div>
       <div class="note">
-        <h3>La voz de la app no llama a visitor_approach</h3>
-        <p>El bridge manda el audio a voice_listener y recibe el texto; sólo el micrófono del PC publica
-          <code>/pepper/visitor_call</code>. Así Gemini y la Fase 3 no compiten por la base y la cabeza.</p>
-        <div class="flow">app → /pepper/voice/audio → voice_listener → <b>/pepper/voice/transcript</b> → app</div>
+        <h3>La app tiene dos voces: tú y un visitante</h3>
+        <p>El bridge manda el audio a voice_listener y recibe el texto. En el chat, la frase va a Gemini; en la pestaña
+          <b>Visitante</b>, el bridge la publica en <code>/pepper/visitor_call</code> como si la dijera alguien del museo,
+          y sigue la llamada por <code>/pepper/visitor_status</code>. voice_listener nunca convierte en llamada una frase
+          de la app: Gemini y la Fase 3 no compiten por la base.</p>
+        <div class="flow">app → /pepper/voice/audio → voice_listener → /pepper/voice/transcript → bridge → <b>/pepper/visitor_call</b> → visitor_approach</div>
       </div>
     </div>
   </div>

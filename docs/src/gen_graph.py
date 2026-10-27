@@ -31,7 +31,7 @@ NODES = {
     "slam_toolbox": ("std", "SLAM (Karto) con la configuración de la base + ajustes para sensores dispersos; publica /map y la TF map → odom"),
     "voice_listener": ("proj", "Whisper large-v3-turbo en la GPU: transcribe el micrófono del PC o el audio de la app; detecta palabras de llamada"),
     "visitor_approach": ("proj", "Fase 3: busca con la cabeza, YOLO11m + clasificador + profundidad, va con Nav2 a ~1 m y mira a la persona"),
-    "pepper_mobile_bridge": ("proj", "pepper_bridge.py: HTTP :8080 para la app; MJPEG, chat con Gemini, voz, mando y cabeza"),
+    "pepper_mobile_bridge": ("proj", "pepper_bridge.py: HTTP :8080 para la app; MJPEG, chat con Gemini, voz, modo visitante, mando y cabeza"),
     "scan_fusion": ("proj", "Fase 1: une los 3 láseres en un barrido de 360°, acumula 4 barridos y (opcional) filtra lo que se mueve"),
     "frontier_explorer": ("proj", "exploración autónoma: elige fronteras del /map y manda objetivos a Nav2"),
     "route_driver": ("proj", "ruta guiada y repetible para los experimentos (alternativa a la exploración)"),
@@ -59,9 +59,10 @@ TOPICS = {
     "/yolo/dbg_image": ("sensor_msgs/Image", "2.8", "imagen con las cajas dibujadas"),
     "/pepper/voice/audio": ("std_msgs/Int16MultiArray", "evento", "frase grabada en la app, 16 kHz mono"),
     "/pepper/voice/transcript": ("std_msgs/String", "evento", "texto de cada frase (vacío si no se entendió)"),
-    "/pepper/visitor_call": ("std_msgs/String", "evento", "frase con palabra de llamada (sólo del micrófono del PC)"),
+    "/pepper/visitor_call": ("std_msgs/String", "evento", "llamada de un visitante: frase con palabra de llamada (micrófono del PC) o cualquier frase del modo visitante de la app"),
     "/pepper/say": ("std_msgs/String", "evento", "lo que dice Pepper"),
     "/pepper/visitor_target": ("geometry_msgs/PointStamped", "evento", "posición de la persona elegida (para RViz)"),
+    "/pepper/visitor_status": ("std_msgs/String", "evento", "fase de la llamada en JSON (buscando, acercándose, de frente…) para la app"),
     "/cmd_vel_nav": ("geometry_msgs/Twist", "—", "velocidad del controller o de un comportamiento"),
     "/cmd_vel_smoothed": ("geometry_msgs/Twist", "—", "velocidad suavizada"),
     "/pepper/cmd_vel": ("geometry_msgs/Twist", "—", "velocidad final que mueve la base"),
@@ -108,6 +109,9 @@ VIEW_A = NAV_CHAIN + [
     ("voice_listener", "/pepper/visitor_call"), ("/pepper/visitor_call", "visitor_approach"),
     ("pepper_mobile_bridge", "/pepper/say"), ("visitor_approach", "/pepper/say"), ("/pepper/say", "pepper_mobile_bridge"),
     ("visitor_approach", "/pepper/visitor_target"),
+    ("pepper_mobile_bridge", "/pepper/visitor_call"),
+    ("visitor_approach", "/pepper/visitor_status"), ("/pepper/visitor_status", "pepper_mobile_bridge"),
+    ("visitor_approach", "/pepper/cmd_vel"),
     ("visitor_approach", "navigate_to_pose"), ("navigate_to_pose", "bt_navigator"),
     ("visitor_approach", "spin"), ("spin", "behavior_server"),
     ("pepper_mobile_bridge", "/pepper/cmd_vel"),
@@ -159,7 +163,7 @@ SINKS = {"gazebo_ros_model_velocity", "Head_controller"}
 FEEDBACK = {("gazebo_ros_model_velocity", "/pepper/odom"), ("gazebo_ros_model_velocity", "/tf"),
             ("/pepper/odom", "controller_server"), ("/pepper/odom", "bt_navigator"), ("/pepper/odom", "odom_noise"),
             ("/pepper/say", "pepper_mobile_bridge"), ("/pepper/voice/transcript", "pepper_mobile_bridge"),
-            ("/yolo/dbg_image", "pepper_mobile_bridge"), ("amcl", "/tf"), ("slam_toolbox", "/tf")}
+            ("/yolo/dbg_image", "pepper_mobile_bridge"), ("/pepper/visitor_status", "pepper_mobile_bridge"), ("amcl", "/tf"), ("slam_toolbox", "/tf")}
 
 
 def kind(i):

@@ -5,6 +5,9 @@
     ros2 run pepper_visitors voice_listener --ros-args -p device:=<sumidero> -p capture_sink:=true
         # escucha lo que suena en un sumidero (su monitor) en vez de un micrófono: pruebas con
         # audio grabado o sintetizado (tools/voice_test.py)
+    ros2 run pepper_visitors voice_listener --ros-args -p source:=topic
+        # sin micrófono del PC: sólo frases que llegan por /pepper/voice/audio (la app del
+        # teléfono, vía pepper_app/bridge); `source:=both` escucha las dos cosas
 
 Corre con el entorno ~/pepper_ws/venvs/voice (faster-whisper en la GPU); el ejecutable
 `voice_listener` instalado es un envoltorio que lo usa.
@@ -17,6 +20,11 @@ Corre con el entorno ~/pepper_ws/venvs/voice (faster-whisper en la GPU); el ejec
 
 Publica /pepper/voice/transcript (cada frase) y /pepper/visitor_call (std_msgs/String con el
 texto) cuando la frase contiene una palabra de llamada (`keywords`: pepper, hola, oye...).
+Una frase llegada por /pepper/voice/audio (std_msgs/Int16MultiArray, 16 kHz mono, ya cortada)
+siempre tiene respuesta en /pepper/voice/transcript: vacía si no se entendió nada, y nunca sale
+por /pepper/visitor_call: la responde el chat de la app (Gemini), que no debe competir con
+visitor_approach por la base y la cabeza. (La pestaña Visitante de la app sí llama: el bridge
+publica el texto en /pepper/visitor_call.)
 """
 
 import collections
@@ -30,7 +38,7 @@ import numpy as np
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import Int16MultiArray, String
 
 RATE = 16000
 CHUNK = 480  # 30 ms
@@ -48,6 +56,7 @@ def normalize(text):
 class VoiceListener(Node):
     def __init__(self):
         super().__init__("voice_listener")
+        self.source = self.declare_parameter("source", "mic").value  # mic | topic | both
         self.device = self.declare_parameter("device", "").value
         self.capture_sink = self.declare_parameter("capture_sink", False).value
         self.model_name = self.declare_parameter("model", "large-v3-turbo").value
@@ -72,13 +81,20 @@ class VoiceListener(Node):
         self.get_logger().info(f"Whisper {self.model_name} cargado en {time.time() - t:.1f} s")
 
         self.segments = queue.Queue()
-        threading.Thread(target=self.capture, daemon=True).start()
+        if self.source in ("mic", "both"):
+            threading.Thread(target=self.capture, daemon=True).start()
+        if self.source in ("topic", "both"):
+            self.create_subscription(Int16MultiArray, "/pepper/voice/audio", self.audio_cb, 10)
         threading.Thread(target=self.transcribe_loop, daemon=True).start()
 
     @staticmethod
     def _weights_dir():
         import os
         return os.path.expanduser("~/pepper_ws/weights/whisper")
+
+    def audio_cb(self, msg):
+        audio = np.asarray(msg.data, np.int16).astype(np.float32) / 32768.0
+        self.segments.put((audio[: int(self.max_len * RATE)], True))
 
     def capture(self):
         cmd = ["pw-record", "--rate", str(RATE), "--channels", "1", "--format", "s16"]
@@ -116,12 +132,12 @@ class VoiceListener(Node):
             dur = len(buf) * CHUNK / RATE
             if silent * CHUNK / RATE >= self.silence_end or dur >= self.max_len:
                 if dur - silent * CHUNK / RATE >= 0.3:  # al menos 0.3 s de voz
-                    self.segments.put(np.concatenate(buf))
+                    self.segments.put((np.concatenate(buf), False))
                 speech, pre = False, collections.deque(maxlen=pre.maxlen)
 
     def transcribe_loop(self):
         while rclpy.ok():
-            audio = self.segments.get()
+            audio, reply_always = self.segments.get()
             t = time.time()
             segs, _ = self.model.transcribe(audio, language=self.language, vad_filter=True, beam_size=5,
                                             hotwords=self.hotwords or None)
@@ -129,9 +145,12 @@ class VoiceListener(Node):
             norm = normalize(text)
             plain = " ".join("".join(c if c.isalnum() else " " for c in norm).split())
             if not plain or any(h in norm for h in HALLUCINATIONS) or plain in NOISE_ONLY:
+                if reply_always:
+                    self.pub_text.publish(String(data=""))
                 continue
             words = set(plain.split())
-            call = bool(words & {normalize(k) for k in self.keywords})
+            # reply_always = frase de la app: la atiende su chat, no es una llamada de visitante
+            call = not reply_always and bool(words & {normalize(k) for k in self.keywords})
             self.get_logger().info(f'"{text}" ({len(audio) / RATE:.1f} s de audio, '
                                    f'{time.time() - t:.2f} s){"  → LLAMADA" if call else ""}')
             self.pub_text.publish(String(data=text))

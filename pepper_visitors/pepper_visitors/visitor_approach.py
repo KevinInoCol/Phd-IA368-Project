@@ -24,9 +24,14 @@ Al recibir /pepper/visitor_call (std_msgs/String, de voice_listener):
      varios recortes) no tome por un actor ("otro"); su clase (aspecto) sirve para saludarla. Va con Nav2 (NavigateToPose) a `approach_distance` m de ella, de frente; si ese
      punto no se puede alcanzar, prueba otros ángulos alrededor de la persona.
   5. Desde que la elige, la sigue con la cabeza (Head_controller) hasta la siguiente llamada.
+  6. Al llegar (o si ya estaba cerca) gira la base hasta quedar de frente a la persona
+     (`face_tolerance`, control proporcional en /pepper/cmd_vel): cuerpo y cabeza quedan
+     alineados con ella.
 
 Publica /pepper/say (lo que diría Pepper), /pepper/visitor_target (PointStamped, la persona
-elegida) y, si `log_file` no está vacío, una línea JSON por llamada (candidatos, elegida, éxito).
+elegida), /pepper/visitor_status (std_msgs/String con JSON: `phase` = searching | approaching |
+facing | reached | nobody | nav_failed | busy | error, `text` y la llamada; lo muestra la app) y,
+si `log_file` no está vacío, una línea JSON por llamada (candidatos, elegida, éxito).
 """
 
 import json
@@ -40,7 +45,7 @@ import rclpy
 from action_msgs.msg import GoalStatus
 from builtin_interfaces.msg import Duration
 from cv_bridge import CvBridge
-from geometry_msgs.msg import PointStamped, PoseStamped
+from geometry_msgs.msg import PointStamped, PoseStamped, Twist, Vector3
 from nav2_msgs.action import NavigateToPose, Spin
 from nav_msgs.msg import OccupancyGrid
 from rclpy.action import ActionClient
@@ -98,6 +103,7 @@ class VisitorApproach(Node):
         self.approach = self.declare_parameter("approach_distance", 1.0).value
         self.full_search = self.declare_parameter("full_search", True).value
         self.map_clearance = self.declare_parameter("map_clearance", 0.2).value
+        self.face_tol = self.declare_parameter("face_tolerance", 0.05).value  # rad
         self.log_file = self.declare_parameter("log_file", "").value
 
         from ultralytics import YOLO
@@ -126,6 +132,8 @@ class VisitorApproach(Node):
         self.pub_head = self.create_publisher(JointTrajectory, "/pepper/Head_controller/command", 10)
         self.pub_say = self.create_publisher(String, "/pepper/say", 10)
         self.pub_target = self.create_publisher(PointStamped, "/pepper/visitor_target", 10)
+        self.pub_status = self.create_publisher(String, "/pepper/visitor_status", 10)
+        self.pub_vel = self.create_publisher(Twist, "/pepper/cmd_vel", 10)   # giro final de frente
         self.nav = ActionClient(self, NavigateToPose, "navigate_to_pose", callback_group=cb)
         self.spin = ActionClient(self, Spin, "spin", callback_group=cb)
 
@@ -175,6 +183,7 @@ class VisitorApproach(Node):
     def _call_cb(self, msg):
         if self.busy:
             self.get_logger().info(f"Llamada ignorada (ocupado): '{msg.data}'")
+            self.status("busy", "Estoy atendiendo otra llamada.", call=msg.data)
             return
         self.busy = True
         threading.Thread(target=self._handle_call, args=(msg.data,), daemon=True).start()
@@ -183,6 +192,10 @@ class VisitorApproach(Node):
     def say(self, text):
         self.get_logger().info(f"Pepper: {text}")
         self.pub_say.publish(String(data=text))
+
+    def status(self, phase, text="", **extra):
+        self.pub_status.publish(String(data=json.dumps(
+            {"phase": phase, "text": text, "call_id": self.call_id, **extra}, ensure_ascii=False)))
 
     def wait(self, sec):
         """Espera en tiempo simulado."""
@@ -385,6 +398,7 @@ class VisitorApproach(Node):
         except Exception as e:  # no dejar el nodo bloqueado en "ocupado"
             self.get_logger().error(f"Error atendiendo la llamada: {e!r}")
             log["error"] = repr(e)
+            self.status("error", f"Error: {e}")
         finally:
             log["duration_s"] = self.get_clock().now().nanoseconds * 1e-9 - log["t"]
             if self.log_file:
@@ -395,10 +409,12 @@ class VisitorApproach(Node):
     def _behave(self, text, log):
         self.get_logger().info(f"Llamada: '{text}'")
         self.target = None
+        self.status("searching", "Busco con la cámara a quien me habló.", call=text)
         self.say("¿Sí? Déjame ver quién me llama.")
         robot = self.robot_pose()
         if robot is None:
             self.say("No sé dónde estoy (sin localización).")
+            self.status("error", "Sin localización (AMCL).")
             log["result"] = "no_localization"
             return
         people = self.search(self.head_yaws)
@@ -418,6 +434,7 @@ class VisitorApproach(Node):
             self.head(0.0, 0.0)
             moving = sum(not p["static"] for p in people)
             self.say("No veo a nadie cerca." + (" Sólo gente que pasa caminando." if moving else ""))
+            self.status("nobody", "No encontré a nadie quieto cerca.", people=len(people))
             log["result"] = "nobody"
             return
 
@@ -434,13 +451,16 @@ class VisitorApproach(Node):
         if tgt is None:
             self.head(0.0, 0.0)
             self.say("No veo a nadie cerca. Sólo gente que pasa caminando.")
+            self.status("nobody", "Sólo vi gente caminando.", people=len(people))
             log["result"] = "nobody"
             return
         log["target"] = {"pos": tgt["pos"], "dist": tgt["dist"], "class": label, "prob": prob}
         self.target = tgt["pos"]
         self.pub_target.publish(PointStamped(header=self._hdr(), point=self._pt(tgt["pos"])))
-        looks = LOOKS.get(label)
+        looks = LOOKS.get(label) if prob >= 0.6 else None   # con poca confianza, mejor no describirla
         self.say(f"Te veo{', la persona de ' + looks if looks else ''}. Voy hacia ti.")
+        self.status("approaching", f"Persona a {tgt['dist']:.1f} m" + (f" ({looks})" if looks else "") + ".",
+                    target=list(tgt["pos"]), dist=round(tgt["dist"], 2), people=len(people))
         self.get_logger().info(f"Objetivo: ({tgt['pos'][0]:.2f}, {tgt['pos'][1]:.2f}) a {tgt['dist']:.2f} m, "
                                f"clase {label} ({prob:.2f})")
 
@@ -457,6 +477,9 @@ class VisitorApproach(Node):
                 if self.go_to(gx, gy, a + math.pi):
                     ok = True
                     break
+        if ok:
+            self.status("facing", "Me pongo de frente.", target=list(tgt["pos"]))
+            log["facing_error"] = self.face(tgt["pos"])
         end = self.robot_pose()
         log["robot_end"] = end
         if end:
@@ -464,9 +487,39 @@ class VisitorApproach(Node):
         log["result"] = "reached" if ok else "nav_failed"
         if ok:
             self.say("Hola, ¿en qué te puedo ayudar?")
+            err = log["facing_error"]
+            self.status("reached", f"A {log.get('final_dist', 0):.2f} m, de frente"
+                        + (f" ({math.degrees(err):+.0f}°)." if err is not None else "."),
+                        target=list(tgt["pos"]), dist=round(log.get("final_dist", 0), 2))
         else:
             self.say("Lo siento, no consigo llegar hasta ti.")
+            self.status("nav_failed", "Nav2 no encontró cómo llegar.", target=list(tgt["pos"]))
         # Sigue mirando a self.target (timer) hasta la siguiente llamada
+
+    def face(self, xy):
+        """Gira la base hasta que la persona en `xy` quede de frente (Nav2 deja ±0.25 rad de
+        tolerancia de orientación y, si ya estaba cerca, ni se mueve). Control proporcional sobre
+        /pepper/cmd_vel: el Spin de Nav2 se pasa de largo en giros de pocos grados. Devuelve el
+        error final (rad)."""
+        def error():
+            robot = self.robot_pose()
+            if robot is None:
+                return None
+            return math.remainder(math.atan2(xy[1] - robot[1], xy[0] - robot[0]) - robot[2], math.tau)
+
+        err, ok = error(), 0
+        if err is not None and abs(err) > self.face_tol:
+            self.get_logger().info(f"Me giro {math.degrees(err):+.0f}° hacia la persona")
+        end = self.get_clock().now().nanoseconds + 15e9
+        while err is not None and ok < 5 and self.get_clock().now().nanoseconds < end:
+            ok = ok + 1 if abs(err) < self.face_tol else 0
+            w = 0.0 if ok else math.copysign(min(max(1.0 * abs(err), 0.12), 0.6), err)
+            self.pub_vel.publish(Twist(angular=Vector3(z=w)))
+            self.wait(0.05)
+            err = error()
+        self.pub_vel.publish(Twist())
+        self.wait(0.5)
+        return error()
 
     def _candidates(self, people, robot):
         out = []

@@ -4,7 +4,7 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-21)
+## Estado y próximos pasos (actualizado 2026-10-25)
 
 **Hecho**
 - Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada.
@@ -68,21 +68,156 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
    como en las baterías del museo. `evaluate` ya da "Recorrido [m]" y "Duración [s]"; comparar
    con la ruta guiada (oficina `results/acc4nofreeT_r*`, museo `results/museo/*/acc4nofreeT_r*`).
    Después README, pestaña del HTML (¿Fase 1/2?), Vercel y push.
-2. **Voz real** (esperar al micrófono nuevo del usuario): `visitors_demo.launch.py voice:=true
-   device:=<node.name>`; ajustar `energy_factor`/`min_rms`.
+2. **Voz real = el micrófono del teléfono** (decidido el 2026-10-27; ya no se espera un micrófono
+   para el PC): la app graba → `/api/voice` → `voice_listener source:=topic` (lanzarlo aparte:
+   `visitors_demo` sin `voice:=true`). Las frases de la app **no** publican `/pepper/visitor_call`
+   aunque digan "Pepper": las atiende Gemini, para no competir con `visitor_approach`. Para que
+   la app pida el acercamiento falta la herramienta (B) `approach_person`.
 3. Opcional: clasificador de `female_03` en vivo; localizar mejor en espacios grandes.
+4. **App de teléfono `pepper_app/`**: funciona en el emulador con cámara, teleoperación y chat con
+   Gemini 3.5 Flash vía Vertex. Pendiente: visión + acercarse a una persona reusando
+   `visitor_approach`, revisión de código y commit (ver la sección "App de teléfono" más abajo).
 
 Repositorio: https://github.com/KevinInoCol/Phd-IA368-Project (público, rama `main`; sólo esta
 carpeta; la base está en su propio repo). Identidad git local: KevinInoCol
 <kevin.inofuente.colque.27@gmail.com>. `results/**/logs/` y `__pycache__` en `.gitignore`.
 
 Publicación: `docs/proyecto.html` está en Vercel (cuenta kevininocol, proyecto `pepper-ia368`,
-**https://pepper-ia368.vercel.app**, público). Redesplegar tras cada cambio del HTML: copiarlo como
-`index.html` a un directorio aparte y `vercel link --yes --project pepper-ia368 && vercel deploy --prod --yes`
+**https://pepper-ia368.vercel.app**, público) y `docs/arquitectura.html` en
+**https://pepper-ia368.vercel.app/arquitectura** y `docs/nodos-topicos.html` en **/nodos-topicos**
+(desde 2026-10-27; sus fuentes y cómo regenerarlas en `docs/src/README.md`). Redesplegar tras cada cambio de un
+HTML: en un directorio aparte, `proyecto.html` como `index.html` + `arquitectura.html` + `vercel.json`
+con `{"cleanUrls": true}` (+ `nodos-topicos.html`), y `vercel link --yes --project pepper-ia368 && vercel deploy --prod --yes`
 (Node/Vercel CLI vía nvm en `~/.nvm`; abrir con `bash -ic` si el PATH no los ve).
 
 Preferencias del usuario: páginas como HTML autónomo en `docs/` (no artifacts), con estilo de
 presentación; responde en español.
+
+## App de teléfono — `pepper_app/` (actualizado 2026-10-27, commiteada)
+
+Pedida por el usuario para controlar e interactuar con Pepper desde un teléfono Android. **La
+escribió el agente de Antigravity (Gemini Flash), no Claude Code**: funciona, pero no ha tenido
+una revisión de código a fondo. Commiteada el 2026-10-27 (sin `.env`, `build/`, `.dart_tool/`).
+
+**Entorno**
+- Flutter 3.47.8 / Dart 3.13.7 en `~/flutter` (en el PATH vía `~/.bashrc`). Android Studio en
+  `/opt/android-studio`; SDK en `~/Android/Sdk` (android-37, build-tools 36, cmdline-tools en
+  `cmdline-tools/latest`, licencias aceptadas). `adb` en `~/Android/Sdk/platform-tools`, fuera
+  del PATH.
+- Emulador: AVD `Medium_Phone_API_37.0` (`~/Android/Sdk/emulator/emulator -avd
+  Medium_Phone_API_37.0 -gpu host -no-boot-anim`); antes de `adb install`, esperar a
+  `adb shell getprop sys.boot_completed` = 1 (si no: `Can't find service: package`).
+- Google Cloud SDK en `~/google-cloud-sdk` (en el PATH vía `~/.bashrc`). Sólo hay login ADC
+  (`gcloud auth application-default login`), **no** `gcloud auth login`: los comandos de la CLI
+  como `gcloud services enable` fallan por "no active account".
+
+**Arquitectura**: teléfono (Flutter) ⇄ HTTP :8080 ⇄ `bridge/pepper_bridge.py` (nodo ROS 2 en el
+PC) ⇄ tópicos de Pepper. No hay `rosbridge_suite` ni `foxglove_bridge`. La app se conecta a
+`10.0.2.2:8080` por defecto (el host visto desde el emulador); con un teléfono físico hay que poner
+la IP del PC en la LAN (192.168.0.9) desde el botón de ajustes.
+- `lib/main.dart` (deps: `http`, `flutter_mjpeg`), tema oscuro, tres pestañas:
+  - *Cámara & Control*: MJPEG de la cámara frontal, frontal + YOLO (`/stream/yolo` ← `/yolo/dbg_image`;
+    hay que lanzar `pepper_gazebo_plugin pepper_yolo.launch.py` de la base) o inferior, cruceta → `/api/cmd_vel`, parada
+    de emergencia, sliders de cabeza (yaw/pitch) → `/api/head`, telemetría (x, y, yaw, última
+    frase de `/pepper/say`).
+  - *Chat Pepper*: burbujas, chips de acciones rápidas, campo de texto → `/api/chat`; botón de
+    micrófono (2026-10-27): toca para grabar (WAV 16 kHz mono, `record` + `path_provider`, máx.
+    10 s), toca otra vez para enviar → `/api/voice` → el texto se manda como mensaje del chat.
+  - *Visitante* (2026-10-27): el mismo micrófono, pero quien habla es "alguien del museo".
+    `/api/visitor_voice` transcribe y el bridge publica **cualquier** frase en
+    `/pepper/visitor_call` (no hace falta palabra de llamada; no pasa por Gemini). Muestra la cámara
+    con YOLO, cuatro pasos (te escucho → te busco → me acerco → de frente) y el registro (frase del
+    visitante, lo que dice Pepper, fases), sondeando `GET /api/visitor` cada 0.8 s.
+- `bridge/pepper_bridge.py` (correr con ROS sourceado: `source /opt/ros/jazzy/setup.bash && source
+  ~/pepper_ws/install/setup.bash && python3 pepper_app/bridge/pepper_bridge.py`):
+  - Suscribe `/pepper/camera/front/image_raw` (best effort), cámara inferior,
+    `/pepper/odom_groundtruth` y `/pepper/say`; publica `/pepper/cmd_vel`,
+    `/pepper/Head_controller/command` (JointTrajectory) y `/pepper/say`.
+  - GET: `/stream/front`, `/stream/bottom`, `/snapshot/front`, `/api/status`, `/api/chat`
+    (historial). POST: `/api/cmd_vel`, `/api/head`, `/api/say`, `/api/chat` (JSON `message`; también
+    acepta `text`), `/api/voice` (cuerpo = WAV PCM 16 bits; responde `transcript`, vacío si no
+    se entendió).
+  - **Voz sin duplicar Whisper**: el bridge publica la frase en `/pepper/voice/audio`
+    (`Int16MultiArray`, 16 kHz) y espera `/pepper/voice/transcript` de `voice_listener`, que hay
+    que lanzar aparte con `ros2 run pepper_visitors voice_listener --ros-args -p source:=topic`
+    (`source`: `mic` por defecto, `topic`, `both`). Una frase del chat **nunca** sale por
+    `/pepper/visitor_call`; las de la pestaña Visitante sí, pero las publica el bridge.
+  - Modo visitante: publica `/pepper/visitor_call` y sigue `/pepper/visitor_status` (JSON de
+    `visitor_approach`: `searching | approaching | facing | reached | nobody | nav_failed | busy |
+    error`). Rechaza una llamada mientras la anterior está en curso (salvo 180 s sin cambio de
+    fase: visitor_approach murió) o si `visitor_approach` no corre (hace falta `visitors_demo`).
+  - Chat: primero `GeminiAgent`; si falla, un parser local de palabras clave (avanza, retrocede,
+    gira, ...) para que el robot siga respondiendo.
+- `bridge/gemini_agent.py`: **sólo Vertex AI** (el usuario no quiere API key de AI Studio; su
+  prepago está agotado, HTTP 402). Token con `gcloud auth application-default print-access-token`
+  (en caché 30 min) y cabecera `x-goog-user-project`. Modelo `gemini-3.5-flash` con
+  `thinkingConfig.thinkingLevel = LOW` (en Gemini 3 sustituye a `thinkingBudget`; la temperatura
+  se ignora). Herramientas: `move_robot` (avance/giro temporizado a ciegas), `move_head`,
+  `stop_robot`, `get_robot_pose`.
+  - **Gemini 3.x en Vertex sólo responde en `locations/global`** (host
+    `aiplatform.googleapis.com`); en `us-central1` da 404.
+  - Proyecto GCP: `itc-kevao-inofuente` (también es el quota project del ADC). También
+    responden `datapath-kevin-inofuente` y `comunidad-intelekia`; `datapath-kevin-inofuentecolque`
+    no tiene facturación y `kevao-inofuente-colque` está en DELETE_REQUESTED.
+- `.env` en la raíz del proyecto (en `.gitignore` junto con `*.env`, `pepper_app/build/`,
+  `pepper_app/.dart_tool/`): `GCP_PROJECT_ID`, `GCP_LOCATION=global`, `GEMINI_MODEL`,
+  `GEMINI_THINKING_LEVEL` y una `GEMINI_API_KEY` que ya no se usa. **No mostrar ni commitear su
+  contenido**; ninguna credencial va dentro del APK.
+
+**Conexión (2026-10-27)**: en ⚙️ la IP del PC (casa) y, opcional, la URL de ngrok + usuario/clave
+(`ngrok http 8080 --basic-auth "usuario:clave"`, la URL gratis cambia en cada arranque); ajustes en
+`shared_preferences`; tras 2 fallos seguidos de `/api/status` la app prueba la otra conexión.
+Credenciales en la URL → Basic auth de dart:io (también en el MJPEG). Probado por USB/LAN en el
+teléfono real (voz incluida); ngrok verificado con curl (401 sin clave). Instalación en el teléfono:
+el APK suelto da "No se puede verificar el desarrollador" (verificación de Android) → `adb install`.
+APK para el teléfono: `flutter build apk --release --split-per-abi --target-platform android-arm64`
+(18 MB, firmado con la clave debug).
+
+**Compilar con `--no-tree-shake-icons`** (2026-10-27): sin esa opción, la compilación release de
+Linux salió sin los íconos nuevos de la pestaña Visitante (círculos vacíos). Para el teléfono:
+`flutter build apk --release --split-per-abi --target-platform android-arm64 --no-tree-shake-icons`.
+Escritorio Linux (para probar sin emulador): `flutter build linux --release --no-tree-shake-icons`
+→ `build/linux/x64/release/bundle/pepper_app`.
+
+**Compilar e instalar**: `cd pepper_app && flutter build apk --debug` →
+`build/app/outputs/flutter-apk/app-debug.apk` → `~/Android/Sdk/platform-tools/adb install -r ...`.
+
+**Probado (2026-10-25)** con `demo.launch.py route:=false` (oficina): cámara en vivo, teleoperación,
+cabeza y chat ("avanza un paso" movió a Pepper de x = −0.50 a +0.18 m y habló por `/pepper/say`).
+Gemini 3.5 Flash por Vertex responde y ejecuta herramientas.
+
+**Visión y contexto (2026-10-27, probado en `visitors_demo` sin GUI + `pepper_yolo.launch.py`)**
+- (A) hecho: cada mensaje lleva el JPEG de la cámara frontal. Gemini responde mirando la imagen,
+  **no con las detecciones de YOLO** (YOLO sólo dibuja las cajas en la vista de la app). Mirando
+  una pared dice que no ve a nadie; frente a female_03 (YOLO `person` 0.94) dice que sí.
+- (C) hecho: bucle de function calling (`MAX_TOOL_ROUNDS` = 3). Tras `move_robot`/`move_head`
+  espera el movimiento + 1 s y manda la imagen nueva **dentro** de `functionResponse.parts`
+  (como parte suelta Gemini 3 soltaba texto basura). Las partes con `thought` no se dicen.
+- `MUSEUM_DESCRIPTION` en el system prompt: Museo ISCAS de tecnología del software, temas sacados
+  de las texturas del modelo; se le prohíbe decir qué tema hay cerca si no lo lee en la imagen.
+- El bridge ya no manda el mensaje actual dos veces (estaba en el historial y otra vez con la imagen).
+- Ojo: tras una llamada de la Fase 3, `visitor_approach` sigue mirando a la persona (cabeza a
+  10 Hz), así que "gira y dime qué ves" sigue viéndola aunque la base gire.
+
+**Modo visitante probado (2026-10-27, `visitors_demo` sin GUI)**: frase por curl a
+`/api/visitor_voice`. (1) female_03 a 1.03 m a la espalda de Pepper: sin Nav2, giro −97° → de
+frente (+6°). (2) Pepper a 3.6 m: Nav2 la deja a 1.06 m con −13° de error → giro final → −1°, y
+HeadYaw −0.9°: cuerpo y cabeza alineados. El giro final era con el Spin de Nav2, pero en giros de
+pocos grados se pasaba (−9° → +8° → −7°) y además la base seguía girando tras terminar: ahora es
+control proporcional en `/pepper/cmd_vel` (`face_tolerance` 0.05 rad, 5 lecturas seguidas dentro).
+El clasificador describía a female_03 como "camisa a cuadros roja" con prob. 0.40: ahora sólo
+describe la ropa con prob. ≥ 0.6. "La persona que habló" = la persona quieta más cercana: no hay
+localización de la voz.
+
+**Próximo paso propuesto (pendiente de aprobación del usuario)**
+- Opcional: pasar las detecciones de `/yolo/detections` como texto para que "sí, la veo" dependa
+  de YOLO.
+- Plan restante: (B) herramienta
+  `approach_person` que publique `/pepper/visitor_call` y **reuse `visitor_approach`** (YOLO +
+  profundidad + Nav2), sin duplicarlo; (C) bucle de function calling que devuelva el resultado al
+  modelo; (D) para eso hay que lanzar `visitors_demo.launch.py` en lugar de `demo.launch.py`.
+- Otros pendientes: probar el micrófono en el emulador/teléfono, mapa `/map` en la app,
+  revisión de código y commit.
 
 ## Regla principal: no duplicar la base
 

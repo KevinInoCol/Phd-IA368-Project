@@ -10,3 +10,12 @@ datasets/
 
 # Pesos intermedios del entrenamiento (el bueno se copia a pepper_visitors/models/visitor_cls.pt)
 results/fase3/classifier/train/weights/
+
+# Secrets and environment
+.env
+*.env
+pepper_app/.env
+
+# Flutter app build
+pepper_app/build/
+pepper_app/.dart_tool/

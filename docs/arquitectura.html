@@ -615,7 +615,7 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
         estática más cercana, se acerca con Nav2 y la sigue mirando.</p>
     </div>
     <div class="pipe">
-      <div class="step"><h3>Voz</h3><p><code>voice_listener</code> con Whisper en la GPU; “pepper”, “hola”, “oye”… → <code>/pepper/visitor_call</code></p></div>
+      <div class="step"><h3>Voz</h3><p><code>voice_listener</code> con Whisper en la GPU; “pepper”, “hola”, “oye”… → <code>/pepper/visitor_call</code>. También desde la pestaña <b>Visitante</b> de la app.</p></div>
       <div class="step"><h3>Buscar</h3><p>barrido de la cabeza y, si hace falta, giro de 180° de la base</p></div>
       <div class="step"><h3>Reconocer</h3><p>YOLO11m encuentra personas; el clasificador separa visitantes de actores</p></div>
       <div class="step"><h3>Ubicar</h3><p>la nube de profundidad da su posición (x, y) en el mapa</p></div>
@@ -717,7 +717,7 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
   const notes = {
     '': '<b>Todo el sistema.</b> Pulsa un flujo para resaltar los nodos y los tópicos que intervienen.',
     slam: '<b>① SLAM y mapa.</b> Gazebo publica los 3 láseres → scan_fusion los une en 360° → slam_toolbox construye /map → Nav2 lo usa (y frontier_explorer elige a dónde explorar).',
-    visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m.',
+    visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m y gira hasta quedar de frente. También se dispara desde la pestaña Visitante de la app.',
     app: '<b>③ App: “¿Qué ves?”.</b> El teléfono manda la voz al bridge → voice_listener la transcribe → Gemini recibe el texto y la imagen de la cámara, y responde o mueve a Pepper por el bridge.'
   };
   const parts = svg.querySelectorAll('[data-f]');
