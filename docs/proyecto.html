@@ -235,13 +235,15 @@ td.why { white-space: normal; color: var(--muted); min-width: 260px; }
 @media (max-width: 640px) { .shots figcaption { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 footer .wrap { padding-block: 32px 48px; font-size: 0.85rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+.flags { display: inline-flex; gap: 5px; margin-right: 9px; vertical-align: -2px; }
+.flags svg { width: 21px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
 </style>
 </head>
 <body>
 
 <nav class="tabbar" aria-label="Fases del proyecto">
   <div class="wrap">
-    <span class="brand">Pepper · IA368</span>
+    <span class="brand"><span class="flags" role="img" aria-label="Perú y Brasil"><svg viewBox="0 0 3 2"><rect width="3" height="2" fill="#D91023"/><rect x="1" width="1" height="2" fill="#fff"/></svg><svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.4 7 10 12.4 1.6 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.5" fill="#002776"/><path d="M6.6 6.4q3.6-1.1 6.8 1.3" stroke="#fff" stroke-width=".7" fill="none"/></svg></span>Pepper · IA368</span>
     <div class="tabs" role="tablist">
       <button role="tab" id="tab-fase1" data-tab="fase1" aria-controls="fase1"><span class="tn">1</span>SLAM multiláser</button>
       <button role="tab" id="tab-fase2" data-tab="fase2" aria-controls="fase2"><span class="tn">2</span>Museo dinámico</button>
