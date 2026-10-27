@@ -128,6 +128,15 @@ la IP del PC en la LAN (192.168.0.9) desde el botón de ajustes.
     `/pepper/visitor_call` (no hace falta palabra de llamada; no pasa por Gemini). Muestra la cámara
     con YOLO, cuatro pasos (te escucho → te busco → me acerco → de frente) y el registro (frase del
     visitante, lo que dice Pepper, fases), sondeando `GET /api/visitor` cada 0.8 s.
+    **Charla** (2026-10-27): cuando visitor_approach publica `reached`, el bridge pasa a la fase
+    `talking` y las frases siguientes de la pestaña van a `GeminiAgent.visitor_response` (prompt de
+    guía frente al visitante, imagen de la cámara, **sin herramientas de movimiento**, sólo
+    `end_conversation`). Gemini la llama cuando el visitante agradece sin pedir nada más, se despide
+    o dice que no tiene más preguntas → fase `ended` (la siguiente frase vuelve a ser una llamada).
+    Botón "Terminar" → `POST /api/visitor_end`. Sin Gemini, un parser local reconoce despedidas.
+    Probado por curl con Piper: "¿de qué trata el museo?" y "gracias, ¿y qué es un sistema
+    operativo?" siguen la charla; "no, eso es todo, muchas gracias" y "eso sería todo, chao" la
+    terminan.
 - `bridge/pepper_bridge.py` (correr con ROS sourceado: `source /opt/ros/jazzy/setup.bash && source
   ~/pepper_ws/install/setup.bash && python3 pepper_app/bridge/pepper_bridge.py`):
   - Suscribe `/pepper/camera/front/image_raw` (best effort), cámara inferior,

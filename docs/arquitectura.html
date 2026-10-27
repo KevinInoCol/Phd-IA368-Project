@@ -717,7 +717,7 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
   const notes = {
     '': '<b>Todo el sistema.</b> Pulsa un flujo para resaltar los nodos y los tópicos que intervienen.',
     slam: '<b>① SLAM y mapa.</b> Gazebo publica los 3 láseres → scan_fusion los une en 360° → slam_toolbox construye /map → Nav2 lo usa (y frontier_explorer elige a dónde explorar).',
-    visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m y gira hasta quedar de frente. También se dispara desde la pestaña Visitante de la app.',
+    visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m y gira hasta quedar de frente. Desde la pestaña Visitante de la app, después charla con Gemini hasta que el visitante se despide.',
     app: '<b>③ App: “¿Qué ves?”.</b> El teléfono manda la voz al bridge → voice_listener la transcribe → Gemini recibe el texto y la imagen de la cámara, y responde o mueve a Pepper por el bridge.'
   };
   const parts = svg.querySelectorAll('[data-f]');

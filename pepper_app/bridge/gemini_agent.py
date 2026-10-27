@@ -31,6 +31,21 @@ MUSEUM_DESCRIPTION = (
     "concreto que no puedas leer. "
 )
 
+# Charla con un visitante (pestaña Visitante de la app), tras acercarse a él con visitor_approach
+VISITOR_INSTRUCTION = (
+    "Ahora estás frente a un visitante del museo: te llamó, lo buscaste con la cámara y te acercaste "
+    "a él, y ya lo saludaste («Hola, ¿en qué te puedo ayudar?»): no vuelvas a saludar. Conversa "
+    "con él como guía del museo: responde sus preguntas, cuéntale de los temas del "
+    "museo y pregúntale qué le interesa. Lo tienes delante en la imagen de tu cámara: puedes "
+    "comentar lo que ves de él si viene al caso. No te muevas: quédate de frente a él. "
+    "Cuando el visitante dé por terminada la charla (dice que no tiene más preguntas, se despide, "
+    "o agradece la ayuda sin pedir nada más), llama a end_conversation y despídete con una frase "
+    "breve y amable. Si agradece pero sigue preguntando, responde y no la termines. "
+)
+# Despedidas para cuando Gemini no responde (parser local)
+FAREWELL_WORDS = ("gracias", "adios", "adiós", "chao", "chau", "hasta luego", "eso es todo",
+                  "nada mas", "nada más", "ninguna", "no tengo mas", "no tengo más")
+
 MAX_TOOL_ROUNDS = 3  # llamadas a Gemini por mensaje como máximo
 SETTLE_TIME = 1.0  # s tras un movimiento antes de tomar la imagen nueva (la cámara va a ~2.5 fps)
 
@@ -111,6 +126,14 @@ class GeminiAgent:
                 continue
 
         return None
+
+    def _visitor_tools_spec(self):
+        return [{"functionDeclarations": [{
+            "name": "end_conversation",
+            "description": "Termina la charla con el visitante cuando él la da por terminada "
+                           "(no tiene más preguntas, se despide o agradece la ayuda).",
+            "parameters": {"type": "OBJECT", "properties": {}},
+        }]}]
 
     def _get_tools_spec(self):
         return [
@@ -203,6 +226,9 @@ class GeminiAgent:
             self.bridge_node.publish_cmd_vel(0.0, 0.0, 0.0)
             return {"status": "stopped"}
 
+        elif name == "end_conversation":
+            return {"status": "ended"}
+
         elif name == "get_robot_pose":
             with self.bridge_node.state.lock:
                 x = self.bridge_node.state.robot_x
@@ -221,17 +247,7 @@ class GeminiAgent:
             return state.front_frame_jpeg
 
     def generate_response(self, user_text, conversation_history=None):
-        headers = {"Content-Type": "application/json"}
-
-        if not self.gcp_project_id:
-            return None, "GCP_PROJECT_ID not set in .env"
-        token = self._get_vertex_token()
-        if not token:
-            return None, "VERTEX_TOKEN_NOT_FOUND (Run: gcloud auth application-default login)"
-        url = self._vertex_url()
-        headers["Authorization"] = f"Bearer {token}"
-        headers["x-goog-user-project"] = self.gcp_project_id
-
+        """Chat del operador (pestaña Chat). Devuelve (texto, error)."""
         system_instruction = (
             "Eres Pepper, un robot humanoide de servicio y guía del museo en una simulación de ROS 2 Jazzy. "
             "Eres amable, simpático, servicial y curioso. "
@@ -244,10 +260,58 @@ class GeminiAgent:
             "Tus respuestas deben ser breves, habladas y claras (máximo 1 o 2 oraciones en español), "
             "ya que se reproducirán por tu sintetizador de voz."
         )
+        speech_text, executed_actions, err = self._converse(
+            system_instruction, user_text, conversation_history, self._get_tools_spec())
+        if err:
+            return None, err
+        if executed_actions and not speech_text:
+            action_name = executed_actions[0][0]
+            if action_name == "move_robot":
+                speech_text = "¡En movimiento! Ejecutando tu indicación."
+            elif action_name == "move_head":
+                speech_text = "Moviendo la cabeza."
+            elif action_name == "stop_robot":
+                speech_text = "¡Detenido!"
+            elif action_name == "get_robot_pose":
+                pose = executed_actions[0][1]
+                speech_text = f"Estoy en la posición X: {pose.get('x')} m, Y: {pose.get('y')} m."
+        return speech_text or "¡Comprendido!", None
+
+    def visitor_response(self, user_text, conversation_history=None):
+        """Charla con el visitante (pestaña Visitante). Devuelve (texto, terminó, error); sin
+        Gemini, un parser local reconoce las despedidas."""
+        system_instruction = (
+            "Eres Pepper, un robot humanoide guía del museo en una simulación de ROS 2 Jazzy. "
+            "Eres amable, simpático y paciente. " + MUSEUM_DESCRIPTION + VISITOR_INSTRUCTION +
+            "Tus respuestas deben ser breves, habladas y claras (máximo 2 o 3 oraciones en español), "
+            "ya que se reproducirán por tu sintetizador de voz."
+        )
+        speech_text, executed_actions, err = self._converse(
+            system_instruction, user_text, conversation_history, self._visitor_tools_spec())
+        if err:
+            t = user_text.lower()
+            if any(w in t for w in FAREWELL_WORDS):
+                return "¡Con gusto! Que disfrutes el resto del museo.", True, err
+            return "Perdona, ahora no puedo pensar bien la respuesta. ¿Me lo repites?", False, err
+        ended = any(name == "end_conversation" for name, _ in executed_actions)
+        return speech_text or ("¡Hasta luego, que disfrutes el museo!" if ended else "¿Perdón?"), ended, None
+
+    def _converse(self, system_instruction, user_text, conversation_history, tools):
+        """Bucle de function calling con la imagen de la cámara. Devuelve (texto, acciones, error)."""
+        headers = {"Content-Type": "application/json"}
+
+        if not self.gcp_project_id:
+            return "", [], "GCP_PROJECT_ID not set in .env"
+        token = self._get_vertex_token()
+        if not token:
+            return "", [], "VERTEX_TOKEN_NOT_FOUND (Run: gcloud auth application-default login)"
+        url = self._vertex_url()
+        headers["Authorization"] = f"Bearer {token}"
+        headers["x-goog-user-project"] = self.gcp_project_id
 
         contents = []
         if conversation_history:
-            for item in conversation_history[-6:]:
+            for item in conversation_history[-10:]:
                 role = "user" if item.get("sender") == "user" else "model"
                 contents.append({
                     "role": role,
@@ -267,7 +331,7 @@ class GeminiAgent:
         payload = {
             "contents": contents,
             "systemInstruction": {"parts": [{"text": system_instruction}]},
-            "tools": self._get_tools_spec(),
+            "tools": tools,
             "generationConfig": {
                 "thinkingConfig": {
                     "thinkingLevel": self.thinking_level
@@ -292,7 +356,7 @@ class GeminiAgent:
 
                 candidates = data.get("candidates", [])
                 if not candidates:
-                    return None, "NO_CANDIDATE"
+                    return "", executed_actions, "NO_CANDIDATE"
 
                 content = candidates[0].get("content", {})
                 parts = content.get("parts", [])
@@ -327,26 +391,12 @@ class GeminiAgent:
                 contents.append({"role": "model", "parts": parts})
                 contents.append({"role": "user", "parts": responses})
 
-            speech_text = speech_text.strip()
-
-            if executed_actions and not speech_text:
-                action_name = executed_actions[0][0]
-                if action_name == "move_robot":
-                    speech_text = "¡En movimiento! Ejecutando tu indicación."
-                elif action_name == "move_head":
-                    speech_text = "Moviendo la cabeza."
-                elif action_name == "stop_robot":
-                    speech_text = "¡Detenido!"
-                elif action_name == "get_robot_pose":
-                    pose = executed_actions[0][1]
-                    speech_text = f"Estoy en la posición X: {pose.get('x')} m, Y: {pose.get('y')} m."
-
-            return speech_text or "¡Comprendido!", None
+            return speech_text.strip(), executed_actions, None
 
         except urllib.error.HTTPError as e:
             err_msg = e.read().decode("utf-8")
             self.last_error = f"HTTP {e.code}: {err_msg[:200]}"
-            return None, self.last_error
+            return "", [], self.last_error
         except Exception as e:
             self.last_error = str(e)
-            return None, self.last_error
+            return "", [], self.last_error

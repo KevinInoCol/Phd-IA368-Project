@@ -61,6 +61,7 @@ class AppBridgeState:
         self.visitor_status = {}
         self.visitor_since = 0.0   # último cambio de fase
         self.visitor_log = []   # {'kind': 'visitor'|'pepper'|'phase', 'text', 'phase', 'time'}
+        self.visitor_chat = []  # charla de la llamada en curso, para Gemini ({'sender', 'text'})
 
     def add_visitor_log(self, kind, text, phase=None):
         with self.lock:
@@ -194,6 +195,11 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
         elif path == '/api/visitor_voice':
             self.handle_visitor_voice(post_data)
 
+        elif path == '/api/visitor_end':
+            if self.bridge_node:
+                self.bridge_node.visitor_end('El operador terminó la charla.')
+            self._send_json(200, {'status': 'ok'})
+
         elif path == '/api/chat':
             user_msg = str(payload.get('message') or payload.get('text') or '').strip()
             if not user_msg:
@@ -249,7 +255,8 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
 
     def handle_visitor_voice(self, wav_bytes):
         """POST /api/visitor_voice: la frase la dice "un visitante del museo": se transcribe igual
-        que /api/voice y el texto va a /pepper/visitor_call (visitor_approach lo busca y se acerca)."""
+        que /api/voice. Si Pepper ya llegó hasta él, es parte de la charla (Gemini responde); si no,
+        va a /pepper/visitor_call (visitor_approach lo busca y se acerca)."""
         try:
             audio = wav_to_pcm16k(wav_bytes)
         except Exception as e:
@@ -264,6 +271,12 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
             return
         if not text:
             self._send_json(200, {'status': 'ok', 'transcript': '', 'sent': False})
+            return
+        with self.state.lock:
+            talking = self.state.visitor_phase == 'talking'
+        if talking:
+            reply, ended = self.bridge_node.visitor_chat(text)
+            self._send_json(200, {'status': 'ok', 'transcript': text, 'reply': reply, 'ended': ended})
             return
         err = self.bridge_node.visitor_call(text)
         self._send_json(503 if err else 200, {'status': 'error' if err else 'ok', 'transcript': text,
@@ -546,6 +559,7 @@ class PepperBridgeNode(Node):
         self.state.add_visitor_log('visitor', text)
         with self.state.lock:
             self.state.visitor_phase = 'searching'   # hasta que llegue el primer estado
+            self.state.visitor_chat = [{'sender': 'user', 'text': text}]
             self.state.visitor_since = time.time()
         self.visitor_call_pub.publish(String(data=text))
         self.get_logger().info(f'Llamada de visitante: "{text}"')
@@ -560,10 +574,40 @@ class PepperBridgeNode(Node):
         if phase == 'busy':
             return
         with self.state.lock:
-            self.state.visitor_phase = phase
+            # al llegar empieza la charla: las frases siguientes las responde Gemini
+            self.state.visitor_phase = 'talking' if phase == 'reached' else phase
             self.state.visitor_status = st
             self.state.visitor_since = time.time()
+            if phase == 'reached':
+                self.state.visitor_chat.append({'sender': 'pepper', 'text': 'Hola, ¿en qué te puedo ayudar?'})
         self.state.add_visitor_log('phase', st.get('text', ''), phase)
+
+    def visitor_chat(self, text):
+        """Una frase del visitante durante la charla: responde Gemini (con la imagen de la cámara,
+        sin herramientas de movimiento). Devuelve (respuesta, terminó)."""
+        self.state.add_visitor_log('visitor', text)
+        with self.state.lock:
+            history = list(self.state.visitor_chat)
+            self.state.visitor_chat.append({'sender': 'user', 'text': text})
+        reply, ended, err = self.gemini_agent.visitor_response(text, history)
+        if err:
+            self.get_logger().warn(f'Gemini (visitante): {err}')
+        with self.state.lock:
+            self.state.visitor_chat.append({'sender': 'pepper', 'text': reply})
+        self.state.add_visitor_log('pepper', reply)
+        self.publish_say(reply)
+        if ended:
+            self.visitor_end('El visitante terminó la charla.')
+        return reply, ended
+
+    def visitor_end(self, text):
+        with self.state.lock:
+            if self.state.visitor_phase != 'talking':
+                return
+            self.state.visitor_phase = 'ended'
+            self.state.visitor_status = {'phase': 'ended', 'text': text}
+            self.state.visitor_since = time.time()
+        self.state.add_visitor_log('phase', text, 'ended')
 
     def publish_cmd_vel(self, linear_x, linear_y, angular_z):
         msg = Twist()

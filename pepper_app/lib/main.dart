@@ -1384,7 +1384,8 @@ class CrosshairPainter extends CustomPainter {
 
 // -----------------------------------------------------------------------------
 // TAB 2: VISITANTE — la voz es la de "alguien del museo": la atiende visitor_approach
-// (busca a la persona quieta más cercana, se acerca a ~1 m y queda de frente), no Gemini.
+// (busca a la persona quieta más cercana, se acerca a ~1 m y queda de frente). Al llegar empieza
+// la charla: Gemini responde como guía hasta que el visitante se despide.
 // -----------------------------------------------------------------------------
 class VisitorView extends StatefulWidget {
   final String baseUrl;
@@ -1406,8 +1407,9 @@ class _VisitorViewState extends State<VisitorView> {
     ('Te busco', Icons.travel_explore_rounded),
     ('Me acerco', Icons.directions_walk_rounded),
     ('De frente', Icons.accessibility_new_rounded),
+    ('Charlamos', Icons.forum_rounded),
   ];
-  static const _stepOf = {'searching': 1, 'approaching': 2, 'facing': 3, 'reached': 4};
+  static const _stepOf = {'searching': 1, 'approaching': 2, 'facing': 3, 'talking': 4, 'ended': 5};
   static const _failures = {'nobody', 'nav_failed', 'error'};
 
   final AudioRecorder _recorder = AudioRecorder();
@@ -1438,7 +1440,15 @@ class _VisitorViewState extends State<VisitorView> {
     super.dispose();
   }
 
-  bool get _busy => _stepOf.containsKey(_phase) && _phase != 'reached';
+  bool get _busy => const {'searching', 'approaching', 'facing'}.contains(_phase);
+  bool get _talking => _phase == 'talking';
+
+  Future<void> _endTalk() async {
+    try {
+      await http.post(Uri.parse('${widget.baseUrl}/api/visitor_end')).timeout(const Duration(seconds: 3));
+    } catch (_) {}
+    _fetchState();
+  }
 
   Future<void> _fetchState() async {
     try {
@@ -1500,7 +1510,7 @@ class _VisitorViewState extends State<VisitorView> {
       final bytes = await File(path!).readAsBytes();
       final res = await http
           .post(Uri.parse('${widget.baseUrl}/api/visitor_voice'), headers: {'Content-Type': 'audio/wav'}, body: bytes)
-          .timeout(const Duration(seconds: 25));
+          .timeout(const Duration(seconds: 50)); // en la charla incluye la respuesta de Gemini
       final data = json.decode(res.body);
       text = (data['transcript'] as String? ?? '').trim();
       if (res.statusCode != 200) error = data['error'] as String? ?? 'Error del servidor (${res.statusCode})';
@@ -1548,7 +1558,7 @@ class _VisitorViewState extends State<VisitorView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Modo visitante', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                    Text('Habla como alguien del museo: Pepper te busca y se acerca', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                    Text('Habla como alguien del museo: Pepper te busca, se acerca y charla contigo', style: TextStyle(fontSize: 11, color: Colors.white60)),
                   ],
                 ),
               ),
@@ -1587,7 +1597,7 @@ class _VisitorViewState extends State<VisitorView> {
               for (var i = 0; i < _steps.length; i++) ...[
                 Expanded(child: _buildStep(i, step, failed)),
                 if (i < _steps.length - 1)
-                  Container(width: 10, height: 2, color: (step > i ? _accent : Colors.white12)),
+                  Container(width: 6, height: 2, color: (step > i ? _accent : Colors.white12)),
               ],
             ],
           ),
@@ -1623,25 +1633,54 @@ class _VisitorViewState extends State<VisitorView> {
           ),
           child: SafeArea(
             top: false,
-            child: SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isRecording ? Colors.redAccent : _accent,
-                  foregroundColor: Colors.black,
-                  disabledBackgroundColor: Colors.white12,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _isRecording ? Colors.redAccent : _accent,
+                        foregroundColor: Colors.black,
+                        disabledBackgroundColor: Colors.white12,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                      ),
+                      onPressed: widget.isConnected && !_isTranscribing ? _toggleRecording : null,
+                      icon: _isTranscribing
+                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                          : Icon(_isRecording ? Icons.stop_rounded : Icons.mic_rounded),
+                      label: Text(
+                        _isRecording
+                            ? 'Toca para enviar'
+                            : _isTranscribing
+                            ? (_talking ? 'Pepper piensa...' : 'Transcribiendo...')
+                            : _busy
+                            ? 'Pepper está en camino...'
+                            : _talking
+                            ? 'Responder a Pepper'
+                            : 'Hablar como visitante',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),
+                  ),
                 ),
-                onPressed: widget.isConnected && !_isTranscribing ? _toggleRecording : null,
-                icon: _isTranscribing
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                    : Icon(_isRecording ? Icons.stop_rounded : Icons.mic_rounded),
-                label: Text(
-                  _isRecording ? 'Toca para enviar' : _isTranscribing ? 'Transcribiendo...' : _busy ? 'Pepper está en camino...' : 'Hablar como visitante',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-              ),
+                // Terminar la charla a mano (si el visitante "se va" sin despedirse)
+                if (_talking && !_isRecording && !_isTranscribing) ...[
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 52,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white70,
+                        side: const BorderSide(color: Colors.white24),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                      ),
+                      onPressed: _endTalk,
+                      child: const Text('Terminar'),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
@@ -1663,7 +1702,7 @@ class _VisitorViewState extends State<VisitorView> {
             color: done ? _accent.withOpacity(0.18) : Colors.transparent,
             border: Border.all(color: current ? _accent : color.withOpacity(0.6), width: current ? 2 : 1),
           ),
-          child: current && step > 0 && step < _steps.length
+          child: current && step > 0 && step < _steps.length - 1 // en la charla, el ícono sin spinner
               ? const Padding(padding: EdgeInsets.all(8), child: CircularProgressIndicator(strokeWidth: 2, color: _accent))
               : Icon(done ? Icons.check_rounded : _steps[i].$2, size: 18, color: color),
         ),
