@@ -1,0 +1,73 @@
+# Lugares con nombre del museo (mapa museum_hokuyo, frame map = mundo + (1.5, -1)).
+# Los usa place_navigator (pepper_visitors): "vamos a la mesa" -> Nav2 a `pose`.
+#   pose: [x, y, yaw en grados] donde se para Pepper, mirando a lo que da nombre al lugar
+#   name: cómo lo dice Pepper; aliases: otras formas de nombrarlo (sin importar tildes ni mayúsculas)
+#   about: qué hay (lo lee Gemini para hablar del lugar)
+# Objetos ubicados con la malla del museo (ISCAS_museum.dae) y comprobados con la cámara frontal
+# de Pepper (2026-10-28).
+places:
+  inicio:
+    name: el punto de partida
+    aliases: [inicio, partida, punto de partida, base, casa, origen]
+    pose: [0.0, 0.0, 0]
+    about: Donde aparece Pepper al arrancar la simulación, al este de la rotonda.
+  mesa:
+    name: la mesa interactiva
+    aliases: [mesa, mesa tactil, mesa interactiva, pantalla tactil, mesa de la sala oeste]
+    pose: [-3.8, 1.4, 180]
+    about: Mesa con pantalla táctil iluminada en la sala oeste, delante de los paneles de
+      «Ciencia de la computación y teoría del software» (con retratos de científicos).
+  rotonda:
+    name: la rotonda
+    aliases: [rotonda, sala circular, estructura circular, circulo, pedestales]
+    pose: [-0.2, -0.8, 180]
+    about: Estructura circular a la entrada de la sala oeste, con pedestales cilíndricos.
+  sala_oeste:
+    name: la sala oeste
+    aliases: [sala oeste, nichos, paneles del software chino, software en china]
+    pose: [-3.3, -4.2, 180]
+    about: Nichos con paneles sobre la historia del software en China, en la pared oeste.
+  computadores:
+    name: los paneles del desarrollo de los computadores
+    aliases: [computadores, computadoras, desarrollo de los computadores, sala central,
+      historia de la computacion]
+    pose: [3.6, -2.6, 90]
+    about: Dentro del bloque central (se entra por el este). Paneles «El desarrollo de los
+      computadores», con fotos de computadoras antiguas y del logo de Microsoft.
+  tecnologia:
+    name: los paneles de tecnología y aplicaciones
+    aliases: [tecnologia, tecnologias, aplicaciones, tecnologia y aplicaciones, vitrinas]
+    pose: [-0.6, -5.5, 0]
+    about: Paneles «Tecnologías integradas y aplicaciones» con vitrinas bajas delante, en la
+      cara oeste del bloque central.
+  introduccion:
+    name: el panel de introducción
+    aliases: [introduccion, prefacio, bienvenida, presentacion del museo, prologo]
+    pose: [7.6, -2.0, 180]
+    about: Panel «Prefacio», la introducción del museo, en la cara este del bloque central.
+  cartel:
+    name: el cartel del museo
+    aliases: [cartel, cartel del museo, letrero, nombre del museo, logo del museo]
+    pose: [8.6, -6.8, -90]
+    about: Panel dorado con el nombre «China Software Technology Museum» (Museo de Tecnología
+      del Software de China).
+  escalera:
+    name: la escalera
+    aliases: [escalera, escaleras, gradas, baranda]
+    pose: [9.0, -5.0, 0]
+    about: Escalera con baranda en el lado este del museo, entre el cartel y la entrada.
+  entrada:
+    name: la entrada
+    aliases: [entrada, entrada principal, puerta principal, puertas de vidrio, recepcion]
+    pose: [9.0, 3.5, 0]
+    about: Fachada y puertas de vidrio del lado este, la entrada principal del museo.
+  puertas_sur:
+    name: las puertas del sur
+    aliases: [puertas sur, puerta sur, salida, puertas de madera, salida sur]
+    pose: [4.3, -11.6, -90]
+    about: Dos puertas de madera en la pared sur.
+  sala_norte:
+    name: la sala norte
+    aliases: [sala norte, salon norte, sala grande, sala amplia]
+    pose: [3.5, 5.0, 90]
+    about: Sala amplia y despejada al norte del bloque central, con columnas.

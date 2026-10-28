@@ -1005,16 +1005,27 @@ class _ChatViewState extends State<ChatView> {
     '🛑 ¡Detente!',
     '🤖 ¿Quién eres?',
     '🔍 Buscar visitantes',
+    '🖥️ Vamos a la mesa',
+    '🏃 Corre a la entrada',
+    '🏠 Vuelve al inicio',
   ];
+
+  // El bridge agrega mensajes por su cuenta (p. ej. "Llegué a la mesa."): se refresca el chat
+  Timer? _poll;
+  String _serverSig = '';
 
   @override
   void initState() {
     super.initState();
     _loadInitialHistory();
+    _poll = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (!_isSending) _loadInitialHistory(onlyIfChanged: true);
+    });
   }
 
   @override
   void dispose() {
+    _poll?.cancel();
     _recordLimit?.cancel();
     _recorder.dispose();
     _msgInputCtrl.dispose();
@@ -1077,13 +1088,18 @@ class _ChatViewState extends State<ChatView> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text), duration: const Duration(seconds: 3), backgroundColor: const Color(0xFF7C4DFF)));
   }
 
-  Future<void> _loadInitialHistory() async {
+  static String _sig(List list) => list.isEmpty ? '' : '${list.length}|${list.last['time']}|${list.last['text']}';
+
+  Future<void> _loadInitialHistory({bool onlyIfChanged = false}) async {
     try {
       final res = await http.get(Uri.parse(widget.chatUrl)).timeout(const Duration(seconds: 2));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         final list = data['history'] as List?;
         if (list != null && list.isNotEmpty) {
+          final sig = _sig(list);
+          if (!mounted || (onlyIfChanged && sig == _serverSig) || _isSending) return;
+          _serverSig = sig;
           setState(() {
             _messages.clear();
             for (var item in list) {
@@ -1097,6 +1113,7 @@ class _ChatViewState extends State<ChatView> {
         }
       }
     } catch (_) {}
+    if (onlyIfChanged || !mounted) return;
 
     // Fallback default greeting if history endpoint is not reachable yet
     if (_messages.isEmpty) {
@@ -1132,6 +1149,8 @@ class _ChatViewState extends State<ChatView> {
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         final reply = data['reply'] as String? ?? 'Indicación recibida.';
+        final history = data['history'] as List?;
+        if (history != null) _serverSig = _sig(history);
 
         if (mounted) {
           setState(() {

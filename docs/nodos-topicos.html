@@ -194,8 +194,8 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
       <p class="authors"><b>Autores</b><span>Kevin Adier Inofuente Colque</span><span>Ervin Alain Bolivar Huayta</span></p>
     </div>
     <div class="stats">
-      <div class="stat"><b>28</b><span>nodos en las dos vistas</span></div>
-      <div class="stat"><b>27</b><span>tópicos que importan (sin camera_info, markers ni diagnóstico)</span></div>
+      <div class="stat"><b>29</b><span>nodos en las dos vistas</span></div>
+      <div class="stat"><b>32</b><span>tópicos que importan (sin camera_info, markers ni diagnóstico)</span></div>
       <div class="stat"><b>6</b><span>acciones de Nav2</span></div>
       <div class="stat"><b>57</b><span>frames en el árbol de TF de Pepper</span></div>
     </div>
@@ -212,7 +212,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
     </div>
     <div class="bar">
       <div class="tabs" role="tablist" aria-label="Vista">
-        <button role="tab" aria-selected="true" data-view="A">Museo + app · en vivo (21 nodos)</button>
+        <button role="tab" aria-selected="true" data-view="A">Museo + app · en vivo (22 nodos)</button>
         <button role="tab" aria-selected="false" data-view="B">SLAM + exploración (20 nodos)</button>
       </div>
       <div class="tool">
@@ -234,655 +234,763 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
     <div class="stage">
       <div class="canvas" id="canvas">
         <div class="view on" data-view="A"><svg class="graph"
- viewBox="0.00 0.00 2882.80 619.16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 604.76)">
+ viewBox="0.00 0.00 2882.80 837.58" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 823.18)">
 <title>G</title>
 <g id="clust1" class="cluster cl">
 <title>cluster_nav2</title>
-<path fill="transparent" stroke="black" stroke-dasharray="5,2" d="M1234.5,-358.5C1234.5,-358.5 2457,-358.5 2457,-358.5 2463,-358.5 2469,-364.5 2469,-370.5 2469,-370.5 2469,-554.5 2469,-554.5 2469,-560.5 2463,-566.5 2457,-566.5 2457,-566.5 1234.5,-566.5 1234.5,-566.5 1228.5,-566.5 1222.5,-560.5 1222.5,-554.5 1222.5,-554.5 1222.5,-370.5 1222.5,-370.5 1222.5,-364.5 1228.5,-358.5 1234.5,-358.5"/>
-<text text-anchor="middle" x="1845.75" y="-553.7" font-family="DejaVu Sans Mono" font-size="11.00">Nav2</text>
+<path fill="transparent" stroke="black" stroke-dasharray="5,2" d="M1234.5,-543.66C1234.5,-543.66 2457,-543.66 2457,-543.66 2463,-543.66 2469,-549.66 2469,-555.66 2469,-555.66 2469,-739.66 2469,-739.66 2469,-745.66 2463,-751.66 2457,-751.66 2457,-751.66 1234.5,-751.66 1234.5,-751.66 1228.5,-751.66 1222.5,-745.66 1222.5,-739.66 1222.5,-739.66 1222.5,-555.66 1222.5,-555.66 1222.5,-549.66 1228.5,-543.66 1234.5,-543.66"/>
+<text text-anchor="middle" x="1845.75" y="-738.86" font-family="DejaVu Sans Mono" font-size="11.00">Nav2</text>
 </g>
 
 <g id="g_bt_navigator" class="node gn node std">
 <title>bt_navigator</title>
-<path fill="#ffffff" stroke="black" d="M1341.33,-536C1341.33,-536 1247.67,-536 1247.67,-536 1243.83,-536 1240,-532.17 1240,-528.33 1240,-528.33 1240,-520.67 1240,-520.67 1240,-516.83 1243.83,-513 1247.67,-513 1247.67,-513 1341.33,-513 1341.33,-513 1345.17,-513 1349,-516.83 1349,-520.67 1349,-520.67 1349,-528.33 1349,-528.33 1349,-532.17 1345.17,-536 1341.33,-536"/>
-<text text-anchor="middle" x="1294.5" y="-521.4" font-family="DejaVu Sans Mono" font-size="12.00">bt_navigator</text>
+<path fill="#ffffff" stroke="black" d="M1341.33,-721.16C1341.33,-721.16 1247.67,-721.16 1247.67,-721.16 1243.83,-721.16 1240,-717.33 1240,-713.5 1240,-713.5 1240,-705.83 1240,-705.83 1240,-702 1243.83,-698.16 1247.67,-698.16 1247.67,-698.16 1341.33,-698.16 1341.33,-698.16 1345.17,-698.16 1349,-702 1349,-705.83 1349,-705.83 1349,-713.5 1349,-713.5 1349,-717.33 1345.17,-721.16 1341.33,-721.16"/>
+<text text-anchor="middle" x="1294.5" y="-706.56" font-family="DejaVu Sans Mono" font-size="12.00">bt_navigator</text>
 </g>
 
 <g id="g_compute_path_to_pose" class="node gn action">
 <title>compute_path_to_pose</title>
-<polygon fill="#ffffff" stroke="black" points="1574.33,-532.17 1431,-532.17 1431,-516.83 1574.33,-516.83 1582,-524.5 1574.33,-532.17"/>
-<text text-anchor="middle" x="1506.5" y="-522.1" font-family="DejaVu Sans Mono" font-size="10.50">⚙ compute_path_to_pose</text>
+<polygon fill="#ffffff" stroke="black" points="1574.33,-717.33 1431,-717.33 1431,-702 1574.33,-702 1582,-709.66 1574.33,-717.33"/>
+<text text-anchor="middle" x="1506.5" y="-707.26" font-family="DejaVu Sans Mono" font-size="10.50">⚙ compute_path_to_pose</text>
 </g>
 
 <g id="e_g_bt_navigator&#45;&#45;g_compute_path_to_pose" class="edge ge">
 <title>bt_navigator&#45;&gt;compute_path_to_pose</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1349.04,-524.5C1371.99,-524.5 1399.29,-524.5 1424.62,-524.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1424.67,-526.6 1430.67,-524.5 1424.67,-522.4 1424.67,-526.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1349.04,-709.66C1371.99,-709.66 1399.29,-709.66 1424.62,-709.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1424.67,-711.76 1430.67,-709.66 1424.67,-707.56 1424.67,-711.76"/>
 </g>
 
 <g id="g_follow_path" class="node gn action">
 <title>follow_path</title>
-<polygon fill="#ffffff" stroke="black" points="1547.33,-460.17 1458,-460.17 1458,-444.83 1547.33,-444.83 1555,-452.5 1547.33,-460.17"/>
-<text text-anchor="middle" x="1506.5" y="-450.1" font-family="DejaVu Sans Mono" font-size="10.50">⚙ follow_path</text>
+<polygon fill="#ffffff" stroke="black" points="1547.33,-640.33 1458,-640.33 1458,-625 1547.33,-625 1555,-632.66 1547.33,-640.33"/>
+<text text-anchor="middle" x="1506.5" y="-630.26" font-family="DejaVu Sans Mono" font-size="10.50">⚙ follow_path</text>
 </g>
 
 <g id="e_g_bt_navigator&#45;&#45;g_follow_path" class="edge ge">
 <title>bt_navigator&#45;&gt;follow_path</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1342.12,-512.97C1349.48,-510.94 1356.98,-508.76 1364,-506.5 1401.51,-494.45 1443.59,-478.01 1472.04,-466.44"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1473.13,-468.26 1477.89,-464.05 1471.54,-464.37 1473.13,-468.26"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1342.92,-698.11C1350.03,-696.12 1357.24,-693.95 1364,-691.66 1403.08,-678.45 1446.7,-659.61 1475.04,-646.8"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1476.26,-648.56 1480.85,-644.17 1474.52,-644.73 1476.26,-648.56"/>
 </g>
 
 <g id="g_planner_server" class="node gn node std">
 <title>planner_server</title>
-<path fill="#ffffff" stroke="black" d="M1776.33,-536C1776.33,-536 1667.67,-536 1667.67,-536 1663.83,-536 1660,-532.17 1660,-528.33 1660,-528.33 1660,-520.67 1660,-520.67 1660,-516.83 1663.83,-513 1667.67,-513 1667.67,-513 1776.33,-513 1776.33,-513 1780.17,-513 1784,-516.83 1784,-520.67 1784,-520.67 1784,-528.33 1784,-528.33 1784,-532.17 1780.17,-536 1776.33,-536"/>
-<text text-anchor="middle" x="1722" y="-521.4" font-family="DejaVu Sans Mono" font-size="12.00">planner_server</text>
+<path fill="#ffffff" stroke="black" d="M1776.33,-721.16C1776.33,-721.16 1667.67,-721.16 1667.67,-721.16 1663.83,-721.16 1660,-717.33 1660,-713.5 1660,-713.5 1660,-705.83 1660,-705.83 1660,-702 1663.83,-698.16 1667.67,-698.16 1667.67,-698.16 1776.33,-698.16 1776.33,-698.16 1780.17,-698.16 1784,-702 1784,-705.83 1784,-705.83 1784,-713.5 1784,-713.5 1784,-717.33 1780.17,-721.16 1776.33,-721.16"/>
+<text text-anchor="middle" x="1722" y="-706.56" font-family="DejaVu Sans Mono" font-size="12.00">planner_server</text>
 </g>
 
 <g id="e_g_compute_path_to_pose&#45;&#45;g_planner_server" class="edge ge">
 <title>compute_path_to_pose&#45;&gt;planner_server</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1582.17,-524.5C1605.46,-524.5 1631,-524.5 1653.75,-524.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1653.78,-526.6 1659.78,-524.5 1653.78,-522.4 1653.78,-526.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1582.17,-709.66C1605.46,-709.66 1631,-709.66 1653.75,-709.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1653.78,-711.76 1659.78,-709.66 1653.78,-707.56 1653.78,-711.76"/>
 </g>
 
 <g id="g_controller_server" class="node gn node std">
 <title>controller_server</title>
-<path fill="#ffffff" stroke="black" d="M1787.33,-446C1787.33,-446 1656.67,-446 1656.67,-446 1652.83,-446 1649,-442.17 1649,-438.33 1649,-438.33 1649,-430.67 1649,-430.67 1649,-426.83 1652.83,-423 1656.67,-423 1656.67,-423 1787.33,-423 1787.33,-423 1791.17,-423 1795,-426.83 1795,-430.67 1795,-430.67 1795,-438.33 1795,-438.33 1795,-442.17 1791.17,-446 1787.33,-446"/>
-<text text-anchor="middle" x="1722" y="-431.4" font-family="DejaVu Sans Mono" font-size="12.00">controller_server</text>
+<path fill="#ffffff" stroke="black" d="M1787.33,-577.16C1787.33,-577.16 1656.67,-577.16 1656.67,-577.16 1652.83,-577.16 1649,-573.33 1649,-569.5 1649,-569.5 1649,-561.83 1649,-561.83 1649,-558 1652.83,-554.16 1656.67,-554.16 1656.67,-554.16 1787.33,-554.16 1787.33,-554.16 1791.17,-554.16 1795,-558 1795,-561.83 1795,-561.83 1795,-569.5 1795,-569.5 1795,-573.33 1791.17,-577.16 1787.33,-577.16"/>
+<text text-anchor="middle" x="1722" y="-562.56" font-family="DejaVu Sans Mono" font-size="12.00">controller_server</text>
 </g>
 
 <g id="e_g_follow_path&#45;&#45;g_controller_server" class="edge ge">
 <title>follow_path&#45;&gt;controller_server</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1555.15,-448.48C1580.85,-446.32 1613.22,-443.59 1642.53,-441.12"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1642.93,-443.19 1648.74,-440.59 1642.58,-439 1642.93,-443.19"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1538.44,-621.06C1566.93,-610.59 1610.5,-595.12 1649,-583.66 1654.65,-581.98 1660.58,-580.33 1666.51,-578.74"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1667.16,-580.74 1672.43,-577.18 1666.09,-576.68 1667.16,-580.74"/>
 </g>
 
 <g id="g__cmd_vel_nav" class="node gn topic">
 <title>/cmd_vel_nav</title>
-<polygon fill="#ffffff" stroke="black" points="1926,-419 1835,-419 1835,-396 1926,-396 1926,-419"/>
-<text text-anchor="middle" x="1880.5" y="-405.1" font-family="DejaVu Sans Mono" font-size="10.50">/cmd_vel_nav</text>
+<polygon fill="#ffffff" stroke="black" points="1926,-595.16 1835,-595.16 1835,-572.16 1926,-572.16 1926,-595.16"/>
+<text text-anchor="middle" x="1880.5" y="-581.26" font-family="DejaVu Sans Mono" font-size="10.50">/cmd_vel_nav</text>
 </g>
 
 <g id="e_g_controller_server&#45;&#45;g__cmd_vel_nav" class="edge ge">
 <title>controller_server&#45;&gt;/cmd_vel_nav</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1789.82,-422.97C1802.82,-420.73 1816.24,-418.41 1828.62,-416.28"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1829.05,-418.33 1834.61,-415.25 1828.34,-414.2 1829.05,-418.33"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1795.29,-573.98C1806.54,-575.27 1817.95,-576.58 1828.6,-577.81"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1828.56,-579.92 1834.76,-578.52 1829.04,-575.75 1828.56,-579.92"/>
 </g>
 
 <g id="g_velocity_smoother" class="node gn node std">
 <title>velocity_smoother</title>
-<path fill="#ffffff" stroke="black" d="M2104.33,-419C2104.33,-419 1973.67,-419 1973.67,-419 1969.83,-419 1966,-415.17 1966,-411.33 1966,-411.33 1966,-403.67 1966,-403.67 1966,-399.83 1969.83,-396 1973.67,-396 1973.67,-396 2104.33,-396 2104.33,-396 2108.17,-396 2112,-399.83 2112,-403.67 2112,-403.67 2112,-411.33 2112,-411.33 2112,-415.17 2108.17,-419 2104.33,-419"/>
-<text text-anchor="middle" x="2039" y="-404.4" font-family="DejaVu Sans Mono" font-size="12.00">velocity_smoother</text>
+<path fill="#ffffff" stroke="black" d="M2104.33,-595.16C2104.33,-595.16 1973.67,-595.16 1973.67,-595.16 1969.83,-595.16 1966,-591.33 1966,-587.5 1966,-587.5 1966,-579.83 1966,-579.83 1966,-576 1969.83,-572.16 1973.67,-572.16 1973.67,-572.16 2104.33,-572.16 2104.33,-572.16 2108.17,-572.16 2112,-576 2112,-579.83 2112,-579.83 2112,-587.5 2112,-587.5 2112,-591.33 2108.17,-595.16 2104.33,-595.16"/>
+<text text-anchor="middle" x="2039" y="-580.56" font-family="DejaVu Sans Mono" font-size="12.00">velocity_smoother</text>
 </g>
 
 <g id="e_g__cmd_vel_nav&#45;&#45;g_velocity_smoother" class="edge ge">
 <title>/cmd_vel_nav&#45;&gt;velocity_smoother</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1926.35,-407.5C1936.88,-407.5 1948.42,-407.5 1959.94,-407.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1959.97,-409.6 1965.97,-407.5 1959.97,-405.4 1959.97,-409.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1926.35,-583.66C1936.88,-583.66 1948.42,-583.66 1959.94,-583.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1959.97,-585.76 1965.97,-583.66 1959.97,-581.56 1959.97,-585.76"/>
 </g>
 
 <g id="g_behavior_server" class="node gn node std">
 <title>behavior_server</title>
-<path fill="#ffffff" stroke="black" d="M1779.83,-392C1779.83,-392 1664.17,-392 1664.17,-392 1660.33,-392 1656.5,-388.17 1656.5,-384.33 1656.5,-384.33 1656.5,-376.67 1656.5,-376.67 1656.5,-372.83 1660.33,-369 1664.17,-369 1664.17,-369 1779.83,-369 1779.83,-369 1783.67,-369 1787.5,-372.83 1787.5,-376.67 1787.5,-376.67 1787.5,-384.33 1787.5,-384.33 1787.5,-388.17 1783.67,-392 1779.83,-392"/>
-<text text-anchor="middle" x="1722" y="-377.4" font-family="DejaVu Sans Mono" font-size="12.00">behavior_server</text>
+<path fill="#ffffff" stroke="black" d="M1779.83,-613.16C1779.83,-613.16 1664.17,-613.16 1664.17,-613.16 1660.33,-613.16 1656.5,-609.33 1656.5,-605.5 1656.5,-605.5 1656.5,-597.83 1656.5,-597.83 1656.5,-594 1660.33,-590.16 1664.17,-590.16 1664.17,-590.16 1779.83,-590.16 1779.83,-590.16 1783.67,-590.16 1787.5,-594 1787.5,-597.83 1787.5,-597.83 1787.5,-605.5 1787.5,-605.5 1787.5,-609.33 1783.67,-613.16 1779.83,-613.16"/>
+<text text-anchor="middle" x="1722" y="-598.56" font-family="DejaVu Sans Mono" font-size="12.00">behavior_server</text>
 </g>
 
 <g id="e_g_behavior_server&#45;&#45;g__cmd_vel_nav" class="edge ge">
 <title>behavior_server&#45;&gt;/cmd_vel_nav</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1787.56,-391.64C1801.29,-394.01 1815.59,-396.47 1828.72,-398.74"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1828.39,-400.81 1834.66,-399.76 1829.1,-396.67 1828.39,-400.81"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1787.56,-594.24C1801.16,-592.67 1815.33,-591.04 1828.36,-589.54"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1828.94,-591.59 1834.66,-588.82 1828.46,-587.42 1828.94,-591.59"/>
 </g>
 
 <g id="g__cmd_vel_smoothed" class="node gn topic">
 <title>/cmd_vel_smoothed</title>
-<polygon fill="#ffffff" stroke="black" points="2273,-419 2152,-419 2152,-396 2273,-396 2273,-419"/>
-<text text-anchor="middle" x="2212.5" y="-405.1" font-family="DejaVu Sans Mono" font-size="10.50">/cmd_vel_smoothed</text>
+<polygon fill="#ffffff" stroke="black" points="2273,-595.16 2152,-595.16 2152,-572.16 2273,-572.16 2273,-595.16"/>
+<text text-anchor="middle" x="2212.5" y="-581.26" font-family="DejaVu Sans Mono" font-size="10.50">/cmd_vel_smoothed</text>
 </g>
 
 <g id="e_g_velocity_smoother&#45;&#45;g__cmd_vel_smoothed" class="edge ge">
 <title>velocity_smoother&#45;&gt;/cmd_vel_smoothed</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M2112.23,-407.5C2123.36,-407.5 2134.79,-407.5 2145.76,-407.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2145.8,-409.6 2151.8,-407.5 2145.8,-405.4 2145.8,-409.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M2112.23,-583.66C2123.36,-583.66 2134.79,-583.66 2145.76,-583.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2145.8,-585.76 2151.8,-583.66 2145.8,-581.56 2145.8,-585.76"/>
 </g>
 
 <g id="g_collision_monitor" class="node gn node std">
 <title>collision_monitor</title>
-<path fill="#ffffff" stroke="black" d="M2451.33,-419C2451.33,-419 2320.67,-419 2320.67,-419 2316.83,-419 2313,-415.17 2313,-411.33 2313,-411.33 2313,-403.67 2313,-403.67 2313,-399.83 2316.83,-396 2320.67,-396 2320.67,-396 2451.33,-396 2451.33,-396 2455.17,-396 2459,-399.83 2459,-403.67 2459,-403.67 2459,-411.33 2459,-411.33 2459,-415.17 2455.17,-419 2451.33,-419"/>
-<text text-anchor="middle" x="2386" y="-404.4" font-family="DejaVu Sans Mono" font-size="12.00">collision_monitor</text>
+<path fill="#ffffff" stroke="black" d="M2451.33,-595.16C2451.33,-595.16 2320.67,-595.16 2320.67,-595.16 2316.83,-595.16 2313,-591.33 2313,-587.5 2313,-587.5 2313,-579.83 2313,-579.83 2313,-576 2316.83,-572.16 2320.67,-572.16 2320.67,-572.16 2451.33,-572.16 2451.33,-572.16 2455.17,-572.16 2459,-576 2459,-579.83 2459,-579.83 2459,-587.5 2459,-587.5 2459,-591.33 2455.17,-595.16 2451.33,-595.16"/>
+<text text-anchor="middle" x="2386" y="-580.56" font-family="DejaVu Sans Mono" font-size="12.00">collision_monitor</text>
 </g>
 
 <g id="e_g__cmd_vel_smoothed&#45;&#45;g_collision_monitor" class="edge ge">
 <title>/cmd_vel_smoothed&#45;&gt;collision_monitor</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M2273,-407.5C2283.86,-407.5 2295.34,-407.5 2306.64,-407.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2306.9,-409.6 2312.9,-407.5 2306.9,-405.4 2306.9,-409.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M2273,-583.66C2283.86,-583.66 2295.34,-583.66 2306.64,-583.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2306.9,-585.76 2312.9,-583.66 2306.9,-581.56 2306.9,-585.76"/>
 </g>
 
 <g id="g__pepper_cmd_vel" class="node gn topic">
 <title>/pepper/cmd_vel</title>
-<polygon fill="#ffffff" stroke="black" points="2608,-280 2499,-280 2499,-257 2608,-257 2608,-280"/>
-<text text-anchor="middle" x="2553.5" y="-266.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/cmd_vel</text>
+<polygon fill="#ffffff" stroke="black" points="2608,-393.16 2499,-393.16 2499,-370.16 2608,-370.16 2608,-393.16"/>
+<text text-anchor="middle" x="2553.5" y="-379.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/cmd_vel</text>
 </g>
 
 <g id="e_g_collision_monitor&#45;&#45;g__pepper_cmd_vel" class="edge ge">
 <title>collision_monitor&#45;&gt;/pepper/cmd_vel</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M2400.83,-395.89C2430.44,-371.01 2500.05,-312.55 2533.67,-284.31"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2535.12,-285.84 2538.36,-280.37 2532.42,-282.62 2535.12,-285.84"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M2396.61,-571.93C2424.61,-537.76 2506.14,-438.24 2538.77,-398.42"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2540.68,-399.4 2542.86,-393.43 2537.43,-396.74 2540.68,-399.4"/>
 </g>
 
 <g id="g_gazebo_ros_model_velocity" class="node gn node base">
 <title>gazebo_ros_model_velocity</title>
-<path fill="#ffffff" stroke="black" d="M2846.33,-280C2846.33,-280 2655.67,-280 2655.67,-280 2651.83,-280 2648,-276.17 2648,-272.33 2648,-272.33 2648,-264.67 2648,-264.67 2648,-260.83 2651.83,-257 2655.67,-257 2655.67,-257 2846.33,-257 2846.33,-257 2850.17,-257 2854,-260.83 2854,-264.67 2854,-264.67 2854,-272.33 2854,-272.33 2854,-276.17 2850.17,-280 2846.33,-280"/>
-<text text-anchor="middle" x="2751" y="-265.4" font-family="DejaVu Sans Mono" font-size="12.00">gazebo_ros_model_velocity</text>
+<path fill="#ffffff" stroke="black" d="M2846.33,-393.16C2846.33,-393.16 2655.67,-393.16 2655.67,-393.16 2651.83,-393.16 2648,-389.33 2648,-385.5 2648,-385.5 2648,-377.83 2648,-377.83 2648,-374 2651.83,-370.16 2655.67,-370.16 2655.67,-370.16 2846.33,-370.16 2846.33,-370.16 2850.17,-370.16 2854,-374 2854,-377.83 2854,-377.83 2854,-385.5 2854,-385.5 2854,-389.33 2850.17,-393.16 2846.33,-393.16"/>
+<text text-anchor="middle" x="2751" y="-378.56" font-family="DejaVu Sans Mono" font-size="12.00">gazebo_ros_model_velocity</text>
 </g>
 
 <g id="e_g__pepper_cmd_vel&#45;&#45;g_gazebo_ros_model_velocity" class="edge ge">
 <title>/pepper/cmd_vel&#45;&gt;gazebo_ros_model_velocity</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M2608.18,-268.5C2618.67,-268.5 2630.02,-268.5 2641.57,-268.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2641.63,-270.6 2647.63,-268.5 2641.63,-266.4 2641.63,-270.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M2608.18,-381.66C2618.67,-381.66 2630.02,-381.66 2641.57,-381.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2641.63,-383.76 2647.63,-381.66 2641.63,-379.56 2641.63,-383.76"/>
 </g>
 
 <g id="g__pepper_odom" class="node gn topic">
 <title>/pepper/odom</title>
-<polygon fill="#ffffff" stroke="black" points="372,-485 281,-485 281,-462 372,-462 372,-485"/>
-<text text-anchor="middle" x="326.5" y="-471.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/odom</text>
+<polygon fill="#ffffff" stroke="black" points="372,-692.16 281,-692.16 281,-669.16 372,-669.16 372,-692.16"/>
+<text text-anchor="middle" x="326.5" y="-678.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/odom</text>
 </g>
 
 <g id="e_g_gazebo_ros_model_velocity&#45;&#45;g__pepper_odom" class="edge ge">
 <title>gazebo_ros_model_velocity&#45;&gt;/pepper/odom</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M2736.79,-256.97C2698.42,-224.14 2582.5,-129.69 2469,-84.5 2361.8,-41.82 2328.88,-38.5 2213.5,-38.5 1879.5,-38.5 1879.5,-38.5 1879.5,-38.5 1732.84,-38.5 1748.9,-183.47 1609,-227.5 1546.68,-247.11 1084.68,-211.94 1022,-193.5 1002.74,-187.83 1001.5,-177.31 982,-172.5 928.49,-159.31 910.14,-154.66 858,-172.5 836.72,-179.78 838.3,-193.82 818,-203.5 674.19,-272.09 593.04,-185.49 469,-285.5 436.81,-311.45 452.65,-335.58 429,-369.5 404.59,-404.52 368.1,-438.68 346.17,-457.82"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="344.62,-456.38 341.46,-461.9 347.37,-459.56 344.62,-456.38"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M2716.08,-370.13C2666.45,-355.23 2572.02,-334.47 2499,-363.66 2393.04,-406.02 2367.46,-440.38 2313,-540.66 2266.83,-625.69 2345.55,-690.64 2273,-754.66 2234.11,-788.98 2091.87,-768.66 2040,-768.66 1721,-768.66 1721,-768.66 1721,-768.66 1499.36,-768.66 1443.8,-766.91 1222.5,-754.66 900.69,-736.85 515.02,-699.55 378.45,-685.85"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="378.32,-683.73 372.14,-685.22 377.9,-687.91 378.32,-683.73"/>
 </g>
 
 <g id="e_g__pepper_odom&#45;&#45;g_bt_navigator" class="edge ge">
 <title>/pepper/odom&#45;&gt;bt_navigator</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M372.15,-475.86C529.02,-484.14 1054.94,-511.91 1233.56,-521.34"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1233.66,-523.44 1239.76,-521.66 1233.88,-519.25 1233.66,-523.44"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M372.35,-680.78C478.4,-681.21 752.88,-683.12 982,-691.66 1069.53,-694.93 1170.76,-701.25 1233.47,-705.46"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1233.66,-707.58 1239.79,-705.89 1233.94,-703.39 1233.66,-707.58"/>
 </g>
 
 <g id="e_g__pepper_odom&#45;&#45;g_controller_server" class="edge ge">
 <title>/pepper/odom&#45;&gt;controller_server</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M372,-466.18C538.74,-439.21 1120.23,-349.52 1185,-399.5 1237.02,-439.64 1170.48,-502.36 1222.5,-542.5 1256.5,-568.73 1569.18,-558.57 1609,-542.5 1615.03,-540.06 1675.44,-480.11 1704.95,-450.6"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1706.65,-451.87 1709.4,-446.14 1703.68,-448.9 1706.65,-451.87"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M372.11,-679.47C399.96,-678.79 436.57,-678.01 469,-677.66 547.22,-676.83 566.78,-676.98 645,-677.66 721.9,-678.33 741.17,-677.42 818,-680.66 890.99,-683.74 909.37,-683.8 982,-691.66 1089.45,-703.29 1114.72,-719.64 1222.5,-727.66 1285.22,-732.33 1312.64,-763.96 1364,-727.66 1407.51,-696.91 1362.98,-648.66 1404,-614.66 1470.39,-559.65 1572.43,-553.26 1642.71,-556.8"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1642.88,-558.91 1648.98,-557.14 1643.11,-554.71 1642.88,-558.91"/>
 </g>
 
 <g id="g_ros_gz_bridge" class="node gn node base">
 <title>ros_gz_bridge</title>
-<path fill="#ffffff" stroke="black" d="M142.33,-339C142.33,-339 41.67,-339 41.67,-339 37.83,-339 34,-335.17 34,-331.33 34,-331.33 34,-323.67 34,-323.67 34,-319.83 37.83,-316 41.67,-316 41.67,-316 142.33,-316 142.33,-316 146.17,-316 150,-319.83 150,-323.67 150,-323.67 150,-331.33 150,-331.33 150,-335.17 146.17,-339 142.33,-339"/>
-<text text-anchor="middle" x="92" y="-324.4" font-family="DejaVu Sans Mono" font-size="12.00">ros_gz_bridge</text>
+<path fill="#ffffff" stroke="black" d="M142.33,-511.16C142.33,-511.16 41.67,-511.16 41.67,-511.16 37.83,-511.16 34,-507.33 34,-503.5 34,-503.5 34,-495.83 34,-495.83 34,-492 37.83,-488.16 41.67,-488.16 41.67,-488.16 142.33,-488.16 142.33,-488.16 146.17,-488.16 150,-492 150,-495.83 150,-495.83 150,-503.5 150,-503.5 150,-507.33 146.17,-511.16 142.33,-511.16"/>
+<text text-anchor="middle" x="92" y="-496.56" font-family="DejaVu Sans Mono" font-size="12.00">ros_gz_bridge</text>
 </g>
 
 <g id="g__pepper_hokuyo_scan" class="node gn topic">
 <title>/pepper/hokuyo_scan</title>
-<polygon fill="#ffffff" stroke="black" points="1170,-465 1037,-465 1037,-442 1170,-442 1170,-465"/>
-<text text-anchor="middle" x="1103.5" y="-451.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/hokuyo_scan</text>
+<polygon fill="#ffffff" stroke="black" points="1170,-649.16 1037,-649.16 1037,-626.16 1170,-626.16 1170,-649.16"/>
+<text text-anchor="middle" x="1103.5" y="-635.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/hokuyo_scan</text>
 </g>
 
 <g id="e_g_ros_gz_bridge&#45;&#45;g__pepper_hokuyo_scan" class="edge ge">
 <title>ros_gz_bridge&#45;&gt;/pepper/hokuyo_scan</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M120.08,-339.06C190.53,-368.04 385.88,-441.5 556,-441.5 556,-441.5 556,-441.5 752.5,-441.5 848.7,-441.5 959.69,-446.08 1030.43,-449.59"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1030.63,-451.7 1036.73,-449.9 1030.84,-447.5 1030.63,-451.7"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M118.49,-511.26C187.44,-541.55 384.02,-620.66 556,-620.66 556,-620.66 556,-620.66 752.5,-620.66 848.76,-620.66 959.73,-627.16 1030.46,-632.12"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1030.62,-634.23 1036.75,-632.56 1030.91,-630.04 1030.62,-634.23"/>
 </g>
 
 <g id="g__pepper_camera_front_image_raw" class="node gn topic">
 <title>/pepper/camera/front/image_raw</title>
-<polygon fill="#ffffff" stroke="black" points="426,-315 227,-315 227,-292 426,-292 426,-315"/>
-<text text-anchor="middle" x="326.5" y="-301.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/front/image_raw</text>
+<polygon fill="#ffffff" stroke="black" points="426,-529.16 227,-529.16 227,-506.16 426,-506.16 426,-529.16"/>
+<text text-anchor="middle" x="326.5" y="-515.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/front/image_raw</text>
 </g>
 
 <g id="e_g_ros_gz_bridge&#45;&#45;g__pepper_camera_front_image_raw" class="edge ge">
 <title>ros_gz_bridge&#45;&gt;/pepper/camera/front/image_raw</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M150.17,-321.6C171.49,-319.4 196.42,-316.82 220.68,-314.32"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="221.08,-316.39 226.83,-313.68 220.65,-312.21 221.08,-316.39"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M150.17,-504.09C171.49,-505.74 196.42,-507.67 220.68,-509.55"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="220.69,-511.65 226.83,-510.02 221.01,-507.47 220.69,-511.65"/>
 </g>
 
 <g id="g__pepper_camera_depth_image_raw" class="node gn topic">
 <title>/pepper/camera/depth/image_raw</title>
-<polygon fill="#ffffff" stroke="black" points="426,-363 227,-363 227,-340 426,-340 426,-363"/>
-<text text-anchor="middle" x="326.5" y="-349.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/depth/image_raw</text>
+<polygon fill="#ffffff" stroke="black" points="426,-493.16 227,-493.16 227,-470.16 426,-470.16 426,-493.16"/>
+<text text-anchor="middle" x="326.5" y="-479.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/depth/image_raw</text>
 </g>
 
 <g id="e_g_ros_gz_bridge&#45;&#45;g__pepper_camera_depth_image_raw" class="edge ge">
 <title>ros_gz_bridge&#45;&gt;/pepper/camera/depth/image_raw</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M150.17,-333.4C171.49,-335.6 196.42,-338.18 220.68,-340.68"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="220.65,-342.79 226.83,-341.32 221.08,-338.61 220.65,-342.79"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M150.17,-495.24C171.49,-493.59 196.42,-491.66 220.68,-489.78"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="221.01,-491.86 226.83,-489.3 220.69,-487.67 221.01,-491.86"/>
 </g>
 
 <g id="g__pepper_camera_bottom_image_raw" class="node gn topic">
 <title>/pepper/camera/bottom/image_raw</title>
-<polygon fill="#ffffff" stroke="black" points="429,-256 224,-256 224,-233 429,-233 429,-256"/>
-<text text-anchor="middle" x="326.5" y="-242.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/bottom/image_raw</text>
+<polygon fill="#ffffff" stroke="black" points="429,-442.16 224,-442.16 224,-419.16 429,-419.16 429,-442.16"/>
+<text text-anchor="middle" x="326.5" y="-428.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/camera/bottom/image_raw</text>
 </g>
 
 <g id="e_g_ros_gz_bridge&#45;&#45;g__pepper_camera_bottom_image_raw" class="edge ge">
 <title>ros_gz_bridge&#45;&gt;/pepper/camera/bottom/image_raw</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M125.33,-315.96C167.72,-300.83 241.99,-274.31 287.17,-258.18"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="288.13,-260.07 293.07,-256.08 286.72,-256.12 288.13,-260.07"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M131.92,-488.11C172.91,-475.95 237.37,-456.82 280.52,-444.01"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="281.3,-445.97 286.46,-442.25 280.11,-441.94 281.3,-445.97"/>
 </g>
 
 <g id="e_g__pepper_hokuyo_scan&#45;&#45;g_collision_monitor" class="edge ge">
 <title>/pepper/hokuyo_scan&#45;&gt;collision_monitor</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1113.01,-465.06C1130.55,-487.84 1173.21,-538.18 1222.5,-559.5 1338.36,-609.61 1379.27,-583.5 1505.5,-583.5 1505.5,-583.5 1505.5,-583.5 2040,-583.5 2180.42,-583.5 2321.32,-466.39 2368.48,-423.23"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2370.02,-424.66 2373,-419.05 2367.17,-421.58 2370.02,-424.66"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1116.11,-649.25C1136.08,-668.49 1178.99,-706.98 1222.5,-727.66 1339.33,-783.19 1376.14,-795.66 1505.5,-795.66 1505.5,-795.66 1505.5,-795.66 2040,-795.66 2143.83,-795.66 2185.09,-833.92 2273,-778.66 2339.36,-736.95 2370.52,-640.74 2380.88,-601.16"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2382.92,-601.64 2382.36,-595.31 2378.85,-600.61 2382.92,-601.64"/>
 </g>
 
 <g id="g_amcl" class="node gn node std">
 <title>amcl</title>
-<path fill="#ffffff" stroke="black" d="M1313.83,-464C1313.83,-464 1275.17,-464 1275.17,-464 1271.33,-464 1267.5,-460.17 1267.5,-456.33 1267.5,-456.33 1267.5,-448.67 1267.5,-448.67 1267.5,-444.83 1271.33,-441 1275.17,-441 1275.17,-441 1313.83,-441 1313.83,-441 1317.67,-441 1321.5,-444.83 1321.5,-448.67 1321.5,-448.67 1321.5,-456.33 1321.5,-456.33 1321.5,-460.17 1317.67,-464 1313.83,-464"/>
-<text text-anchor="middle" x="1294.5" y="-449.4" font-family="DejaVu Sans Mono" font-size="12.00">amcl</text>
+<path fill="#ffffff" stroke="black" d="M1313.83,-649.16C1313.83,-649.16 1275.17,-649.16 1275.17,-649.16 1271.33,-649.16 1267.5,-645.33 1267.5,-641.5 1267.5,-641.5 1267.5,-633.83 1267.5,-633.83 1267.5,-630 1271.33,-626.16 1275.17,-626.16 1275.17,-626.16 1313.83,-626.16 1313.83,-626.16 1317.67,-626.16 1321.5,-630 1321.5,-633.83 1321.5,-633.83 1321.5,-641.5 1321.5,-641.5 1321.5,-645.33 1317.67,-649.16 1313.83,-649.16"/>
+<text text-anchor="middle" x="1294.5" y="-634.56" font-family="DejaVu Sans Mono" font-size="12.00">amcl</text>
 </g>
 
 <g id="e_g__pepper_hokuyo_scan&#45;&#45;g_amcl" class="edge ge">
 <title>/pepper/hokuyo_scan&#45;&gt;amcl</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1170.07,-453.15C1200.93,-452.99 1236.35,-452.8 1261.31,-452.67"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1261.43,-454.77 1267.42,-452.64 1261.41,-450.57 1261.43,-454.77"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1170.07,-637.66C1200.93,-637.66 1236.35,-637.66 1261.31,-637.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1261.42,-639.76 1267.42,-637.66 1261.42,-635.56 1261.42,-639.76"/>
 </g>
 
 <g id="g_global_costmap" class="node gn node std">
 <title>global_costmap</title>
-<path fill="#ffffff" stroke="black" d="M1348.83,-428C1348.83,-428 1240.17,-428 1240.17,-428 1236.33,-428 1232.5,-424.17 1232.5,-420.33 1232.5,-420.33 1232.5,-412.67 1232.5,-412.67 1232.5,-408.83 1236.33,-405 1240.17,-405 1240.17,-405 1348.83,-405 1348.83,-405 1352.67,-405 1356.5,-408.83 1356.5,-412.67 1356.5,-412.67 1356.5,-420.33 1356.5,-420.33 1356.5,-424.17 1352.67,-428 1348.83,-428"/>
-<text text-anchor="middle" x="1294.5" y="-413.4" font-family="DejaVu Sans Mono" font-size="12.00">global_costmap</text>
+<path fill="#ffffff" stroke="black" d="M1348.83,-613.16C1348.83,-613.16 1240.17,-613.16 1240.17,-613.16 1236.33,-613.16 1232.5,-609.33 1232.5,-605.5 1232.5,-605.5 1232.5,-597.83 1232.5,-597.83 1232.5,-594 1236.33,-590.16 1240.17,-590.16 1240.17,-590.16 1348.83,-590.16 1348.83,-590.16 1352.67,-590.16 1356.5,-594 1356.5,-597.83 1356.5,-597.83 1356.5,-605.5 1356.5,-605.5 1356.5,-609.33 1352.67,-613.16 1348.83,-613.16"/>
+<text text-anchor="middle" x="1294.5" y="-598.56" font-family="DejaVu Sans Mono" font-size="12.00">global_costmap</text>
 </g>
 
 <g id="e_g__pepper_hokuyo_scan&#45;&#45;g_global_costmap" class="edge ge">
 <title>/pepper/hokuyo_scan&#45;&gt;global_costmap</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1163.26,-442C1183.97,-437.94 1207.35,-433.37 1228.53,-429.22"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1228.96,-431.27 1234.45,-428.06 1228.15,-427.15 1228.96,-431.27"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1165.08,-626.12C1184.83,-622.36 1206.87,-618.16 1227.03,-614.32"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1227.44,-616.38 1232.94,-613.2 1226.65,-612.26 1227.44,-616.38"/>
 </g>
 
 <g id="g_local_costmap" class="node gn node std">
 <title>local_costmap</title>
-<path fill="#ffffff" stroke="black" d="M1344.83,-500C1344.83,-500 1244.17,-500 1244.17,-500 1240.33,-500 1236.5,-496.17 1236.5,-492.33 1236.5,-492.33 1236.5,-484.67 1236.5,-484.67 1236.5,-480.83 1240.33,-477 1244.17,-477 1244.17,-477 1344.83,-477 1344.83,-477 1348.67,-477 1352.5,-480.83 1352.5,-484.67 1352.5,-484.67 1352.5,-492.33 1352.5,-492.33 1352.5,-496.17 1348.67,-500 1344.83,-500"/>
-<text text-anchor="middle" x="1294.5" y="-485.4" font-family="DejaVu Sans Mono" font-size="12.00">local_costmap</text>
+<path fill="#ffffff" stroke="black" d="M1344.83,-685.16C1344.83,-685.16 1244.17,-685.16 1244.17,-685.16 1240.33,-685.16 1236.5,-681.33 1236.5,-677.5 1236.5,-677.5 1236.5,-669.83 1236.5,-669.83 1236.5,-666 1240.33,-662.16 1244.17,-662.16 1244.17,-662.16 1344.83,-662.16 1344.83,-662.16 1348.67,-662.16 1352.5,-666 1352.5,-669.83 1352.5,-669.83 1352.5,-677.5 1352.5,-677.5 1352.5,-681.33 1348.67,-685.16 1344.83,-685.16"/>
+<text text-anchor="middle" x="1294.5" y="-670.56" font-family="DejaVu Sans Mono" font-size="12.00">local_costmap</text>
 </g>
 
 <g id="e_g__pepper_hokuyo_scan&#45;&#45;g_local_costmap" class="edge ge">
 <title>/pepper/hokuyo_scan&#45;&gt;local_costmap</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1166.65,-465.01C1187.11,-468.8 1209.88,-473.02 1230.42,-476.82"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1230.15,-478.9 1236.43,-477.93 1230.91,-474.77 1230.15,-478.9"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1165.08,-649.2C1185.91,-653.17 1209.28,-657.62 1230.32,-661.63"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1230.19,-663.74 1236.48,-662.8 1230.97,-659.62 1230.19,-663.74"/>
 </g>
 
 <g id="g_yolo_node" class="node gn node std">
 <title>yolo_node</title>
-<path fill="#ffffff" stroke="black" d="M592.33,-315C592.33,-315 521.67,-315 521.67,-315 517.83,-315 514,-311.17 514,-307.33 514,-307.33 514,-299.67 514,-299.67 514,-295.83 517.83,-292 521.67,-292 521.67,-292 592.33,-292 592.33,-292 596.17,-292 600,-295.83 600,-299.67 600,-299.67 600,-307.33 600,-307.33 600,-311.17 596.17,-315 592.33,-315"/>
-<text text-anchor="middle" x="557" y="-300.4" font-family="DejaVu Sans Mono" font-size="12.00">yolo_node</text>
+<path fill="#ffffff" stroke="black" d="M592.33,-552.16C592.33,-552.16 521.67,-552.16 521.67,-552.16 517.83,-552.16 514,-548.33 514,-544.5 514,-544.5 514,-536.83 514,-536.83 514,-533 517.83,-529.16 521.67,-529.16 521.67,-529.16 592.33,-529.16 592.33,-529.16 596.17,-529.16 600,-533 600,-536.83 600,-536.83 600,-544.5 600,-544.5 600,-548.33 596.17,-552.16 592.33,-552.16"/>
+<text text-anchor="middle" x="557" y="-537.56" font-family="DejaVu Sans Mono" font-size="12.00">yolo_node</text>
 </g>
 
 <g id="e_g__pepper_camera_front_image_raw&#45;&#45;g_yolo_node" class="edge ge">
 <title>/pepper/camera/front/image_raw&#45;&gt;yolo_node</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M426.06,-303.5C454.34,-303.5 483.92,-303.5 507.7,-303.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="507.93,-305.6 513.93,-303.5 507.93,-301.4 507.93,-305.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M426.06,-527.58C454.34,-530.43 483.92,-533.41 507.7,-535.8"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="507.75,-537.92 513.93,-536.43 508.17,-533.74 507.75,-537.92"/>
 </g>
 
 <g id="g_debug_node" class="node gn node std">
 <title>debug_node</title>
-<path fill="#ffffff" stroke="black" d="M959.33,-325C959.33,-325 880.67,-325 880.67,-325 876.83,-325 873,-321.17 873,-317.33 873,-317.33 873,-309.67 873,-309.67 873,-305.83 876.83,-302 880.67,-302 880.67,-302 959.33,-302 959.33,-302 963.17,-302 967,-305.83 967,-309.67 967,-309.67 967,-317.33 967,-317.33 967,-321.17 963.17,-325 959.33,-325"/>
-<text text-anchor="middle" x="920" y="-310.4" font-family="DejaVu Sans Mono" font-size="12.00">debug_node</text>
+<path fill="#ffffff" stroke="black" d="M959.33,-584.16C959.33,-584.16 880.67,-584.16 880.67,-584.16 876.83,-584.16 873,-580.33 873,-576.5 873,-576.5 873,-568.83 873,-568.83 873,-565 876.83,-561.16 880.67,-561.16 880.67,-561.16 959.33,-561.16 959.33,-561.16 963.17,-561.16 967,-565 967,-568.83 967,-568.83 967,-576.5 967,-576.5 967,-580.33 963.17,-584.16 959.33,-584.16"/>
+<text text-anchor="middle" x="920" y="-569.56" font-family="DejaVu Sans Mono" font-size="12.00">debug_node</text>
 </g>
 
 <g id="e_g__pepper_camera_front_image_raw&#45;&#45;g_debug_node" class="edge ge">
 <title>/pepper/camera/front/image_raw&#45;&gt;debug_node</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M404.07,-315.04C425.07,-317.71 447.87,-320.16 469,-321.5 623.8,-331.31 663.01,-327.63 818,-321.5 833.83,-320.87 851.02,-319.7 866.65,-318.44"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="866.98,-320.52 872.79,-317.93 866.64,-316.33 866.98,-320.52"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M358.74,-529.17C387.07,-539.02 430.22,-552.54 469,-558.66 611.55,-581.16 782.55,-578.49 866.81,-575.25"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="867.06,-577.34 872.97,-575.01 866.9,-573.15 867.06,-577.34"/>
 </g>
 
 <g id="g_visitor_approach" class="node gn node proj">
 <title>visitor_approach</title>
-<path fill="#ffffff" stroke="black" d="M1356.33,-280C1356.33,-280 1232.67,-280 1232.67,-280 1228.83,-280 1225,-276.17 1225,-272.33 1225,-272.33 1225,-264.67 1225,-264.67 1225,-260.83 1228.83,-257 1232.67,-257 1232.67,-257 1356.33,-257 1356.33,-257 1360.17,-257 1364,-260.83 1364,-264.67 1364,-264.67 1364,-272.33 1364,-272.33 1364,-276.17 1360.17,-280 1356.33,-280"/>
-<text text-anchor="middle" x="1294.5" y="-265.4" font-family="DejaVu Sans Mono" font-size="12.00">visitor_approach</text>
+<path fill="#ffffff" stroke="black" d="M1356.33,-461.16C1356.33,-461.16 1232.67,-461.16 1232.67,-461.16 1228.83,-461.16 1225,-457.33 1225,-453.5 1225,-453.5 1225,-445.83 1225,-445.83 1225,-442 1228.83,-438.16 1232.67,-438.16 1232.67,-438.16 1356.33,-438.16 1356.33,-438.16 1360.17,-438.16 1364,-442 1364,-445.83 1364,-445.83 1364,-453.5 1364,-453.5 1364,-457.33 1360.17,-461.16 1356.33,-461.16"/>
+<text text-anchor="middle" x="1294.5" y="-446.56" font-family="DejaVu Sans Mono" font-size="12.00">visitor_approach</text>
 </g>
 
 <g id="e_g__pepper_camera_front_image_raw&#45;&#45;g_visitor_approach" class="edge ge">
 <title>/pepper/camera/front/image_raw&#45;&gt;visitor_approach</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M406.31,-291.97C426.69,-289.4 448.63,-287 469,-285.5 744.76,-265.18 1073.7,-265.84 1218.64,-267.39"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1218.95,-269.5 1224.98,-267.46 1219,-265.3 1218.95,-269.5"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M426.2,-514.38C511.92,-511.8 639.4,-508.66 750.5,-508.66 750.5,-508.66 750.5,-508.66 921,-508.66 1038.82,-508.66 1069.56,-508.23 1185,-484.66 1209.82,-479.6 1236.93,-470.85 1257.85,-463.37"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1258.65,-465.31 1263.58,-461.3 1257.22,-461.36 1258.65,-465.31"/>
 </g>
 
 <g id="g_pepper_mobile_bridge" class="node gn node proj">
 <title>pepper_mobile_bridge</title>
-<path fill="#ffffff" stroke="black" d="M633.83,-197C633.83,-197 480.17,-197 480.17,-197 476.33,-197 472.5,-193.17 472.5,-189.33 472.5,-189.33 472.5,-181.67 472.5,-181.67 472.5,-177.83 476.33,-174 480.17,-174 480.17,-174 633.83,-174 633.83,-174 637.67,-174 641.5,-177.83 641.5,-181.67 641.5,-181.67 641.5,-189.33 641.5,-189.33 641.5,-193.17 637.67,-197 633.83,-197"/>
-<text text-anchor="middle" x="557" y="-182.4" font-family="DejaVu Sans Mono" font-size="12.00">pepper_mobile_bridge</text>
+<path fill="#ffffff" stroke="black" d="M633.83,-399.16C633.83,-399.16 480.17,-399.16 480.17,-399.16 476.33,-399.16 472.5,-395.33 472.5,-391.5 472.5,-391.5 472.5,-383.83 472.5,-383.83 472.5,-380 476.33,-376.16 480.17,-376.16 480.17,-376.16 633.83,-376.16 633.83,-376.16 637.67,-376.16 641.5,-380 641.5,-383.83 641.5,-383.83 641.5,-391.5 641.5,-391.5 641.5,-395.33 637.67,-399.16 633.83,-399.16"/>
+<text text-anchor="middle" x="557" y="-384.56" font-family="DejaVu Sans Mono" font-size="12.00">pepper_mobile_bridge</text>
 </g>
 
 <g id="e_g__pepper_camera_front_image_raw&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/camera/front/image_raw&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M361.75,-291.88C381.85,-284.52 407.45,-274.2 429,-262.5 448.07,-252.15 450.64,-246.06 469,-234.5 488.51,-222.22 511.22,-209.48 528.55,-200.07"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="529.93,-201.71 534.21,-197.01 527.93,-198.01 529.93,-201.71"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M412.79,-506.15C418.39,-504.3 423.84,-502.15 429,-499.66 477.41,-476.33 521.45,-429.21 542.67,-404.17"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="544.36,-405.42 546.6,-399.47 541.14,-402.72 544.36,-405.42"/>
 </g>
 
 <g id="g__yolo_detections" class="node gn topic">
 <title>/yolo/detections</title>
-<polygon fill="#ffffff" stroke="black" points="809,-315 694,-315 694,-292 809,-292 809,-315"/>
-<text text-anchor="middle" x="751.5" y="-301.1" font-family="DejaVu Sans Mono" font-size="10.50">/yolo/detections</text>
+<polygon fill="#ffffff" stroke="black" points="809,-552.16 694,-552.16 694,-529.16 809,-529.16 809,-552.16"/>
+<text text-anchor="middle" x="751.5" y="-538.26" font-family="DejaVu Sans Mono" font-size="10.50">/yolo/detections</text>
 </g>
 
 <g id="e_g_yolo_node&#45;&#45;g__yolo_detections" class="edge ge">
 <title>yolo_node&#45;&gt;/yolo/detections</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M600.24,-303.5C625.87,-303.5 659.05,-303.5 687.7,-303.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="687.74,-305.6 693.74,-303.5 687.74,-301.4 687.74,-305.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M600.24,-540.66C625.87,-540.66 659.05,-540.66 687.7,-540.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="687.74,-542.76 693.74,-540.66 687.74,-538.56 687.74,-542.76"/>
 </g>
 
 <g id="g__yolo_dbg_image" class="node gn topic">
 <title>/yolo/dbg_image</title>
-<polygon fill="#ffffff" stroke="black" points="1158,-325 1049,-325 1049,-302 1158,-302 1158,-325"/>
-<text text-anchor="middle" x="1103.5" y="-311.1" font-family="DejaVu Sans Mono" font-size="10.50">/yolo/dbg_image</text>
+<polygon fill="#ffffff" stroke="black" points="1158,-613.16 1049,-613.16 1049,-590.16 1158,-590.16 1158,-613.16"/>
+<text text-anchor="middle" x="1103.5" y="-599.26" font-family="DejaVu Sans Mono" font-size="10.50">/yolo/dbg_image</text>
 </g>
 
 <g id="e_g_debug_node&#45;&#45;g__yolo_dbg_image" class="edge ge">
 <title>debug_node&#45;&gt;/yolo/dbg_image</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M967.27,-313.5C990.22,-313.5 1018.2,-313.5 1042.75,-313.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1042.91,-315.6 1048.91,-313.5 1042.91,-311.4 1042.91,-315.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M967.27,-580.06C990.22,-583.72 1018.2,-588.19 1042.75,-592.12"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1042.66,-594.23 1048.91,-593.1 1043.32,-590.08 1042.66,-594.23"/>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g__pepper_cmd_vel" class="edge ge">
 <title>visitor_approach&#45;&gt;/pepper/cmd_vel</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1364.04,-268.5C1448.13,-268.5 1595.05,-268.5 1721,-268.5 1721,-268.5 1721,-268.5 2213.5,-268.5 2311.33,-268.5 2425.05,-268.5 2492.77,-268.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2492.78,-270.6 2498.78,-268.5 2492.78,-266.4 2492.78,-270.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1313.02,-438.04C1333.74,-425 1369.78,-404.51 1404,-395.66 1540.54,-360.37 1579.97,-381.66 1721,-381.66 1721,-381.66 1721,-381.66 2213.5,-381.66 2311.33,-381.66 2425.05,-381.66 2492.77,-381.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2492.78,-383.76 2498.78,-381.66 2492.78,-379.56 2492.78,-383.76"/>
 </g>
 
 <g id="g__pepper_say" class="node gn topic">
 <title>/pepper/say</title>
-<polygon fill="#ffffff" stroke="black" points="1549,-139 1464,-139 1464,-116 1549,-116 1549,-139"/>
-<text text-anchor="middle" x="1506.5" y="-125.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/say</text>
+<polygon fill="#ffffff" stroke="black" points="1549,-361.16 1464,-361.16 1464,-338.16 1549,-338.16 1549,-361.16"/>
+<text text-anchor="middle" x="1506.5" y="-347.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/say</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g__pepper_say" class="edge ge">
 <title>visitor_approach&#45;&gt;/pepper/say</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1303.29,-256.93C1319.34,-234 1358.44,-182.65 1404,-155.5 1420.37,-145.75 1440.23,-139.29 1458.03,-135.07"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1458.59,-137.1 1463.98,-133.72 1457.66,-133 1458.59,-137.1"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1308.1,-437.89C1327.28,-420.65 1365.63,-388.72 1404,-371.66 1420.73,-364.22 1440.15,-359.23 1457.5,-355.9"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1458.27,-357.9 1463.79,-354.75 1457.51,-353.77 1458.27,-357.9"/>
 </g>
 
 <g id="g__pepper_visitor_target" class="node gn topic">
 <title>/pepper/visitor_target</title>
-<polygon fill="#ffffff" stroke="black" points="1582,-185 1431,-185 1431,-162 1582,-162 1582,-185"/>
-<text text-anchor="middle" x="1506.5" y="-171.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_target</text>
+<polygon fill="#ffffff" stroke="black" points="1582,-461.16 1431,-461.16 1431,-438.16 1582,-438.16 1582,-461.16"/>
+<text text-anchor="middle" x="1506.5" y="-447.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_target</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g__pepper_visitor_target" class="edge ge">
 <title>visitor_approach&#45;&gt;/pepper/visitor_target</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1307.74,-256.99C1326.74,-239.8 1365.22,-207.73 1404,-191.5 1410.64,-188.72 1417.7,-186.37 1424.89,-184.38"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1425.67,-186.35 1430.95,-182.8 1424.61,-182.28 1425.67,-186.35"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1364.26,-449.66C1383.56,-449.66 1404.71,-449.66 1424.64,-449.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1424.79,-451.76 1430.79,-449.66 1424.79,-447.56 1424.79,-451.76"/>
 </g>
 
 <g id="g__pepper_visitor_status" class="node gn topic">
 <title>/pepper/visitor_status</title>
-<polygon fill="#ffffff" stroke="black" points="1582,-221 1431,-221 1431,-198 1582,-198 1582,-221"/>
-<text text-anchor="middle" x="1506.5" y="-207.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_status</text>
+<polygon fill="#ffffff" stroke="black" points="1582,-425.16 1431,-425.16 1431,-402.16 1582,-402.16 1582,-425.16"/>
+<text text-anchor="middle" x="1506.5" y="-411.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_status</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g__pepper_visitor_status" class="edge ge">
 <title>visitor_approach&#45;&gt;/pepper/visitor_status</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1336.49,-256.98C1371.35,-247.19 1421.45,-233.11 1458.05,-222.83"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1459.05,-224.73 1464.26,-221.09 1457.91,-220.69 1459.05,-224.73"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1362.81,-438.12C1384.95,-434.33 1409.66,-430.09 1432.22,-426.23"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1432.65,-428.28 1438.21,-425.2 1431.94,-424.14 1432.65,-428.28"/>
 </g>
 
 <g id="g_navigate_to_pose" class="node gn action">
 <title>navigate_to_pose</title>
-<polygon fill="#ffffff" stroke="black" points="1562.33,-344.17 1443,-344.17 1443,-328.83 1562.33,-328.83 1570,-336.5 1562.33,-344.17"/>
-<text text-anchor="middle" x="1506.5" y="-334.1" font-family="DejaVu Sans Mono" font-size="10.50">⚙ navigate_to_pose</text>
+<polygon fill="#ffffff" stroke="black" points="1562.33,-529.33 1443,-529.33 1443,-514 1562.33,-514 1570,-521.66 1562.33,-529.33"/>
+<text text-anchor="middle" x="1506.5" y="-519.26" font-family="DejaVu Sans Mono" font-size="10.50">⚙ navigate_to_pose</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g_navigate_to_pose" class="edge ge">
 <title>visitor_approach&#45;&gt;navigate_to_pose</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1316.47,-280.13C1337.87,-291.53 1372.33,-308.58 1404,-318.5 1414.45,-321.77 1425.7,-324.51 1436.77,-326.78"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1436.6,-328.89 1442.9,-327.99 1437.42,-324.77 1436.6,-328.89"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1314.77,-461.38C1335.92,-473.73 1371.23,-492.85 1404,-503.66 1414.4,-507.09 1425.62,-509.91 1436.68,-512.21"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1436.51,-514.32 1442.8,-513.44 1437.33,-510.2 1436.51,-514.32"/>
 </g>
 
 <g id="g_spin" class="node gn action">
 <title>spin</title>
-<polygon fill="#ffffff" stroke="black" points="1526.33,-308.17 1479,-308.17 1479,-292.83 1526.33,-292.83 1534,-300.5 1526.33,-308.17"/>
-<text text-anchor="middle" x="1506.5" y="-298.1" font-family="DejaVu Sans Mono" font-size="10.50">⚙ spin</text>
+<polygon fill="#ffffff" stroke="black" points="1526.33,-493.33 1479,-493.33 1479,-478 1526.33,-478 1534,-485.66 1526.33,-493.33"/>
+<text text-anchor="middle" x="1506.5" y="-483.26" font-family="DejaVu Sans Mono" font-size="10.50">⚙ spin</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g_spin" class="edge ge">
 <title>visitor_approach&#45;&gt;spin</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1364.26,-278.98C1400.78,-284.54 1443.96,-291.12 1472.88,-295.53"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1472.58,-297.61 1478.83,-296.44 1473.21,-293.46 1472.58,-297.61"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1362.81,-461.2C1399.66,-467.52 1443.65,-475.06 1472.95,-480.08"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1472.7,-482.17 1478.97,-481.11 1473.41,-478.03 1472.7,-482.17"/>
 </g>
 
 <g id="g__pepper_Head_controller_command" class="node gn topic">
 <title>/pepper/Head_controller/command</title>
-<polygon fill="#ffffff" stroke="black" points="1609,-45 1404,-45 1404,-22 1609,-22 1609,-45"/>
-<text text-anchor="middle" x="1506.5" y="-31.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/Head_controller/command</text>
+<polygon fill="#ffffff" stroke="black" points="1609,-88.16 1404,-88.16 1404,-65.16 1609,-65.16 1609,-88.16"/>
+<text text-anchor="middle" x="1506.5" y="-74.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/Head_controller/command</text>
 </g>
 
 <g id="e_g_visitor_approach&#45;&#45;g__pepper_Head_controller_command" class="edge ge">
 <title>visitor_approach&#45;&gt;/pepper/Head_controller/command</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1301.72,-256.77C1316.75,-229.07 1357.33,-158.27 1404,-109.5 1427.43,-85.02 1459.39,-62.49 1481.14,-48.43"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1482.52,-50.04 1486.44,-45.04 1480.26,-46.5 1482.52,-50.04"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1302.71,-437.85C1316.17,-415.44 1345.4,-364.97 1364,-319.66 1387.28,-262.96 1373.67,-240.94 1404,-187.66 1426.07,-148.89 1463.89,-112.43 1486.61,-92.47"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1488.06,-93.98 1491.21,-88.46 1485.31,-90.81 1488.06,-93.98"/>
 </g>
 
 <g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_cmd_vel" class="edge ge">
 <title>pepper_mobile_bridge&#45;&gt;/pepper/cmd_vel</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M577.59,-173.99C630.63,-143.96 782.29,-65.5 919,-65.5 919,-65.5 919,-65.5 2213.5,-65.5 2358.41,-65.5 2495,-203.73 2538.33,-252.06"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2536.9,-253.62 2542.46,-256.71 2540.04,-250.83 2536.9,-253.62"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M567.9,-376.16C607.31,-331.71 758.71,-173.66 919,-173.66 919,-173.66 919,-173.66 2213.5,-173.66 2359.7,-173.66 2495.95,-315.94 2538.71,-365.15"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2537.27,-366.71 2542.78,-369.88 2540.46,-363.97 2537.27,-366.71"/>
 </g>
 
 <g id="g__pepper_voice_audio" class="node gn topic">
 <title>/pepper/voice/audio</title>
-<polygon fill="#ffffff" stroke="black" points="818,-197 685,-197 685,-174 818,-174 818,-197"/>
-<text text-anchor="middle" x="751.5" y="-183.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/voice/audio</text>
+<polygon fill="#ffffff" stroke="black" points="818,-424.16 685,-424.16 685,-401.16 818,-401.16 818,-424.16"/>
+<text text-anchor="middle" x="751.5" y="-410.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/voice/audio</text>
 </g>
 
 <g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_voice_audio" class="edge ge">
 <title>pepper_mobile_bridge&#45;&gt;/pepper/voice/audio</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M641.59,-185.5C653.95,-185.5 666.59,-185.5 678.68,-185.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="678.94,-187.6 684.94,-185.5 678.94,-183.4 678.94,-187.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M641.59,-398.52C653.95,-400.12 666.59,-401.76 678.68,-403.33"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="678.72,-405.46 684.94,-404.15 679.26,-401.29 678.72,-405.46"/>
 </g>
 
 <g id="g__pepper_visitor_call" class="node gn topic">
 <title>/pepper/visitor_call</title>
-<polygon fill="#ffffff" stroke="black" points="1173,-251 1034,-251 1034,-228 1173,-228 1173,-251"/>
-<text text-anchor="middle" x="1103.5" y="-237.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_call</text>
+<polygon fill="#ffffff" stroke="black" points="1173,-461.16 1034,-461.16 1034,-438.16 1173,-438.16 1173,-461.16"/>
+<text text-anchor="middle" x="1103.5" y="-447.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/visitor_call</text>
 </g>
 
 <g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_visitor_call" class="edge ge">
 <title>pepper_mobile_bridge&#45;&gt;/pepper/visitor_call</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M634.47,-197.03C651.11,-199.34 668.63,-201.64 685,-203.5 804.53,-217.11 943.84,-228.16 1027.5,-234.28"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1027.54,-236.39 1033.68,-234.73 1027.85,-232.2 1027.54,-236.39"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M585.15,-399.35C610.46,-409.63 649.54,-423.99 685,-430.66 803.26,-452.91 943.52,-454.31 1027.64,-452.53"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1027.9,-454.63 1033.85,-452.39 1027.8,-450.43 1027.9,-454.63"/>
 </g>
 
 <g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_say" class="edge ge">
 <title>pepper_mobile_bridge&#45;&gt;/pepper/say</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M596.52,-173.97C621.64,-169.16 655.18,-164.33 685,-161.5 977.85,-133.67 1331.46,-124.72 1457.79,-125.43"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1457.98,-127.53 1463.99,-125.47 1458.01,-123.33 1457.98,-127.53"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M593.91,-376.13C658.58,-360.03 799.03,-333.66 919,-333.66 919,-333.66 919,-333.66 1104.5,-333.66 1232.18,-333.66 1382.66,-338.79 1457.79,-343.91"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1457.81,-346.01 1463.94,-344.34 1458.11,-341.82 1457.81,-346.01"/>
+</g>
+
+<g id="g__pepper_go_to" class="node gn topic">
+<title>/pepper/go_to</title>
+<polygon fill="#ffffff" stroke="black" points="1152,-389.16 1055,-389.16 1055,-366.16 1152,-366.16 1152,-389.16"/>
+<text text-anchor="middle" x="1103.5" y="-375.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/go_to</text>
+</g>
+
+<g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_go_to" class="edge ge">
+<title>pepper_mobile_bridge&#45;&gt;/pepper/go_to</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M641.59,-386.13C754.77,-384.05 953.54,-380.4 1048.73,-378.65"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1048.88,-380.75 1054.84,-378.54 1048.81,-376.55 1048.88,-380.75"/>
 </g>
 
 <g id="e_g_pepper_mobile_bridge&#45;&#45;g__pepper_Head_controller_command" class="edge ge">
 <title>pepper_mobile_bridge&#45;&gt;/pepper/Head_controller/command</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M565.13,-173.83C582.07,-147.28 627.65,-82.58 685,-55.5 779.39,-10.93 814.62,-35.5 919,-35.5 919,-35.5 919,-35.5 1104.5,-35.5 1203.73,-35.5 1316.78,-34.88 1397.49,-34.33"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1397.74,-36.43 1403.73,-34.29 1397.72,-32.23 1397.74,-36.43"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M558.14,-376.16C559.43,-326.23 571.72,-126.8 685,-37.66 767.23,27.05 814.36,-11.66 919,-11.66 919,-11.66 919,-11.66 1104.5,-11.66 1232.95,-11.66 1381.6,-44.56 1456.69,-63.55"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1456.51,-65.67 1462.84,-65.12 1457.55,-61.6 1456.51,-65.67"/>
 </g>
 
 <g id="e_g__pepper_camera_depth_image_raw&#45;&#45;g_visitor_approach" class="edge ge">
 <title>/pepper/camera/depth/image_raw&#45;&gt;visitor_approach</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M410.8,-363.03C566.41,-381.63 910.35,-408.9 1185,-331.5 1219.02,-321.91 1253.5,-299.17 1274.19,-283.8"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1275.62,-285.35 1279.15,-280.07 1273.09,-282 1275.62,-285.35"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M426.22,-481.66C511.95,-481.66 639.43,-481.66 750.5,-481.66 750.5,-481.66 750.5,-481.66 921,-481.66 1038.5,-481.66 1068.2,-480.41 1185,-467.66 1198.09,-466.23 1211.99,-464.27 1225.33,-462.16"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1225.82,-464.21 1231.41,-461.18 1225.15,-460.06 1225.82,-464.21"/>
 </g>
 
 <g id="e_g__pepper_camera_bottom_image_raw&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/camera/bottom/image_raw&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M372.1,-232.98C410.19,-223.15 464.99,-209 504.86,-198.71"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="505.84,-200.62 511.12,-197.09 504.79,-196.55 505.84,-200.62"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M388.73,-419.14C419.47,-413.36 456.78,-406.33 488.36,-400.39"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="489.09,-402.39 494.6,-399.22 488.31,-398.26 489.09,-402.39"/>
 </g>
 
 <g id="g_gazebo_ros_p3d" class="node gn node base">
 <title>gazebo_ros_p3d</title>
-<path fill="#ffffff" stroke="black" d="M146.33,-197C146.33,-197 37.67,-197 37.67,-197 33.83,-197 30,-193.17 30,-189.33 30,-189.33 30,-181.67 30,-181.67 30,-177.83 33.83,-174 37.67,-174 37.67,-174 146.33,-174 146.33,-174 150.17,-174 154,-177.83 154,-181.67 154,-181.67 154,-189.33 154,-189.33 154,-193.17 150.17,-197 146.33,-197"/>
-<text text-anchor="middle" x="92" y="-182.4" font-family="DejaVu Sans Mono" font-size="12.00">gazebo_ros_p3d</text>
+<path fill="#ffffff" stroke="black" d="M146.33,-399.16C146.33,-399.16 37.67,-399.16 37.67,-399.16 33.83,-399.16 30,-395.33 30,-391.5 30,-391.5 30,-383.83 30,-383.83 30,-380 33.83,-376.16 37.67,-376.16 37.67,-376.16 146.33,-376.16 146.33,-376.16 150.17,-376.16 154,-380 154,-383.83 154,-383.83 154,-391.5 154,-391.5 154,-395.33 150.17,-399.16 146.33,-399.16"/>
+<text text-anchor="middle" x="92" y="-384.56" font-family="DejaVu Sans Mono" font-size="12.00">gazebo_ros_p3d</text>
 </g>
 
 <g id="g__pepper_odom_groundtruth" class="node gn topic">
 <title>/pepper/odom_groundtruth</title>
-<polygon fill="#ffffff" stroke="black" points="408,-197 245,-197 245,-174 408,-174 408,-197"/>
-<text text-anchor="middle" x="326.5" y="-183.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/odom_groundtruth</text>
+<polygon fill="#ffffff" stroke="black" points="408,-399.16 245,-399.16 245,-376.16 408,-376.16 408,-399.16"/>
+<text text-anchor="middle" x="326.5" y="-385.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/odom_groundtruth</text>
 </g>
 
 <g id="e_g_gazebo_ros_p3d&#45;&#45;g__pepper_odom_groundtruth" class="edge ge">
 <title>gazebo_ros_p3d&#45;&gt;/pepper/odom_groundtruth</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M154.09,-185.5C179.85,-185.5 210.33,-185.5 238.38,-185.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="238.7,-187.6 244.7,-185.5 238.7,-183.4 238.7,-187.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M154.09,-387.66C179.85,-387.66 210.33,-387.66 238.38,-387.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="238.7,-389.76 244.7,-387.66 238.7,-385.56 238.7,-389.76"/>
 </g>
 
 <g id="e_g__pepper_odom_groundtruth&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/odom_groundtruth&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M408.06,-185.5C426.76,-185.5 446.79,-185.5 465.87,-185.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="466.3,-187.6 472.3,-185.5 466.3,-183.4 466.3,-187.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M408.06,-387.66C426.76,-387.66 446.79,-387.66 465.87,-387.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="466.3,-389.76 472.3,-387.66 466.3,-385.56 466.3,-389.76"/>
 </g>
 
 <g id="g_joint_state_controller" class="node gn node base">
 <title>joint_state_controller</title>
-<path fill="#ffffff" stroke="black" d="M176.33,-521C176.33,-521 7.67,-521 7.67,-521 3.83,-521 0,-517.17 0,-513.33 0,-513.33 0,-505.67 0,-505.67 0,-501.83 3.83,-498 7.67,-498 7.67,-498 176.33,-498 176.33,-498 180.17,-498 184,-501.83 184,-505.67 184,-505.67 184,-513.33 184,-513.33 184,-517.17 180.17,-521 176.33,-521"/>
-<text text-anchor="middle" x="92" y="-506.4" font-family="DejaVu Sans Mono" font-size="12.00">joint_state_controller</text>
+<path fill="#ffffff" stroke="black" d="M176.33,-745.16C176.33,-745.16 7.67,-745.16 7.67,-745.16 3.83,-745.16 0,-741.33 0,-737.5 0,-737.5 0,-729.83 0,-729.83 0,-726 3.83,-722.16 7.67,-722.16 7.67,-722.16 176.33,-722.16 176.33,-722.16 180.17,-722.16 184,-726 184,-729.83 184,-729.83 184,-737.5 184,-737.5 184,-741.33 180.17,-745.16 176.33,-745.16"/>
+<text text-anchor="middle" x="92" y="-730.56" font-family="DejaVu Sans Mono" font-size="12.00">joint_state_controller</text>
 </g>
 
 <g id="g__pepper_joint_states" class="node gn topic">
 <title>/pepper/joint_states</title>
-<polygon fill="#ffffff" stroke="black" points="396,-521 257,-521 257,-498 396,-498 396,-521"/>
-<text text-anchor="middle" x="326.5" y="-507.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/joint_states</text>
+<polygon fill="#ffffff" stroke="black" points="396,-745.16 257,-745.16 257,-722.16 396,-722.16 396,-745.16"/>
+<text text-anchor="middle" x="326.5" y="-731.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/joint_states</text>
 </g>
 
 <g id="e_g_joint_state_controller&#45;&#45;g__pepper_joint_states" class="edge ge">
 <title>joint_state_controller&#45;&gt;/pepper/joint_states</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M184.22,-509.5C206.22,-509.5 229.48,-509.5 250.63,-509.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="250.83,-511.6 256.83,-509.5 250.83,-507.4 250.83,-511.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M184.22,-733.66C206.22,-733.66 229.48,-733.66 250.63,-733.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="250.83,-735.76 256.83,-733.66 250.83,-731.56 250.83,-735.76"/>
 </g>
 
 <g id="g_robot_state_publisher" class="node gn node base">
 <title>robot_state_publisher</title>
-<path fill="#ffffff" stroke="black" d="M637.33,-521C637.33,-521 476.67,-521 476.67,-521 472.83,-521 469,-517.17 469,-513.33 469,-513.33 469,-505.67 469,-505.67 469,-501.83 472.83,-498 476.67,-498 476.67,-498 637.33,-498 637.33,-498 641.17,-498 645,-501.83 645,-505.67 645,-505.67 645,-513.33 645,-513.33 645,-517.17 641.17,-521 637.33,-521"/>
-<text text-anchor="middle" x="557" y="-506.4" font-family="DejaVu Sans Mono" font-size="12.00">robot_state_publisher</text>
+<path fill="#ffffff" stroke="black" d="M637.33,-745.16C637.33,-745.16 476.67,-745.16 476.67,-745.16 472.83,-745.16 469,-741.33 469,-737.5 469,-737.5 469,-729.83 469,-729.83 469,-726 472.83,-722.16 476.67,-722.16 476.67,-722.16 637.33,-722.16 637.33,-722.16 641.17,-722.16 645,-726 645,-729.83 645,-729.83 645,-737.5 645,-737.5 645,-741.33 641.17,-745.16 637.33,-745.16"/>
+<text text-anchor="middle" x="557" y="-730.56" font-family="DejaVu Sans Mono" font-size="12.00">robot_state_publisher</text>
 </g>
 
 <g id="e_g__pepper_joint_states&#45;&#45;g_robot_state_publisher" class="edge ge">
 <title>/pepper/joint_states&#45;&gt;robot_state_publisher</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M396.06,-509.5C416.97,-509.5 440.32,-509.5 462.58,-509.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="462.82,-511.6 468.82,-509.5 462.82,-507.4 462.82,-511.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M396.06,-733.66C416.97,-733.66 440.32,-733.66 462.58,-733.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="462.82,-735.76 468.82,-733.66 462.82,-731.56 462.82,-735.76"/>
 </g>
 
 <g id="g_map_server" class="node gn node std">
 <title>map_server</title>
-<path fill="#ffffff" stroke="black" d="M1333.83,-392C1333.83,-392 1255.17,-392 1255.17,-392 1251.33,-392 1247.5,-388.17 1247.5,-384.33 1247.5,-384.33 1247.5,-376.67 1247.5,-376.67 1247.5,-372.83 1251.33,-369 1255.17,-369 1255.17,-369 1333.83,-369 1333.83,-369 1337.67,-369 1341.5,-372.83 1341.5,-376.67 1341.5,-376.67 1341.5,-384.33 1341.5,-384.33 1341.5,-388.17 1337.67,-392 1333.83,-392"/>
-<text text-anchor="middle" x="1294.5" y="-377.4" font-family="DejaVu Sans Mono" font-size="12.00">map_server</text>
+<path fill="#ffffff" stroke="black" d="M1333.83,-577.16C1333.83,-577.16 1255.17,-577.16 1255.17,-577.16 1251.33,-577.16 1247.5,-573.33 1247.5,-569.5 1247.5,-569.5 1247.5,-561.83 1247.5,-561.83 1247.5,-558 1251.33,-554.16 1255.17,-554.16 1255.17,-554.16 1333.83,-554.16 1333.83,-554.16 1337.67,-554.16 1341.5,-558 1341.5,-561.83 1341.5,-561.83 1341.5,-569.5 1341.5,-569.5 1341.5,-573.33 1337.67,-577.16 1333.83,-577.16"/>
+<text text-anchor="middle" x="1294.5" y="-562.56" font-family="DejaVu Sans Mono" font-size="12.00">map_server</text>
 </g>
 
 <g id="g__map" class="node gn topic">
 <title>/map</title>
-<polygon fill="#ffffff" stroke="black" points="1130.5,-429 1076.5,-429 1076.5,-406 1130.5,-406 1130.5,-429"/>
-<text text-anchor="middle" x="1103.5" y="-415.1" font-family="DejaVu Sans Mono" font-size="10.50">/map</text>
+<polygon fill="#ffffff" stroke="black" points="1130.5,-577.16 1076.5,-577.16 1076.5,-554.16 1130.5,-554.16 1130.5,-577.16"/>
+<text text-anchor="middle" x="1103.5" y="-563.26" font-family="DejaVu Sans Mono" font-size="10.50">/map</text>
 </g>
 
 <g id="e_g_map_server&#45;&#45;g__map" class="edge ge">
 <title>map_server&#45;&gt;/map</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1247.45,-389.51C1213.27,-396.21 1167.48,-405.17 1137.03,-411.13"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1136.26,-409.14 1130.78,-412.36 1137.07,-413.26 1136.26,-409.14"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1247.45,-565.66C1213.27,-565.66 1167.48,-565.66 1137.03,-565.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1136.78,-563.56 1130.78,-565.66 1136.78,-567.76 1136.78,-563.56"/>
 </g>
 
 <g id="e_g__map&#45;&#45;g_amcl" class="edge ge">
 <title>/map&#45;&gt;amcl</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1130.78,-422.37C1164.91,-428.69 1224.48,-439.72 1261.29,-446.54"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1261.16,-448.65 1267.44,-447.67 1261.93,-444.52 1261.16,-448.65"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1130.77,-567.9C1147.14,-570.15 1168.22,-574.66 1185,-583.66 1205.36,-594.59 1202.3,-608.45 1222.5,-619.66 1234.35,-626.24 1248.64,-630.46 1261.28,-633.14"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1261.04,-635.24 1267.33,-634.34 1261.86,-631.12 1261.04,-635.24"/>
 </g>
 
 <g id="e_g__map&#45;&#45;g_global_costmap" class="edge ge">
 <title>/map&#45;&gt;global_costmap</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1130.78,-417.36C1155.42,-417.23 1193.3,-417.03 1226.31,-416.86"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1226.43,-418.96 1232.41,-416.82 1226.4,-414.76 1226.43,-418.96"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1130.78,-570.67C1155.51,-575.38 1193.59,-582.63 1226.69,-588.94"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1226.53,-591.04 1232.81,-590.1 1227.31,-586.92 1226.53,-591.04"/>
 </g>
 
 <g id="e_g__map&#45;&#45;g_visitor_approach" class="edge ge">
 <title>/map&#45;&gt;visitor_approach</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1126.09,-405.9C1142.74,-396.6 1166.05,-382.78 1185,-368.5 1220.57,-341.7 1257.87,-305.18 1278.14,-284.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1279.75,-285.86 1282.44,-280.1 1276.75,-282.92 1279.75,-285.86"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1124.81,-554.09C1141.16,-544.7 1164.69,-531.05 1185,-518.66 1214.7,-500.56 1248.43,-478.94 1270.29,-464.78"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1271.69,-466.38 1275.59,-461.35 1269.41,-462.85 1271.69,-466.38"/>
 </g>
 
 <g id="e_g__yolo_detections&#45;&#45;g_debug_node" class="edge ge">
 <title>/yolo/detections&#45;&gt;debug_node</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M809.33,-306.91C827.95,-308.03 848.54,-309.27 866.8,-310.37"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="866.79,-312.47 872.9,-310.73 867.04,-308.28 866.79,-312.47"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M809.33,-551.59C827.95,-555.16 848.54,-559.12 866.8,-562.63"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="866.61,-564.73 872.9,-563.8 867.4,-560.61 866.61,-564.73"/>
 </g>
 
 <g id="e_g__yolo_dbg_image&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/yolo/dbg_image&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1079.57,-301.88C1061.97,-292.03 1038.04,-276.49 1022,-257.5 995.06,-225.6 1016.91,-195.41 982,-172.5 859.58,-92.17 671.57,-144.46 593.69,-171.82"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="592.78,-169.92 587.83,-173.91 594.18,-173.87 592.78,-169.92"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1048.76,-598.49C1038.79,-595.62 1029.25,-590.99 1022,-583.66 961.91,-522.95 1047.88,-450.04 982,-395.66 869.94,-303.17 678.66,-348.53 596.91,-374.17"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="595.83,-372.31 590.75,-376.13 597.1,-376.31 595.83,-372.31"/>
 </g>
 
 <g id="g_voice_listener" class="node gn node proj">
 <title>voice_listener</title>
-<path fill="#ffffff" stroke="black" d="M974.33,-202C974.33,-202 865.67,-202 865.67,-202 861.83,-202 858,-198.17 858,-194.33 858,-194.33 858,-186.67 858,-186.67 858,-182.83 861.83,-179 865.67,-179 865.67,-179 974.33,-179 974.33,-179 978.17,-179 982,-182.83 982,-186.67 982,-186.67 982,-194.33 982,-194.33 982,-198.17 978.17,-202 974.33,-202"/>
-<text text-anchor="middle" x="920" y="-187.4" font-family="DejaVu Sans Mono" font-size="12.00">voice_listener</text>
+<path fill="#ffffff" stroke="black" d="M974.33,-425.16C974.33,-425.16 865.67,-425.16 865.67,-425.16 861.83,-425.16 858,-421.33 858,-417.5 858,-417.5 858,-409.83 858,-409.83 858,-406 861.83,-402.16 865.67,-402.16 865.67,-402.16 974.33,-402.16 974.33,-402.16 978.17,-402.16 982,-406 982,-409.83 982,-409.83 982,-417.5 982,-417.5 982,-421.33 978.17,-425.16 974.33,-425.16"/>
+<text text-anchor="middle" x="920" y="-410.56" font-family="DejaVu Sans Mono" font-size="12.00">voice_listener</text>
 </g>
 
 <g id="e_g__pepper_voice_audio&#45;&#45;g_voice_listener" class="edge ge">
 <title>/pepper/voice/audio&#45;&gt;voice_listener</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M818.31,-187.48C829.27,-187.81 840.66,-188.15 851.67,-188.48"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="851.68,-190.58 857.74,-188.66 851.8,-186.38 851.68,-190.58"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M818.31,-413.06C829.27,-413.12 840.66,-413.19 851.67,-413.26"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="851.72,-415.36 857.74,-413.29 851.75,-411.16 851.72,-415.36"/>
 </g>
 
 <g id="g__pepper_voice_transcript" class="node gn topic">
 <title>/pepper/voice/transcript</title>
-<polygon fill="#ffffff" stroke="black" points="1185,-187 1022,-187 1022,-164 1185,-164 1185,-187"/>
-<text text-anchor="middle" x="1103.5" y="-173.1" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/voice/transcript</text>
+<polygon fill="#ffffff" stroke="black" points="1185,-425.16 1022,-425.16 1022,-402.16 1185,-402.16 1185,-425.16"/>
+<text text-anchor="middle" x="1103.5" y="-411.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/voice/transcript</text>
 </g>
 
 <g id="e_g_voice_listener&#45;&#45;g__pepper_voice_transcript" class="edge ge">
 <title>voice_listener&#45;&gt;/pepper/voice/transcript</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M982.19,-185.44C992.96,-184.55 1004.35,-183.61 1015.66,-182.68"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1016.12,-184.75 1021.93,-182.16 1015.78,-180.56 1016.12,-184.75"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M982.19,-413.66C992.96,-413.66 1004.35,-413.66 1015.66,-413.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1015.93,-415.76 1021.93,-413.66 1015.93,-411.56 1015.93,-415.76"/>
 </g>
 
 <g id="e_g_voice_listener&#45;&#45;g__pepper_visitor_call" class="edge ge">
 <title>voice_listener&#45;&gt;/pepper/visitor_call</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M964.01,-202.11C991.02,-209.4 1025.92,-218.83 1053.93,-226.39"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1053.46,-228.43 1059.8,-227.97 1054.55,-224.38 1053.46,-228.43"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M979.18,-425.2C998.06,-428.95 1019.12,-433.12 1038.41,-436.95"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1038.05,-439.02 1044.34,-438.13 1038.86,-434.9 1038.05,-439.02"/>
 </g>
 
 <g id="e_g__pepper_voice_transcript&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/voice/transcript&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1061.61,-163.98C1038.46,-158.06 1008.85,-151.47 982,-148.5 852.62,-134.18 700.53,-157.09 618.25,-172.77"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="617.45,-170.78 611.96,-173.98 618.25,-174.91 617.45,-170.78"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1029.42,-402.05C1026.75,-400.19 1024.25,-398.07 1022,-395.66 942.43,-310.6 1070.42,-212.48 982,-136.66 931.9,-93.7 741.23,-102.1 685,-136.66 598.58,-189.79 568.79,-321.97 560.63,-369.92"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="558.51,-369.85 559.61,-376.11 562.65,-370.53 558.51,-369.85"/>
 </g>
 
 <g id="e_g__pepper_visitor_call&#45;&#45;g_visitor_approach" class="edge ge">
 <title>/pepper/visitor_call&#45;&gt;visitor_approach</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1173,-250.01C1187.92,-252.3 1203.78,-254.73 1218.93,-257.06"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1218.67,-259.14 1224.92,-257.98 1219.3,-254.99 1218.67,-259.14"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1173,-449.66C1187.79,-449.66 1203.5,-449.66 1218.52,-449.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1218.92,-451.76 1224.92,-449.66 1218.92,-447.56 1218.92,-451.76"/>
 </g>
 
 <g id="e_g__pepper_say&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/say&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1463.99,-131.32C1343.41,-137.42 982.8,-146.2 685,-174.5 672.9,-175.65 660.19,-177.13 647.68,-178.67"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="647.25,-176.61 641.56,-179.44 647.77,-180.78 647.25,-176.61"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1463.94,-352.15C1391.14,-352.08 1235.77,-346.66 1104.5,-346.66 919,-346.66 919,-346.66 919,-346.66 824.91,-346.66 718.22,-362.88 645.38,-375.09"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="644.88,-373.04 639.31,-376.11 645.58,-377.19 644.88,-373.04"/>
 </g>
 
 <g id="e_g__pepper_visitor_status&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
 <title>/pepper/visitor_status&#45;&gt;pepper_mobile_bridge</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1430.77,-205.57C1421.03,-202.5 1411.75,-197.99 1404,-191.5 1364.44,-158.36 1406.31,-112.04 1364,-82.5 1107.48,96.61 690.49,-111.92 583.6,-170.87"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="582.39,-169.14 578.16,-173.89 584.43,-172.81 582.39,-169.14"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1463.52,-402.09C1443.52,-394.86 1420.43,-383.79 1404,-367.66 1374.49,-338.7 1398.54,-306.4 1364,-283.66 1236.95,-200.02 1139.75,-366.95 1022,-270.66 963.59,-222.89 1041.31,-152.31 982,-105.66 930.12,-64.86 740.43,-69.83 685,-105.66 590.08,-167.02 565.39,-318.13 559.61,-369.92"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="557.51,-369.81 558.97,-376 561.69,-370.25 557.51,-369.81"/>
 </g>
 
 <g id="e_g_navigate_to_pose&#45;&#45;g_bt_navigator" class="edge ge">
 <title>navigate_to_pose&#45;&gt;bt_navigator</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1442.97,-337.14C1428.71,-340.09 1414.64,-345.62 1404,-355.5 1353.13,-402.74 1413.14,-457.46 1364,-506.5 1361.2,-509.29 1358.02,-511.67 1354.61,-513.69"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1353.42,-511.94 1349.07,-516.57 1355.36,-515.66 1353.42,-511.94"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1442.97,-522.31C1428.71,-525.25 1414.64,-530.78 1404,-540.66 1353.13,-587.91 1413.14,-642.62 1364,-691.66 1361.2,-694.46 1358.02,-696.83 1354.61,-698.85"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1353.42,-697.1 1349.07,-701.74 1355.36,-700.83 1353.42,-697.1"/>
 </g>
 
 <g id="e_g_spin&#45;&#45;g_behavior_server" class="edge ge">
 <title>spin&#45;&gt;behavior_server</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1534.4,-302.83C1555.23,-305.21 1584.54,-309.83 1609,-318.5 1642.22,-330.27 1677.25,-351.25 1699.11,-365.51"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="1698.21,-367.43 1704.38,-368.98 1700.52,-363.92 1698.21,-367.43"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1534.23,-484.1C1556.34,-484.18 1587.49,-487.6 1609,-503.66 1640.85,-527.44 1617.99,-558.79 1649,-583.66 1650.41,-584.8 1651.89,-585.86 1653.41,-586.86"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1652.55,-588.78 1658.78,-590 1654.67,-585.16 1652.55,-588.78"/>
+</g>
+
+<g id="e_g__pepper_go_to&#45;&#45;g_visitor_approach" class="edge ge">
+<title>/pepper/go_to&#45;&gt;visitor_approach</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1152.29,-386.35C1163.18,-388.88 1174.61,-391.98 1185,-395.66 1214.8,-406.23 1247,-423 1268.51,-435.05"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1267.49,-436.88 1273.74,-438 1269.55,-433.22 1267.49,-436.88"/>
+</g>
+
+<g id="g_place_navigator" class="node gn node proj">
+<title>place_navigator</title>
+<path fill="#ffffff" stroke="black" d="M1352.33,-313.16C1352.33,-313.16 1236.67,-313.16 1236.67,-313.16 1232.83,-313.16 1229,-309.33 1229,-305.5 1229,-305.5 1229,-297.83 1229,-297.83 1229,-294 1232.83,-290.16 1236.67,-290.16 1236.67,-290.16 1352.33,-290.16 1352.33,-290.16 1356.17,-290.16 1360,-294 1360,-297.83 1360,-297.83 1360,-305.5 1360,-305.5 1360,-309.33 1356.17,-313.16 1352.33,-313.16"/>
+<text text-anchor="middle" x="1294.5" y="-298.56" font-family="DejaVu Sans Mono" font-size="12.00">place_navigator</text>
+</g>
+
+<g id="e_g__pepper_go_to&#45;&#45;g_place_navigator" class="edge ge">
+<title>/pepper/go_to&#45;&gt;place_navigator</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1133.21,-366.12C1167.02,-352.52 1223.16,-329.95 1259.23,-315.45"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1260.05,-317.38 1264.84,-313.19 1258.48,-313.48 1260.05,-317.38"/>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g__pepper_say" class="edge ge">
+<title>place_navigator&#45;&gt;/pepper/say</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1333.69,-313.17C1354.38,-319.16 1380.46,-326.33 1404,-331.66 1421.41,-335.6 1440.66,-339.21 1457.68,-342.14"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1457.57,-344.25 1463.84,-343.18 1458.28,-340.11 1457.57,-344.25"/>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g_navigate_to_pose" class="edge ge">
+<title>place_navigator&#45;&gt;navigate_to_pose</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1301.66,-313.29C1324.31,-356.04 1401.8,-502.07 1404,-503.66 1413.63,-510.63 1425.09,-515.2 1436.79,-518.14"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1436.61,-520.25 1442.92,-519.53 1437.54,-516.15 1436.61,-520.25"/>
+</g>
+
+<g id="g__speed_limit" class="node gn topic">
+<title>/speed_limit</title>
+<polygon fill="#ffffff" stroke="black" points="1552,-325.16 1461,-325.16 1461,-302.16 1552,-302.16 1552,-325.16"/>
+<text text-anchor="middle" x="1506.5" y="-311.26" font-family="DejaVu Sans Mono" font-size="10.50">/speed_limit</text>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g__speed_limit" class="edge ge">
+<title>place_navigator&#45;&gt;/speed_limit</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1360.22,-305.36C1390.58,-307.1 1426.24,-309.13 1454.63,-310.76"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1454.84,-312.87 1460.95,-311.12 1455.07,-308.68 1454.84,-312.87"/>
+</g>
+
+<g id="g__pepper_places" class="node gn topic">
+<title>/pepper/places</title>
+<polygon fill="#ffffff" stroke="black" points="1558,-289.16 1455,-289.16 1455,-266.16 1558,-266.16 1558,-289.16"/>
+<text text-anchor="middle" x="1506.5" y="-275.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/places</text>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g__pepper_places" class="edge ge">
+<title>place_navigator&#45;&gt;/pepper/places</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1360.22,-294.27C1388.57,-291.03 1421.53,-287.26 1448.88,-284.13"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1449.27,-286.2 1454.99,-283.44 1448.79,-282.03 1449.27,-286.2"/>
+</g>
+
+<g id="g__pepper_place_status" class="node gn topic">
+<title>/pepper/place_status</title>
+<polygon fill="#ffffff" stroke="black" points="1576,-253.16 1437,-253.16 1437,-230.16 1576,-230.16 1576,-253.16"/>
+<text text-anchor="middle" x="1506.5" y="-239.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/place_status</text>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g__pepper_place_status" class="edge ge">
+<title>place_navigator&#45;&gt;/pepper/place_status</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1321.33,-290.03C1343.01,-280.66 1375.01,-267.76 1404,-259.66 1412.62,-257.25 1421.76,-255.1 1430.87,-253.19"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1431.38,-255.23 1436.84,-251.97 1430.55,-251.11 1431.38,-255.23"/>
+</g>
+
+<g id="g__pepper_places_markers" class="node gn topic">
+<title>/pepper/places/markers</title>
+<polygon fill="#ffffff" stroke="black" points="1582,-217.16 1431,-217.16 1431,-194.16 1582,-194.16 1582,-217.16"/>
+<text text-anchor="middle" x="1506.5" y="-203.26" font-family="DejaVu Sans Mono" font-size="10.50">/pepper/places/markers</text>
+</g>
+
+<g id="e_g_place_navigator&#45;&#45;g__pepper_places_markers" class="edge ge">
+<title>place_navigator&#45;&gt;/pepper/places/markers</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1307.71,-289.99C1326.67,-272.58 1365.1,-240.08 1404,-223.66 1410.63,-220.86 1417.69,-218.5 1424.87,-216.5"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1425.66,-218.47 1430.93,-214.91 1424.59,-214.4 1425.66,-218.47"/>
+</g>
+
+<g id="e_g__speed_limit&#45;&#45;g_controller_server" class="edge ge">
+<title>/speed_limit&#45;&gt;controller_server</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1552.06,-312.78C1571.24,-314.48 1592.9,-319.42 1609,-331.66 1682.48,-387.51 1710.09,-503.89 1718.18,-548.1"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="1716.12,-548.54 1719.23,-554.09 1720.26,-547.81 1716.12,-548.54"/>
+</g>
+
+<g id="e_g__pepper_places&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
+<title>/pepper/places&#45;&gt;pepper_mobile_bridge</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1454.8,-269.71C1427.86,-265.6 1394.16,-260.62 1364,-256.66 1288.16,-246.71 1080.31,-267.17 1022,-217.66 972.35,-175.5 1033.97,-115.94 982,-76.66 955.67,-56.77 712.39,-58.26 685,-76.66 582.19,-145.73 562.56,-314.23 558.85,-369.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="556.74,-369.73 558.47,-375.84 560.93,-369.98 556.74,-369.73"/>
+</g>
+
+<g id="e_g__pepper_place_status&#45;&#45;g_pepper_mobile_bridge" class="edge ge">
+<title>/pepper/place_status&#45;&gt;pepper_mobile_bridge</title>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1436.84,-231.37C1425.78,-229.17 1414.51,-226.61 1404,-223.66 1210.24,-169.39 1179.78,-96.74 982,-59.66 917.13,-47.5 739.45,-22.36 685,-59.66 577.32,-133.44 560.92,-312.7 558.44,-369.85"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="556.34,-369.82 558.21,-375.9 560.53,-369.98 556.34,-369.82"/>
 </g>
 
 <g id="g_Head_controller" class="node gn node base">
 <title>Head_controller</title>
-<path fill="#ffffff" stroke="black" d="M2808.83,-23C2808.83,-23 2693.17,-23 2693.17,-23 2689.33,-23 2685.5,-19.17 2685.5,-15.33 2685.5,-15.33 2685.5,-7.67 2685.5,-7.67 2685.5,-3.83 2689.33,0 2693.17,0 2693.17,0 2808.83,0 2808.83,0 2812.67,0 2816.5,-3.83 2816.5,-7.67 2816.5,-7.67 2816.5,-15.33 2816.5,-15.33 2816.5,-19.17 2812.67,-23 2808.83,-23"/>
-<text text-anchor="middle" x="2751" y="-8.4" font-family="DejaVu Sans Mono" font-size="12.00">Head_controller</text>
+<path fill="#ffffff" stroke="black" d="M2808.83,-88.16C2808.83,-88.16 2693.17,-88.16 2693.17,-88.16 2689.33,-88.16 2685.5,-84.33 2685.5,-80.5 2685.5,-80.5 2685.5,-72.83 2685.5,-72.83 2685.5,-69 2689.33,-65.16 2693.17,-65.16 2693.17,-65.16 2808.83,-65.16 2808.83,-65.16 2812.67,-65.16 2816.5,-69 2816.5,-72.83 2816.5,-72.83 2816.5,-80.5 2816.5,-80.5 2816.5,-84.33 2812.67,-88.16 2808.83,-88.16"/>
+<text text-anchor="middle" x="2751" y="-73.56" font-family="DejaVu Sans Mono" font-size="12.00">Head_controller</text>
 </g>
 
 <g id="e_g__pepper_Head_controller_command&#45;&#45;g_Head_controller" class="edge ge">
 <title>/pepper/Head_controller/command&#45;&gt;Head_controller</title>
-<path fill="none" stroke="black" stroke-width="1.1" d="M1609.24,-24.23C1683.96,-18.22 1787.95,-11.5 1879.5,-11.5 1879.5,-11.5 1879.5,-11.5 2387,-11.5 2488.6,-11.5 2606.2,-11.5 2679.35,-11.5"/>
-<polygon fill="black" stroke="black" stroke-width="1.1" points="2679.41,-13.6 2685.41,-11.5 2679.41,-9.4 2679.41,-13.6"/>
+<path fill="none" stroke="black" stroke-width="1.1" d="M1609.34,-76.66C1684.1,-76.66 1788.11,-76.66 1879.5,-76.66 1879.5,-76.66 1879.5,-76.66 2387,-76.66 2488.6,-76.66 2606.2,-76.66 2679.35,-76.66"/>
+<polygon fill="black" stroke="black" stroke-width="1.1" points="2679.41,-78.76 2685.41,-76.66 2679.41,-74.56 2679.41,-78.76"/>
 </g>
 </g>
 </svg>
@@ -1438,7 +1546,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
   <div class="wrap">
     <div class="head">
       <div class="eyebrow"><span>02</span><span class="n">Lo que conviene saber</span></div>
-      <h2>Tres detalles del grafo</h2>
+      <h2>Cuatro detalles del grafo</h2>
     </div>
     <div class="notes">
       <div class="note">
@@ -1461,6 +1569,13 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
           y sigue la llamada por <code>/pepper/visitor_status</code>. voice_listener nunca convierte en llamada una frase
           de la app: Gemini y la Fase 3 no compiten por la base.</p>
         <div class="flow">app → /pepper/voice/audio → voice_listener → /pepper/voice/transcript → bridge → <b>/pepper/visitor_call</b> → visitor_approach</div>
+      </div>
+      <div class="note">
+        <h3>Dos clientes de <code>navigate_to_pose</code></h3>
+        <p>visitor_approach y place_navigator mandan objetivos a Nav2; el último en llegar reemplaza al anterior. El bridge no
+          manda a Pepper a un lugar mientras atiende a un visitante, y una orden de <code>/pepper/go_to</code> hace que
+          visitor_approach deje de mirar al último visitante. «Corre» sólo cambia el límite de <code>/speed_limit</code>.</p>
+        <div class="flow">Gemini go_to_place → bridge → <b>/pepper/go_to</b> → place_navigator → navigate_to_pose → bt_navigator</div>
       </div>
     </div>
   </div>
@@ -1746,7 +1861,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
 </footer>
 
 <script>
-const DATA = {"bt_navigator": {"id": "bt_navigator", "gid": "g_bt_navigator", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: árbol de comportamiento de navigate_to_pose"}, "compute_path_to_pose": {"id": "compute_path_to_pose", "gid": "g_compute_path_to_pose", "kind": "action", "views": ["A", "B"], "pub": ["bt_navigator"], "sub": ["planner_server"], "type": "nav2_msgs/action/ComputePathToPose", "desc": "pedir una ruta al planner"}, "planner_server": {"id": "planner_server", "gid": "g_planner_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: calcula la ruta sobre el costmap global"}, "follow_path": {"id": "follow_path", "gid": "g_follow_path", "kind": "action", "views": ["A", "B"], "pub": ["bt_navigator"], "sub": ["controller_server"], "type": "nav2_msgs/action/FollowPath", "desc": "seguir la ruta"}, "controller_server": {"id": "controller_server", "gid": "g_controller_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: sigue la ruta y genera velocidades"}, "/cmd_vel_nav": {"id": "/cmd_vel_nav", "gid": "g__cmd_vel_nav", "kind": "topic", "views": ["A", "B"], "pub": ["controller_server", "behavior_server"], "sub": ["velocity_smoother"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad del controller o de un comportamiento"}, "behavior_server": {"id": "behavior_server", "gid": "g_behavior_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: comportamientos de recuperación (spin, backup, drive_on_heading)"}, "velocity_smoother": {"id": "velocity_smoother", "gid": "g_velocity_smoother", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: suaviza las velocidades"}, "/cmd_vel_smoothed": {"id": "/cmd_vel_smoothed", "gid": "g__cmd_vel_smoothed", "kind": "topic", "views": ["A", "B"], "pub": ["velocity_smoother"], "sub": ["collision_monitor"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad suavizada"}, "collision_monitor": {"id": "collision_monitor", "gid": "g_collision_monitor", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: frena si el láser ve un obstáculo dentro del polígono de seguridad; publica la velocidad final"}, "/pepper/cmd_vel": {"id": "/pepper/cmd_vel", "gid": "g__pepper_cmd_vel", "kind": "topic", "views": ["A", "B"], "pub": ["collision_monitor", "visitor_approach", "pepper_mobile_bridge", "route_driver"], "sub": ["gazebo_ros_model_velocity"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad final que mueve la base"}, "gazebo_ros_model_velocity": {"id": "gazebo_ros_model_velocity", "gid": "g_gazebo_ros_model_velocity", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "mueve la base omnidireccional con /pepper/cmd_vel; publica la odometría y la TF odom → base_footprint"}, "/pepper/odom": {"id": "/pepper/odom", "gid": "g__pepper_odom", "kind": "topic", "views": ["A", "B"], "pub": ["gazebo_ros_model_velocity"], "sub": ["controller_server", "bt_navigator", "odom_noise"], "type": "nav_msgs/Odometry", "hz": "15", "desc": "odometría de la base"}, "ros_gz_bridge": {"id": "ros_gz_bridge", "gid": "g_ros_gz_bridge", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "puente Gazebo → ROS 2: láseres, cámaras, sonares y reloj de la simulación"}, "/pepper/hokuyo_scan": {"id": "/pepper/hokuyo_scan", "gid": "g__pepper_hokuyo_scan", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["amcl", "collision_monitor", "global_costmap", "local_costmap"], "type": "sensor_msgs/LaserScan", "hz": "4.3", "desc": "láser hokuyo de 720 rayos: referencia; en la demo del museo lo usan AMCL, los costmaps y collision_monitor"}, "amcl": {"id": "amcl", "gid": "g_amcl", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: localiza a Pepper en el mapa con el láser; publica la TF map → odom"}, "global_costmap": {"id": "global_costmap", "gid": "g_global_costmap", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: costmap global (mapa + láser), lo usa el planner"}, "local_costmap": {"id": "local_costmap", "gid": "g_local_costmap", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: costmap local (láser), lo usa el controller"}, "/pepper/camera/front/image_raw": {"id": "/pepper/camera/front/image_raw", "gid": "g__pepper_camera_front_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["yolo_node", "debug_node", "visitor_approach", "pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.1", "desc": "cámara frontal 640×480"}, "yolo_node": {"id": "yolo_node", "gid": "g_yolo_node", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "yolo_ros: YOLO11m sobre la cámara frontal"}, "debug_node": {"id": "debug_node", "gid": "g_debug_node", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "yolo_ros: dibuja las cajas sobre la imagen (vista YOLO de la app)"}, "visitor_approach": {"id": "visitor_approach", "gid": "g_visitor_approach", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "Fase 3: busca con la cabeza, YOLO11m + clasificador + profundidad, va con Nav2 a ~1 m y mira a la persona"}, "pepper_mobile_bridge": {"id": "pepper_mobile_bridge", "gid": "g_pepper_mobile_bridge", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "pepper_bridge.py: HTTP :8080 para la app; MJPEG, chat con Gemini, voz, modo visitante, mando y cabeza"}, "/pepper/camera/depth/image_raw": {"id": "/pepper/camera/depth/image_raw", "gid": "g__pepper_camera_depth_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["visitor_approach"], "type": "sensor_msgs/Image", "hz": "20", "desc": "cámara de profundidad 320×240"}, "/pepper/camera/bottom/image_raw": {"id": "/pepper/camera/bottom/image_raw", "gid": "g__pepper_camera_bottom_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.5", "desc": "cámara inferior 640×480"}, "gazebo_ros_p3d": {"id": "gazebo_ros_p3d", "gid": "g_gazebo_ros_p3d", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "pose real de Pepper en el mundo (ground truth), sólo para evaluar y para la app"}, "/pepper/odom_groundtruth": {"id": "/pepper/odom_groundtruth", "gid": "g__pepper_odom_groundtruth", "kind": "topic", "views": ["A", "B"], "pub": ["gazebo_ros_p3d"], "sub": ["pepper_mobile_bridge", "trajectory_recorder", "route_driver"], "type": "nav_msgs/Odometry", "hz": "14", "desc": "pose real en el mundo"}, "joint_state_controller": {"id": "joint_state_controller", "gid": "g_joint_state_controller", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "ros2_control: estado de las articulaciones"}, "/pepper/joint_states": {"id": "/pepper/joint_states", "gid": "g__pepper_joint_states", "kind": "topic", "views": ["A", "B"], "pub": ["joint_state_controller"], "sub": ["robot_state_publisher"], "type": "sensor_msgs/JointState", "hz": "70", "desc": "estado de las articulaciones"}, "robot_state_publisher": {"id": "robot_state_publisher", "gid": "g_robot_state_publisher", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "TF de todo el cuerpo a partir del URDF y de /pepper/joint_states"}, "map_server": {"id": "map_server", "gid": "g_map_server", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: sirve el mapa guardado del museo (museum_hokuyo.yaml)"}, "/map": {"id": "/map", "gid": "g__map", "kind": "topic", "views": ["A", "B"], "pub": ["map_server", "slam_toolbox"], "sub": ["amcl", "visitor_approach", "global_costmap", "frontier_explorer"], "type": "nav_msgs/OccupancyGrid", "hz": "latched", "desc": "mapa de ocupación (transient local: se recibe al suscribirse)"}, "/tf": {"id": "/tf", "gid": "g__tf", "kind": "topic", "views": ["A", "B"], "pub": ["amcl", "robot_state_publisher", "gazebo_ros_model_velocity", "slam_toolbox"], "sub": ["visitor_approach", "bt_navigator", "collision_monitor", "amcl", "scan_fusion", "slam_toolbox", "frontier_explorer", "trajectory_recorder"], "type": "tf2_msgs/TFMessage", "hz": "31", "desc": "transformaciones dinámicas (map → odom → base_footprint → cuerpo)"}, "/yolo/detections": {"id": "/yolo/detections", "gid": "g__yolo_detections", "kind": "topic", "views": ["A"], "pub": ["yolo_node"], "sub": ["debug_node"], "type": "yolo_msgs/DetectionArray", "hz": "3.7", "desc": "cajas y clases de YOLO"}, "/yolo/dbg_image": {"id": "/yolo/dbg_image", "gid": "g__yolo_dbg_image", "kind": "topic", "views": ["A"], "pub": ["debug_node"], "sub": ["pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.8", "desc": "imagen con las cajas dibujadas"}, "/pepper/voice/audio": {"id": "/pepper/voice/audio", "gid": "g__pepper_voice_audio", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge"], "sub": ["voice_listener"], "type": "std_msgs/Int16MultiArray", "hz": "evento", "desc": "frase grabada en la app, 16 kHz mono"}, "voice_listener": {"id": "voice_listener", "gid": "g_voice_listener", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "Whisper large-v3-turbo en la GPU: transcribe el micrófono del PC o el audio de la app; detecta palabras de llamada"}, "/pepper/voice/transcript": {"id": "/pepper/voice/transcript", "gid": "g__pepper_voice_transcript", "kind": "topic", "views": ["A"], "pub": ["voice_listener"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "texto de cada frase (vacío si no se entendió)"}, "/pepper/visitor_call": {"id": "/pepper/visitor_call", "gid": "g__pepper_visitor_call", "kind": "topic", "views": ["A"], "pub": ["voice_listener", "pepper_mobile_bridge"], "sub": ["visitor_approach"], "type": "std_msgs/String", "hz": "evento", "desc": "llamada de un visitante: frase con palabra de llamada (micrófono del PC) o cualquier frase del modo visitante de la app"}, "/pepper/say": {"id": "/pepper/say", "gid": "g__pepper_say", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge", "visitor_approach"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "lo que dice Pepper"}, "/pepper/visitor_target": {"id": "/pepper/visitor_target", "gid": "g__pepper_visitor_target", "kind": "topic", "views": ["A"], "pub": ["visitor_approach"], "sub": [], "type": "geometry_msgs/PointStamped", "hz": "evento", "desc": "posición de la persona elegida (para RViz)"}, "/pepper/visitor_status": {"id": "/pepper/visitor_status", "gid": "g__pepper_visitor_status", "kind": "topic", "views": ["A"], "pub": ["visitor_approach"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "fase de la llamada en JSON (buscando, acercándose, de frente…) para la app"}, "navigate_to_pose": {"id": "navigate_to_pose", "gid": "g_navigate_to_pose", "kind": "action", "views": ["A", "B"], "pub": ["visitor_approach", "frontier_explorer"], "sub": ["bt_navigator"], "type": "nav2_msgs/action/NavigateToPose", "desc": "ir a una pose del mapa"}, "spin": {"id": "spin", "gid": "g_spin", "kind": "action", "views": ["A", "B"], "pub": ["visitor_approach", "frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/Spin", "desc": "girar en el sitio"}, "/pepper/Head_controller/command": {"id": "/pepper/Head_controller/command", "gid": "g__pepper_Head_controller_command", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge", "visitor_approach"], "sub": ["Head_controller"], "type": "trajectory_msgs/JointTrajectory", "hz": "evento", "desc": "objetivo de HeadYaw / HeadPitch"}, "Head_controller": {"id": "Head_controller", "gid": "g_Head_controller", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "base", "desc": "ros2_control: trayectorias de HeadYaw / HeadPitch"}, "/pepper/scan_left": {"id": "/pepper/scan_left", "gid": "g__pepper_scan_left", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.8", "desc": "láser izquierdo de Pepper"}, "/pepper/scan_front": {"id": "/pepper/scan_front", "gid": "g__pepper_scan_front", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.4", "desc": "láser frontal de Pepper"}, "/pepper/scan_right": {"id": "/pepper/scan_right", "gid": "g__pepper_scan_right", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.4", "desc": "láser derecho de Pepper"}, "scan_fusion": {"id": "scan_fusion", "gid": "g_scan_fusion", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "Fase 1: une los 3 láseres en un barrido de 360°, acumula 4 barridos y (opcional) filtra lo que se mueve"}, "laser_publisher": {"id": "laser_publisher", "gid": "g_laser_publisher", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "base", "desc": "fusión del V8: une los 3 láseres en /pepper/laser_2 (línea base de la Fase 1)"}, "/pepper/scan_fused": {"id": "/pepper/scan_fused", "gid": "g__pepper_scan_fused", "kind": "topic", "views": ["B"], "pub": ["scan_fusion"], "sub": ["slam_toolbox", "global_costmap", "local_costmap", "collision_monitor"], "type": "sensor_msgs/LaserScan", "hz": "—", "desc": "barrido de 360° de scan_fusion"}, "/pepper/laser_2": {"id": "/pepper/laser_2", "gid": "g__pepper_laser_2", "kind": "topic", "views": ["B"], "pub": ["laser_publisher"], "sub": ["slam_toolbox"], "type": "sensor_msgs/LaserScan", "hz": "4.1", "desc": "fusión del V8 (línea base)"}, "slam_toolbox": {"id": "slam_toolbox", "gid": "g_slam_toolbox", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "std", "desc": "SLAM (Karto) con la configuración de la base + ajustes para sensores dispersos; publica /map y la TF map → odom"}, "frontier_explorer": {"id": "frontier_explorer", "gid": "g_frontier_explorer", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "exploración autónoma: elige fronteras del /map y manda objetivos a Nav2"}, "trajectory_recorder": {"id": "trajectory_recorder", "gid": "g_trajectory_recorder", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "graba pose real, pose del SLAM y odometría en trajectory.csv"}, "odom_noise": {"id": "odom_noise", "gid": "g_odom_noise", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "odometría degradada (/pepper/odom_noisy) para probar el SLAM con errores sistemáticos"}, "/pepper/odom_noisy": {"id": "/pepper/odom_noisy", "gid": "g__pepper_odom_noisy", "kind": "topic", "views": ["B"], "pub": ["odom_noise"], "sub": [], "type": "nav_msgs/Odometry", "hz": "—", "desc": "odometría con errores (experimentos)"}, "route_driver": {"id": "route_driver", "gid": "g_route_driver", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "ruta guiada y repetible para los experimentos (alternativa a la exploración)"}, "drive_on_heading": {"id": "drive_on_heading", "gid": "g_drive_on_heading", "kind": "action", "views": ["B"], "pub": ["frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/DriveOnHeading", "desc": "avanzar recto"}, "backup": {"id": "backup", "gid": "g_backup", "kind": "action", "views": ["B"], "pub": ["frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/BackUp", "desc": "retroceder"}};
+const DATA = {"bt_navigator": {"id": "bt_navigator", "gid": "g_bt_navigator", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: árbol de comportamiento de navigate_to_pose"}, "compute_path_to_pose": {"id": "compute_path_to_pose", "gid": "g_compute_path_to_pose", "kind": "action", "views": ["A", "B"], "pub": ["bt_navigator"], "sub": ["planner_server"], "type": "nav2_msgs/action/ComputePathToPose", "desc": "pedir una ruta al planner"}, "planner_server": {"id": "planner_server", "gid": "g_planner_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: calcula la ruta sobre el costmap global"}, "follow_path": {"id": "follow_path", "gid": "g_follow_path", "kind": "action", "views": ["A", "B"], "pub": ["bt_navigator"], "sub": ["controller_server"], "type": "nav2_msgs/action/FollowPath", "desc": "seguir la ruta"}, "controller_server": {"id": "controller_server", "gid": "g_controller_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: sigue la ruta y genera velocidades"}, "/cmd_vel_nav": {"id": "/cmd_vel_nav", "gid": "g__cmd_vel_nav", "kind": "topic", "views": ["A", "B"], "pub": ["controller_server", "behavior_server"], "sub": ["velocity_smoother"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad del controller o de un comportamiento"}, "behavior_server": {"id": "behavior_server", "gid": "g_behavior_server", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: comportamientos de recuperación (spin, backup, drive_on_heading)"}, "velocity_smoother": {"id": "velocity_smoother", "gid": "g_velocity_smoother", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: suaviza las velocidades"}, "/cmd_vel_smoothed": {"id": "/cmd_vel_smoothed", "gid": "g__cmd_vel_smoothed", "kind": "topic", "views": ["A", "B"], "pub": ["velocity_smoother"], "sub": ["collision_monitor"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad suavizada"}, "collision_monitor": {"id": "collision_monitor", "gid": "g_collision_monitor", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: frena si el láser ve un obstáculo dentro del polígono de seguridad; publica la velocidad final"}, "/pepper/cmd_vel": {"id": "/pepper/cmd_vel", "gid": "g__pepper_cmd_vel", "kind": "topic", "views": ["A", "B"], "pub": ["collision_monitor", "visitor_approach", "pepper_mobile_bridge", "route_driver"], "sub": ["gazebo_ros_model_velocity"], "type": "geometry_msgs/Twist", "hz": "—", "desc": "velocidad final que mueve la base"}, "gazebo_ros_model_velocity": {"id": "gazebo_ros_model_velocity", "gid": "g_gazebo_ros_model_velocity", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "mueve la base omnidireccional con /pepper/cmd_vel; publica la odometría y la TF odom → base_footprint"}, "/pepper/odom": {"id": "/pepper/odom", "gid": "g__pepper_odom", "kind": "topic", "views": ["A", "B"], "pub": ["gazebo_ros_model_velocity"], "sub": ["controller_server", "bt_navigator", "odom_noise"], "type": "nav_msgs/Odometry", "hz": "15", "desc": "odometría de la base"}, "ros_gz_bridge": {"id": "ros_gz_bridge", "gid": "g_ros_gz_bridge", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "puente Gazebo → ROS 2: láseres, cámaras, sonares y reloj de la simulación"}, "/pepper/hokuyo_scan": {"id": "/pepper/hokuyo_scan", "gid": "g__pepper_hokuyo_scan", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["amcl", "collision_monitor", "global_costmap", "local_costmap"], "type": "sensor_msgs/LaserScan", "hz": "4.3", "desc": "láser hokuyo de 720 rayos: referencia; en la demo del museo lo usan AMCL, los costmaps y collision_monitor"}, "amcl": {"id": "amcl", "gid": "g_amcl", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: localiza a Pepper en el mapa con el láser; publica la TF map → odom"}, "global_costmap": {"id": "global_costmap", "gid": "g_global_costmap", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: costmap global (mapa + láser), lo usa el planner"}, "local_costmap": {"id": "local_costmap", "gid": "g_local_costmap", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: costmap local (láser), lo usa el controller"}, "/pepper/camera/front/image_raw": {"id": "/pepper/camera/front/image_raw", "gid": "g__pepper_camera_front_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["yolo_node", "debug_node", "visitor_approach", "pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.1", "desc": "cámara frontal 640×480"}, "yolo_node": {"id": "yolo_node", "gid": "g_yolo_node", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "yolo_ros: YOLO11m sobre la cámara frontal"}, "debug_node": {"id": "debug_node", "gid": "g_debug_node", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "yolo_ros: dibuja las cajas sobre la imagen (vista YOLO de la app)"}, "visitor_approach": {"id": "visitor_approach", "gid": "g_visitor_approach", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "Fase 3: busca con la cabeza, YOLO11m + clasificador + profundidad, va con Nav2 a ~1 m y mira a la persona"}, "pepper_mobile_bridge": {"id": "pepper_mobile_bridge", "gid": "g_pepper_mobile_bridge", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "pepper_bridge.py: HTTP :8080 para la app; MJPEG, chat con Gemini, voz, modo visitante, lugares, mando y cabeza"}, "/pepper/camera/depth/image_raw": {"id": "/pepper/camera/depth/image_raw", "gid": "g__pepper_camera_depth_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["visitor_approach"], "type": "sensor_msgs/Image", "hz": "20", "desc": "cámara de profundidad 320×240"}, "/pepper/camera/bottom/image_raw": {"id": "/pepper/camera/bottom/image_raw", "gid": "g__pepper_camera_bottom_image_raw", "kind": "topic", "views": ["A"], "pub": ["ros_gz_bridge"], "sub": ["pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.5", "desc": "cámara inferior 640×480"}, "gazebo_ros_p3d": {"id": "gazebo_ros_p3d", "gid": "g_gazebo_ros_p3d", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "pose real de Pepper en el mundo (ground truth), sólo para evaluar y para la app"}, "/pepper/odom_groundtruth": {"id": "/pepper/odom_groundtruth", "gid": "g__pepper_odom_groundtruth", "kind": "topic", "views": ["A", "B"], "pub": ["gazebo_ros_p3d"], "sub": ["pepper_mobile_bridge", "trajectory_recorder", "route_driver"], "type": "nav_msgs/Odometry", "hz": "14", "desc": "pose real en el mundo"}, "joint_state_controller": {"id": "joint_state_controller", "gid": "g_joint_state_controller", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "ros2_control: estado de las articulaciones"}, "/pepper/joint_states": {"id": "/pepper/joint_states", "gid": "g__pepper_joint_states", "kind": "topic", "views": ["A", "B"], "pub": ["joint_state_controller"], "sub": ["robot_state_publisher"], "type": "sensor_msgs/JointState", "hz": "70", "desc": "estado de las articulaciones"}, "robot_state_publisher": {"id": "robot_state_publisher", "gid": "g_robot_state_publisher", "kind": "node", "views": ["A", "B"], "pub": [], "sub": [], "group": "base", "desc": "TF de todo el cuerpo a partir del URDF y de /pepper/joint_states"}, "map_server": {"id": "map_server", "gid": "g_map_server", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "std", "desc": "Nav2: sirve el mapa guardado del museo (museum_hokuyo.yaml)"}, "/map": {"id": "/map", "gid": "g__map", "kind": "topic", "views": ["A", "B"], "pub": ["map_server", "slam_toolbox"], "sub": ["amcl", "visitor_approach", "global_costmap", "frontier_explorer"], "type": "nav_msgs/OccupancyGrid", "hz": "latched", "desc": "mapa de ocupación (transient local: se recibe al suscribirse)"}, "/tf": {"id": "/tf", "gid": "g__tf", "kind": "topic", "views": ["A", "B"], "pub": ["amcl", "robot_state_publisher", "gazebo_ros_model_velocity", "slam_toolbox"], "sub": ["visitor_approach", "bt_navigator", "collision_monitor", "amcl", "scan_fusion", "slam_toolbox", "frontier_explorer", "trajectory_recorder"], "type": "tf2_msgs/TFMessage", "hz": "31", "desc": "transformaciones dinámicas (map → odom → base_footprint → cuerpo)"}, "/yolo/detections": {"id": "/yolo/detections", "gid": "g__yolo_detections", "kind": "topic", "views": ["A"], "pub": ["yolo_node"], "sub": ["debug_node"], "type": "yolo_msgs/DetectionArray", "hz": "3.7", "desc": "cajas y clases de YOLO"}, "/yolo/dbg_image": {"id": "/yolo/dbg_image", "gid": "g__yolo_dbg_image", "kind": "topic", "views": ["A"], "pub": ["debug_node"], "sub": ["pepper_mobile_bridge"], "type": "sensor_msgs/Image", "hz": "2.8", "desc": "imagen con las cajas dibujadas"}, "/pepper/voice/audio": {"id": "/pepper/voice/audio", "gid": "g__pepper_voice_audio", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge"], "sub": ["voice_listener"], "type": "std_msgs/Int16MultiArray", "hz": "evento", "desc": "frase grabada en la app, 16 kHz mono"}, "voice_listener": {"id": "voice_listener", "gid": "g_voice_listener", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "Whisper large-v3-turbo en la GPU: transcribe el micrófono del PC o el audio de la app; detecta palabras de llamada"}, "/pepper/voice/transcript": {"id": "/pepper/voice/transcript", "gid": "g__pepper_voice_transcript", "kind": "topic", "views": ["A"], "pub": ["voice_listener"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "texto de cada frase (vacío si no se entendió)"}, "/pepper/visitor_call": {"id": "/pepper/visitor_call", "gid": "g__pepper_visitor_call", "kind": "topic", "views": ["A"], "pub": ["voice_listener", "pepper_mobile_bridge"], "sub": ["visitor_approach"], "type": "std_msgs/String", "hz": "evento", "desc": "llamada de un visitante: frase con palabra de llamada (micrófono del PC) o cualquier frase del modo visitante de la app"}, "/pepper/say": {"id": "/pepper/say", "gid": "g__pepper_say", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge", "visitor_approach", "place_navigator"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "lo que dice Pepper"}, "/pepper/visitor_target": {"id": "/pepper/visitor_target", "gid": "g__pepper_visitor_target", "kind": "topic", "views": ["A"], "pub": ["visitor_approach"], "sub": [], "type": "geometry_msgs/PointStamped", "hz": "evento", "desc": "posición de la persona elegida (para RViz)"}, "/pepper/visitor_status": {"id": "/pepper/visitor_status", "gid": "g__pepper_visitor_status", "kind": "topic", "views": ["A"], "pub": ["visitor_approach"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "fase de la llamada en JSON (buscando, acercándose, de frente…) para la app"}, "navigate_to_pose": {"id": "navigate_to_pose", "gid": "g_navigate_to_pose", "kind": "action", "views": ["A", "B"], "pub": ["visitor_approach", "place_navigator", "frontier_explorer"], "sub": ["bt_navigator"], "type": "nav2_msgs/action/NavigateToPose", "desc": "ir a una pose del mapa"}, "spin": {"id": "spin", "gid": "g_spin", "kind": "action", "views": ["A", "B"], "pub": ["visitor_approach", "frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/Spin", "desc": "girar en el sitio"}, "/pepper/go_to": {"id": "/pepper/go_to", "gid": "g__pepper_go_to", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge"], "sub": ["place_navigator", "visitor_approach"], "type": "std_msgs/String", "hz": "evento", "desc": "orden de ir a un lugar: nombre o alias, o JSON {place, run} / {cancel}"}, "place_navigator": {"id": "place_navigator", "gid": "g_place_navigator", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "proj", "desc": "lugares con nombre (museum_places.yaml): «vamos a la mesa» → alias → pose → Nav2; caminando o corriendo"}, "/speed_limit": {"id": "/speed_limit", "gid": "g__speed_limit", "kind": "topic", "views": ["A"], "pub": ["place_navigator"], "sub": ["controller_server"], "type": "nav2_msgs/SpeedLimit", "hz": "evento", "desc": "% de la velocidad máxima: 40 caminando, 100 corriendo"}, "/pepper/places": {"id": "/pepper/places", "gid": "g__pepper_places", "kind": "topic", "views": ["A"], "pub": ["place_navigator"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "latched", "desc": "lista de lugares en JSON (transient local); el bridge se la da a Gemini"}, "/pepper/place_status": {"id": "/pepper/place_status", "gid": "g__pepper_place_status", "kind": "topic", "views": ["A"], "pub": ["place_navigator"], "sub": ["pepper_mobile_bridge"], "type": "std_msgs/String", "hz": "evento", "desc": "JSON: going, arrived, failed, canceled o unknown; el bridge avisa en el chat"}, "/pepper/places/markers": {"id": "/pepper/places/markers", "gid": "g__pepper_places_markers", "kind": "topic", "views": ["A"], "pub": ["place_navigator"], "sub": [], "type": "visualization_msgs/MarkerArray", "hz": "latched", "desc": "flecha y nombre de cada lugar, para RViz"}, "/pepper/Head_controller/command": {"id": "/pepper/Head_controller/command", "gid": "g__pepper_Head_controller_command", "kind": "topic", "views": ["A"], "pub": ["pepper_mobile_bridge", "visitor_approach"], "sub": ["Head_controller"], "type": "trajectory_msgs/JointTrajectory", "hz": "evento", "desc": "objetivo de HeadYaw / HeadPitch"}, "Head_controller": {"id": "Head_controller", "gid": "g_Head_controller", "kind": "node", "views": ["A"], "pub": [], "sub": [], "group": "base", "desc": "ros2_control: trayectorias de HeadYaw / HeadPitch"}, "/pepper/scan_left": {"id": "/pepper/scan_left", "gid": "g__pepper_scan_left", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.8", "desc": "láser izquierdo de Pepper"}, "/pepper/scan_front": {"id": "/pepper/scan_front", "gid": "g__pepper_scan_front", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.4", "desc": "láser frontal de Pepper"}, "/pepper/scan_right": {"id": "/pepper/scan_right", "gid": "g__pepper_scan_right", "kind": "topic", "views": ["B"], "pub": ["ros_gz_bridge"], "sub": ["scan_fusion", "laser_publisher"], "type": "sensor_msgs/LaserScan", "hz": "4.4", "desc": "láser derecho de Pepper"}, "scan_fusion": {"id": "scan_fusion", "gid": "g_scan_fusion", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "Fase 1: une los 3 láseres en un barrido de 360°, acumula 4 barridos y (opcional) filtra lo que se mueve"}, "laser_publisher": {"id": "laser_publisher", "gid": "g_laser_publisher", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "base", "desc": "fusión del V8: une los 3 láseres en /pepper/laser_2 (línea base de la Fase 1)"}, "/pepper/scan_fused": {"id": "/pepper/scan_fused", "gid": "g__pepper_scan_fused", "kind": "topic", "views": ["B"], "pub": ["scan_fusion"], "sub": ["slam_toolbox", "global_costmap", "local_costmap", "collision_monitor"], "type": "sensor_msgs/LaserScan", "hz": "—", "desc": "barrido de 360° de scan_fusion"}, "/pepper/laser_2": {"id": "/pepper/laser_2", "gid": "g__pepper_laser_2", "kind": "topic", "views": ["B"], "pub": ["laser_publisher"], "sub": ["slam_toolbox"], "type": "sensor_msgs/LaserScan", "hz": "4.1", "desc": "fusión del V8 (línea base)"}, "slam_toolbox": {"id": "slam_toolbox", "gid": "g_slam_toolbox", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "std", "desc": "SLAM (Karto) con la configuración de la base + ajustes para sensores dispersos; publica /map y la TF map → odom"}, "frontier_explorer": {"id": "frontier_explorer", "gid": "g_frontier_explorer", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "exploración autónoma: elige fronteras del /map y manda objetivos a Nav2"}, "trajectory_recorder": {"id": "trajectory_recorder", "gid": "g_trajectory_recorder", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "graba pose real, pose del SLAM y odometría en trajectory.csv"}, "odom_noise": {"id": "odom_noise", "gid": "g_odom_noise", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "odometría degradada (/pepper/odom_noisy) para probar el SLAM con errores sistemáticos"}, "/pepper/odom_noisy": {"id": "/pepper/odom_noisy", "gid": "g__pepper_odom_noisy", "kind": "topic", "views": ["B"], "pub": ["odom_noise"], "sub": [], "type": "nav_msgs/Odometry", "hz": "—", "desc": "odometría con errores (experimentos)"}, "route_driver": {"id": "route_driver", "gid": "g_route_driver", "kind": "node", "views": ["B"], "pub": [], "sub": [], "group": "proj", "desc": "ruta guiada y repetible para los experimentos (alternativa a la exploración)"}, "drive_on_heading": {"id": "drive_on_heading", "gid": "g_drive_on_heading", "kind": "action", "views": ["B"], "pub": ["frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/DriveOnHeading", "desc": "avanzar recto"}, "backup": {"id": "backup", "gid": "g_backup", "kind": "action", "views": ["B"], "pub": ["frontier_explorer"], "sub": ["behavior_server"], "type": "nav2_msgs/action/BackUp", "desc": "retroceder"}};
 (() => {
   const byGid = {};
   Object.values(DATA).forEach(d => { byGid[d.gid] = d; });

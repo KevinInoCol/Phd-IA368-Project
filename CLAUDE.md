@@ -218,6 +218,27 @@ El clasificador describía a female_03 como "camisa a cuadros roja" con prob. 0.
 describe la ropa con prob. ≥ 0.6. "La persona que habló" = la persona quieta más cercana: no hay
 localización de la voz.
 
+**Lugares con nombre (2026-10-28)**: "vamos a la mesa" / "corre a la entrada" → Pepper va solo.
+- `pepper_museum/maps/museum_places.yaml`: 12 lugares en el frame map (pose x, y, yaw en grados =
+  dónde se para Pepper y hacia dónde mira; `name`, `aliases`, `about`). Objetos ubicados con la
+  malla (nombres en pinyin de ISCAS_museum.dae: `jiqi034` = mesa táctil, `lt047` = escalera,
+  `paimian` = cartel dorado del museo, `men050` = puertas de madera sur, `men051` = fachada de
+  vidrio este) y comprobados teletransportando a Pepper y mirando su cámara. La "mesa" es la mesa
+  táctil de la sala oeste (no hay otra mesa en el museo).
+- `pepper_visitors/place_navigator.py` (python del sistema, en `visitors_demo.launch.py`):
+  `/pepper/go_to` (nombre/alias, o JSON `{place, run}` / `{cancel: true}`) → NavigateToPose;
+  publica `/pepper/places` (JSON latched), `/pepper/place_status`, `/pepper/places/markers` (RViz),
+  `/pepper/say` al llegar o fallar. Velocidad con `nav2_msgs/SpeedLimit` en `/speed_limit`:
+  caminar 40 %, correr 100 %; al terminar 0 (sin límite) para no frenar a visitor_approach. Con 60 %
+  caminando no se notaba la diferencia (MPPI casi no llega a 0.5 m/s cerca de las paredes).
+- `visitor_approach` deja de mirar al visitante al recibir `/pepper/go_to`.
+- Bridge: herramienta de Gemini `go_to_place(place enum, run)` (lista y `about` en el system
+  prompt, sólo si `/pepper/places` llegó); `stop_robot`/"detente" también cancela; parser local con
+  alias + verbo ("vamos", "ve a", "corre", "vuelve"…); no va a un lugar durante una llamada de
+  visitante. "Llegué a…" se añade al historial del chat; la app lo refresca cada 2 s.
+- Probado (sim, `museum_test_people`): 12/12 lugares alcanzados, error medio 0.16 m (máx. 0.29), yaw ±13° (tolerancia de Nav2); fotos de llegada coinciden con cada lugar. "Corre" vs caminar: máx. 0.42 vs 0.26 m/s. `ros2 topic pub --once` a veces pierde el
+  mensaje antes del descubrimiento: usar `-w 2`.
+
 **Próximo paso propuesto (pendiente de aprobación del usuario)**
 - Opcional: pasar las detecciones de `/yolo/detections` como texto para que "sí, la veo" dependa
   de YOLO.
@@ -225,8 +246,8 @@ localización de la voz.
   `approach_person` que publique `/pepper/visitor_call` y **reuse `visitor_approach`** (YOLO +
   profundidad + Nav2), sin duplicarlo; (C) bucle de function calling que devuelva el resultado al
   modelo; (D) para eso hay que lanzar `visitors_demo.launch.py` en lugar de `demo.launch.py`.
-- Otros pendientes: probar el micrófono en el emulador/teléfono, mapa `/map` en la app,
-  revisión de código y commit.
+- Otros pendientes: mapa `/map` con los lugares en la app; etiquetar un lugar nuevo por voz
+  ("este lugar se llama…", guardando la pose de AMCL en el YAML).
 
 ## Regla principal: no duplicar la base
 

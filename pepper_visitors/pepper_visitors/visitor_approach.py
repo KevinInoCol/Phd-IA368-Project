@@ -23,7 +23,8 @@ Al recibir /pepper/visitor_call (std_msgs/String, de voice_listener):
   4. Elige a la persona estática más cercana que el clasificador (visitor_cls.pt, votando con
      varios recortes) no tome por un actor ("otro"); su clase (aspecto) sirve para saludarla. Va con Nav2 (NavigateToPose) a `approach_distance` m de ella, de frente; si ese
      punto no se puede alcanzar, prueba otros ángulos alrededor de la persona.
-  5. Desde que la elige, la sigue con la cabeza (Head_controller) hasta la siguiente llamada.
+  5. Desde que la elige, la sigue con la cabeza (Head_controller) hasta la siguiente llamada o
+     hasta que place_navigator lo mande a otro lugar (/pepper/go_to).
   6. Al llegar (o si ya estaba cerca) gira la base hasta quedar de frente a la persona
      (`face_tolerance`, control proporcional en /pepper/cmd_vel): cuerpo y cabeza quedan
      alineados con ella.
@@ -126,6 +127,7 @@ class VisitorApproach(Node):
         self.create_subscription(CameraInfo, "/pepper/camera/front/camera_info", self._rgb_info_cb, qos_profile_sensor_data, callback_group=cb)
         self.create_subscription(CameraInfo, "/pepper/camera/depth/camera_info", self._depth_info_cb, qos_profile_sensor_data, callback_group=cb)
         self.create_subscription(String, "/pepper/visitor_call", self._call_cb, 10, callback_group=cb)
+        self.create_subscription(String, "/pepper/go_to", self._go_to_cb, 10, callback_group=cb)
         self.map = None
         self.create_subscription(OccupancyGrid, "/map", self._map_cb,
                                  QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL), callback_group=cb)
@@ -187,6 +189,12 @@ class VisitorApproach(Node):
             return
         self.busy = True
         threading.Thread(target=self._handle_call, args=(msg.data,), daemon=True).start()
+
+    def _go_to_cb(self, msg):
+        """place_navigator lleva a Pepper a otro lugar: deja de mirar al visitante."""
+        if not self.busy and self.target is not None:
+            self.target = None
+            self.head(0.0, 0.0)
 
     # ---------- utilidades ----------
     def say(self, text):

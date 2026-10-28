@@ -10,10 +10,12 @@
 y la llamada (sin micrófono):
 
     ros2 topic pub --once /pepper/visitor_call std_msgs/String "data: hola pepper"
+    ros2 topic pub --once /pepper/go_to std_msgs/String "data: la mesa"     # a un lugar con nombre
 
 Simulación (museum.launch.py de pepper_museum) + Nav2 con AMCL (amcl.launch.py de pepper_nav)
 en el mapa del museo vacío (pepper_museum/maps/museum_hokuyo.yaml, frame map = mundo + (1.5, −1))
-+ visitor_approach (+ voice_listener si voice:=true). AMCL arranca en (0, 0) del mapa; si Pepper
++ visitor_approach + place_navigator (lugares con nombre: "vamos a la mesa") (+ voice_listener si
+voice:=true). AMCL arranca en (0, 0) del mapa; si Pepper
 aparece en otro sitio se le publica la pose inicial en /initialpose.
 """
 
@@ -52,6 +54,10 @@ def generate_launch_description():
         package="pepper_visitors", executable="visitor_approach", output="screen",
         parameters=[{"use_sim_time": True, "log_file": LaunchConfiguration("log_file")}],
     )
+    places = Node(
+        package="pepper_visitors", executable="place_navigator", output="screen",
+        parameters=[{"use_sim_time": True}],
+    )
     voice = Node(
         package="pepper_visitors", executable="voice_listener", output="screen",
         parameters=[{"device": LaunchConfiguration("device"),
@@ -75,5 +81,5 @@ def generate_launch_description():
         # Nav2 y la percepción cuando la simulación ya publica reloj, TF y sensores
         TimerAction(period=25.0, actions=[nav]),
         TimerAction(period=40.0, actions=[initial_pose]),
-        TimerAction(period=30.0, actions=[approach, voice]),
+        TimerAction(period=30.0, actions=[approach, places, voice]),
     ])

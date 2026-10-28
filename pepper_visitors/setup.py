@@ -24,6 +24,7 @@ setup(
     entry_points={
         "console_scripts": [
             "capture_dataset = pepper_visitors.capture_dataset:main",
+            "place_navigator = pepper_visitors.place_navigator:main",
         ],
     },
 )

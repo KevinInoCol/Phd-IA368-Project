@@ -213,6 +213,16 @@ figcaption { color: var(--muted); font-size: 0.86rem; }
 .step.cloudy::before { color: var(--cloud); }
 .step .ms { font: 500 0.75rem var(--mono); color: var(--l-front); }
 
+.pmap { display: block; width: 100%; height: auto; }
+.pmap .pa { stroke: var(--accent); stroke-width: 7; marker-end: url(#ph); }
+.pmap .pd { fill: var(--accent); stroke: #1a1205; stroke-width: 3; }
+.pmap .pt { font: 700 34px var(--sans); fill: #122030; paint-order: stroke; stroke: #f3efeb; stroke-width: 8px; stroke-linejoin: round; }
+.pmap g:hover .pd { fill: var(--cloud); }
+.plist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.plist li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 2px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 0.88rem; }
+.plist b { font: 600 0.82rem var(--mono); color: var(--accent); grid-row: span 2; align-self: center; }
+.plist em { color: var(--muted); font-style: normal; font-size: 0.8rem; }
+.pnote { color: var(--muted); font-size: 0.84rem; margin: 0; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
 .kpi b { font: 800 1.6rem/1.1 var(--display); }
@@ -265,6 +275,7 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
     <a href="#slam">SLAM</a>
     <a href="#visitante">Visitante</a>
     <a href="#app">App</a>
+    <a href="#lugares">Lugares</a>
     <a href="#estado">Estado</a>
     <a href="nodos-topicos.html">Nodos y tópicos ↗</a>
   </div>
@@ -663,10 +674,44 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
   </div>
 </section>
 
+<section id="lugares">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span>08</span><span class="n">Flujo ④ · Lugares</span></div>
+      <h2>“Vamos a la mesa”: lugares con nombre</h2>
+      <p class="lead">El mapa del museo tiene 12 lugares etiquetados. Basta con nombrarlos en el chat o por voz
+        (“vamos a la mesa”, “corre a la entrada”, “vuelve al inicio”) y Pepper va solo con Nav2, esquivando a la gente.</p>
+    </div>
+    <div class="gal2">
+      <figure>
+        <div class="frame tag-on-img"><svg class="pmap" viewBox="0 0 1131 1320" role="img" aria-label="Mapa del museo con los 12 lugares con nombre"><defs><marker id="ph" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--accent)"/></marker></defs><image href="@@places_map" width="1131" height="1320"/><g><title>inicio — Donde aparece Pepper al arrancar la simulación, al este de la rotonda.</title><line x1="347" y1="486" x2="387" y2="486" class="pa"/><circle cx="347" cy="486" r="12" class="pd"/><text x="347" y="462" text-anchor="middle" class="pt">inicio</text></g><g><title>mesa — Mesa con pantalla táctil iluminada en la sala oeste, delante de los paneles de «Ciencia de la computación y teoría del software» (con retratos de científicos).</title><line x1="119" y1="402" x2="79" y2="402" class="pa"/><circle cx="119" cy="402" r="12" class="pd"/><text x="139" y="386" text-anchor="start" class="pt">mesa</text></g><g><title>rotonda — Estructura circular a la entrada de la sala oeste, con pedestales cilíndricos.</title><line x1="335" y1="534" x2="295" y2="534" class="pa"/><circle cx="335" cy="534" r="12" class="pd"/><text x="335" y="578" text-anchor="middle" class="pt">rotonda</text></g><g><title>sala oeste — Nichos con paneles sobre la historia del software en China, en la pared oeste.</title><line x1="149" y1="738" x2="109" y2="738" class="pa"/><circle cx="149" cy="738" r="12" class="pd"/><text x="169" y="772" text-anchor="start" class="pt">sala oeste</text></g><g><title>computadores — Dentro del bloque central (se entra por el este). Paneles «El desarrollo de los computadores», con fotos de computadoras antiguas y del logo de Microsoft.</title><line x1="563" y1="642" x2="563" y2="602" class="pa"/><circle cx="563" cy="642" r="12" class="pd"/><text x="543" y="652" text-anchor="end" class="pt">computadores</text></g><g><title>tecnologia — Paneles «Tecnologías integradas y aplicaciones» con vitrinas bajas delante, en la cara oeste del bloque central.</title><line x1="311" y1="816" x2="351" y2="816" class="pa"/><circle cx="311" cy="816" r="12" class="pd"/><text x="331" y="826" text-anchor="start" class="pt">tecnología</text></g><g><title>introduccion — Panel «Prefacio», la introducción del museo, en la cara este del bloque central.</title><line x1="803" y1="606" x2="763" y2="606" class="pa"/><circle cx="803" cy="606" r="12" class="pd"/><text x="823" y="616" text-anchor="start" class="pt">introducción</text></g><g><title>cartel — Panel dorado con el nombre «China Software Technology Museum» (Museo de Tecnología del Software de China).</title><line x1="863" y1="894" x2="863" y2="934" class="pa"/><circle cx="863" cy="894" r="12" class="pd"/><text x="883" y="904" text-anchor="start" class="pt">cartel</text></g><g><title>escalera — Escalera con baranda en el lado este del museo, entre el cartel y la entrada.</title><line x1="887" y1="786" x2="927" y2="786" class="pa"/><circle cx="887" cy="786" r="12" class="pd"/><text x="907" y="796" text-anchor="start" class="pt">escalera</text></g><g><title>entrada — Fachada y puertas de vidrio del lado este, la entrada principal del museo.</title><line x1="887" y1="276" x2="927" y2="276" class="pa"/><circle cx="887" cy="276" r="12" class="pd"/><text x="907" y="286" text-anchor="start" class="pt">entrada</text></g><g><title>puertas sur — Dos puertas de madera en la pared sur.</title><line x1="605" y1="1182" x2="605" y2="1222" class="pa"/><circle cx="605" cy="1182" r="12" class="pd"/><text x="625" y="1192" text-anchor="start" class="pt">puertas sur</text></g><g><title>sala norte — Sala amplia y despejada al norte del bloque central, con columnas.</title><line x1="557" y1="186" x2="557" y2="146" class="pa"/><circle cx="557" cy="186" r="12" class="pd"/><text x="577" y="196" text-anchor="start" class="pt">sala norte</text></g></svg><span class="chip"><i></i>mapa museum_hokuyo · frame map</span></div>
+        <figcaption>Cada flecha es donde se para Pepper y hacia dónde mira. Los lugares salen de la malla del museo y se comprobaron con su cámara. Pasa el cursor por un punto para ver qué hay.</figcaption>
+      </figure>
+      <div style="display:grid;gap:14px;align-content:start">
+        <ul class="plist"><li><b>inicio</b><span>el punto de partida</span><em>“partida”</em></li><li><b>mesa</b><span>la mesa interactiva</span><em>“mesa tactil”</em></li><li><b>rotonda</b><span>la rotonda</span><em>“sala circular”</em></li><li><b>sala oeste</b><span>la sala oeste</span><em>“nichos”</em></li><li><b>computadores</b><span>los paneles del desarrollo de los computadores</span><em>“computadoras”</em></li><li><b>tecnologia</b><span>los paneles de tecnología y aplicaciones</span><em>“tecnologias”</em></li><li><b>introduccion</b><span>el panel de introducción</span><em>“prefacio”</em></li><li><b>cartel</b><span>el cartel del museo</span><em>“cartel del museo”</em></li><li><b>escalera</b><span>la escalera</span><em>“escaleras”</em></li><li><b>entrada</b><span>la entrada</span><em>“entrada principal”</em></li><li><b>puertas sur</b><span>las puertas del sur</span><em>“puerta sur”</em></li><li><b>sala norte</b><span>la sala norte</span><em>“salon norte”</em></li></ul>
+        <p class="pnote">Fuente: <code>pepper_museum/maps/museum_places.yaml</code> (pose x, y, yaw y alias). Para añadir un lugar basta con otra entrada; no hay que tocar código.</p>
+      </div>
+    </div>
+    <div class="pipe">
+      <div class="step"><h3>Decir</h3><p>“corre a la entrada” por voz o escrito, en la pestaña <b>Chat</b> de la app</p></div>
+      <div class="step cloudy"><h3>Entender</h3><p>Gemini llama a <code>go_to_place(place, run)</code>; sin Gemini, el parser local reconoce los alias</p></div>
+      <div class="step"><h3>Ubicar</h3><p><code>place_navigator</code> busca el alias (sin tildes ni artículos) y toma la pose del YAML</p></div>
+      <div class="step"><h3>Navegar</h3><p>Nav2 <code>NavigateToPose</code>; caminando al 40 % de la velocidad, corriendo al 100 % (<code>/speed_limit</code>)</p></div>
+      <div class="step"><h3>Avisar</h3><p>“Llegué a la entrada.” en <code>/pepper/say</code> y en el chat; “detente” cancela</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>12 / 12</b><span>lugares alcanzados en el recorrido de prueba</span></div>
+      <div class="kpi"><b>0.16 <small>m</small></b><span>error medio de posición al llegar</span></div>
+      <div class="kpi"><b>0.23 → 0.27 <small>m/s</small></b><span>velocidad media caminando → corriendo</span></div>
+      <div class="kpi"><b>~5 <small>s</small></b><span>de la frase a ponerse en marcha (Gemini)</span></div>
+    </div>
+  </div>
+</section>
+
 <section id="estado">
   <div class="wrap">
     <div class="head">
-      <div class="eyebrow"><span>08</span><span class="n">Estado</span></div>
+      <div class="eyebrow"><span>09</span><span class="n">Estado</span></div>
       <h2>Dónde estamos y qué viene</h2>
     </div>
     <div class="road">
@@ -676,7 +721,8 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
           <li><b>Fase 1 · SLAM con 3 láseres</b>fusión + slam_toolbox ajustado, probado con odometría ruidosa</li>
           <li><b>Fase 2 · museo dinámico</b>29 corridas de SLAM, estelas medidas y filtro dinámico</li>
           <li><b>Fase 3 · el visitante llama</b>voz, clasificador, acercamiento y mirada</li>
-          <li><b>App</b>cámara, YOLO, mando, chat con visión y voz desde el teléfono</li>
+          <li><b>App</b>cámara, YOLO, mando, chat con visión y voz desde el teléfono; pestaña Visitante con charla</li>
+          <li><b>Lugares con nombre</b>12 lugares del museo; “vamos a la mesa” o “corre a la entrada” → Nav2</li>
         </ul>
       </div>
       <div class="col" style="--c:var(--accent)">
@@ -689,15 +735,13 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
         <h3><i></i>Siguiente</h3>
         <ul>
           <li><b>approach_person</b>“acércate a esa persona” desde la app, reutilizando visitor_approach</li>
-          <li><b>go_to_place</b>“ve a la otra sala”: lugares con nombre en el mapa y Nav2</li>
-          <li><b>Revisión y commit de la app</b></li>
         </ul>
       </div>
     </div>
     <div class="stack">
       <span>Ubuntu 24.04</span><span>ROS 2 Jazzy</span><span>Gazebo Harmonic</span><span>ros2_control</span>
       <span>slam_toolbox</span><span>Nav2 · AMCL</span><span>yolo_ros · YOLO11</span><span>faster-whisper</span>
-      <span class="p">scan_fusion</span><span class="p">visitor_approach</span><span class="p">frontier_explorer</span>
+      <span class="p">scan_fusion</span><span class="p">visitor_approach</span><span class="p">frontier_explorer</span><span class="p">place_navigator</span>
       <span class="p">Flutter · Dart</span><span class="c">Gemini 3.5 Flash · Vertex AI</span><span>ngrok</span>
     </div>
   </div>
@@ -718,7 +762,7 @@ footer .wrap { padding-block: 40px; color: var(--muted); font-size: 0.85rem; dis
     '': '<b>Todo el sistema.</b> Pulsa un flujo para resaltar los nodos y los tópicos que intervienen.',
     slam: '<b>① SLAM y mapa.</b> Gazebo publica los 3 láseres → scan_fusion los une en 360° → slam_toolbox construye /map → Nav2 lo usa (y frontier_explorer elige a dónde explorar).',
     visit: '<b>② Un visitante llama.</b> voice_listener oye “hola, Pepper” → /pepper/visitor_call → visitor_approach busca con las cámaras, ubica a la persona con la profundidad → Nav2 lleva a Pepper a 1 m y gira hasta quedar de frente. Desde la pestaña Visitante de la app, después charla con Gemini hasta que el visitante se despide.',
-    app: '<b>③ App: “¿Qué ves?”.</b> El teléfono manda la voz al bridge → voice_listener la transcribe → Gemini recibe el texto y la imagen de la cámara, y responde o mueve a Pepper por el bridge.'
+    app: '<b>③ App: “¿Qué ves?”.</b> El teléfono manda la voz al bridge → voice_listener la transcribe → Gemini recibe el texto y la imagen de la cámara, y responde o mueve a Pepper por el bridge; con un lugar con nombre (“vamos a la mesa”) lo manda a place_navigator y Nav2.'
   };
   const parts = svg.querySelectorAll('[data-f]');
   document.querySelectorAll('.flowbar button').forEach(btn => {

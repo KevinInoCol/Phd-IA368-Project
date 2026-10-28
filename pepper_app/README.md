@@ -7,7 +7,10 @@ Pestañas:
 
 - **Cámara & Control**: cámara frontal (normal, con YOLO o inferior), cruceta, cabeza, telemetría.
 - **Chat Pepper**: texto o voz → Gemini 3.5 Flash (Vertex AI) con la imagen de la cámara y
-  herramientas para mover la base y la cabeza.
+  herramientas para mover la base y la cabeza, y para ir a un lugar con nombre del museo
+  ("vamos a la mesa", "corre a la entrada", "vuelve al inicio": `go_to_place` → `place_navigator`
+  → Nav2; los lugares están en `pepper_museum/maps/museum_places.yaml`). Al llegar, "Llegué a…"
+  aparece solo en el chat (la app lo refresca cada 2 s); "detente" cancela.
 - **Visitante**: el mismo micrófono, pero quien habla es "un visitante del museo". La frase va a
   `/pepper/visitor_call`: `visitor_approach` busca con la cámara a la persona quieta más cercana,
   se acerca a ~1 m con Nav2 y queda de frente (cuerpo y cabeza). Luego charla con él (Gemini como
@@ -24,7 +27,7 @@ flutter build apk --release --split-per-abi --target-platform android-arm64 --no
 flutter build linux --release --no-tree-shake-icons   # escritorio, para probar sin emulador
 ```
 
-Endpoints del bridge: `GET /stream/{front,bottom,yolo}`, `/snapshot/front`, `/api/status`,
+Endpoints del bridge: `GET /stream/{front,bottom,yolo}`, `/snapshot/front`, `/api/status` (con `place_status`),
 `/api/chat`, `/api/visitor`; `POST /api/cmd_vel`, `/api/head`, `/api/say`, `/api/chat`,
 `/api/voice` (WAV → texto), `/api/visitor_voice` (WAV → texto → `/pepper/visitor_call`, o en la
 charla → respuesta de Gemini), `/api/visitor_end` (termina la charla).

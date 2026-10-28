@@ -135,10 +135,43 @@ class GeminiAgent:
             "parameters": {"type": "OBJECT", "properties": {}},
         }]}]
 
+    def _places(self):
+        """Lugares con nombre que publica place_navigator (vacío si no corre)."""
+        state = getattr(self.bridge_node, "state", None)
+        if state is None:
+            return []
+        with state.lock:
+            return list(state.places)
+
+    def _places_instruction(self):
+        places = self._places()
+        if not places:
+            return ""
+        lines = "; ".join(f"{p['key']} = {p['name']} ({p['about']})" for p in places)
+        return ("Conoces estos lugares del museo y puedes ir a ellos con go_to_place: " + lines + ". "
+                "Si te piden ir, volver o correr a uno de ellos (o llevar a alguien), llama a go_to_place "
+                "con su clave y run=true si piden correr o ir rápido; responde en una frase que vas para "
+                "allá (avisarás al llegar). Si nombran un lugar que no está en la lista, dilo. ")
+
     def _get_tools_spec(self):
+        places = self._places()
+        go_to = [{
+            "name": "go_to_place",
+            "description": "Navega de forma autónoma (Nav2, evitando obstáculos) a un lugar con nombre del museo.",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "place": {"type": "STRING", "enum": [p["key"] for p in places],
+                              "description": "Clave del lugar."},
+                    "run": {"type": "BOOLEAN",
+                            "description": "true para ir corriendo (a la velocidad máxima)."},
+                },
+                "required": ["place"],
+            },
+        }] if places else []
         return [
             {
-                "functionDeclarations": [
+                "functionDeclarations": go_to + [
                     {
                         "name": "move_robot",
                         "description": "Mueve la base móvil del robot Pepper en una dirección determinada.",
@@ -223,8 +256,20 @@ class GeminiAgent:
             return {"status": "executed", "yaw_deg": yaw_deg, "pitch_deg": pitch_deg}
 
         elif name == "stop_robot":
+            self.bridge_node.cancel_go_to()
             self.bridge_node.publish_cmd_vel(0.0, 0.0, 0.0)
             return {"status": "stopped"}
+
+        elif name == "go_to_place":
+            key = args.get("place", "")
+            place = next((p for p in self._places() if p["key"] == key), None)
+            if place is None:
+                return {"status": "error", "error": f"lugar desconocido: {key}"}
+            run = bool(args.get("run", False))
+            err = self.bridge_node.go_to_place(key, run)
+            if err:
+                return {"status": "error", "error": err}
+            return {"status": "going", "place": place["name"], "run": run}
 
         elif name == "end_conversation":
             return {"status": "ended"}
@@ -254,6 +299,7 @@ class GeminiAgent:
             + MUSEUM_DESCRIPTION +
             "Tienes herramientas para mover tu cuerpo (move_robot), tu cabeza (move_head), frenar (stop_robot) "
             "y consultar tu posición (get_robot_pose). "
+            + self._places_instruction() +
             "Con cada mensaje del usuario recibes la imagen actual de tu cámara frontal: úsala cuando "
             "te pregunten qué ves o necesites mirar algo, y describe sólo lo que de verdad aparece en ella. "
             "Cuando el usuario te pida una acción física, invoca la herramienta correspondiente. "
@@ -272,6 +318,12 @@ class GeminiAgent:
                 speech_text = "Moviendo la cabeza."
             elif action_name == "stop_robot":
                 speech_text = "¡Detenido!"
+            elif action_name == "go_to_place":
+                res = executed_actions[0][1]
+                name = res.get("place", "")
+                to = "al " + name[3:] if name.startswith("el ") else "a " + name
+                speech_text = (f"¡{'Corro' if res.get('run') else 'Voy'} {to}!"
+                               if res.get("status") == "going" else f"No puedo ir: {res.get('error')}.")
             elif action_name == "get_robot_pose":
                 pose = executed_actions[0][1]
                 speech_text = f"Estoy en la posición X: {pose.get('x')} m, Y: {pose.get('y')} m."

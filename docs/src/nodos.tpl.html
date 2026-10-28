@@ -246,7 +246,7 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
   <div class="wrap">
     <div class="head">
       <div class="eyebrow"><span>02</span><span class="n">Lo que conviene saber</span></div>
-      <h2>Tres detalles del grafo</h2>
+      <h2>Cuatro detalles del grafo</h2>
     </div>
     <div class="notes">
       <div class="note">
@@ -269,6 +269,13 @@ footer .wrap { padding-block: 36px; color: var(--muted); font-size: 0.85rem; dis
           y sigue la llamada por <code>/pepper/visitor_status</code>. voice_listener nunca convierte en llamada una frase
           de la app: Gemini y la Fase 3 no compiten por la base.</p>
         <div class="flow">app → /pepper/voice/audio → voice_listener → /pepper/voice/transcript → bridge → <b>/pepper/visitor_call</b> → visitor_approach</div>
+      </div>
+      <div class="note">
+        <h3>Dos clientes de <code>navigate_to_pose</code></h3>
+        <p>visitor_approach y place_navigator mandan objetivos a Nav2; el último en llegar reemplaza al anterior. El bridge no
+          manda a Pepper a un lugar mientras atiende a un visitante, y una orden de <code>/pepper/go_to</code> hace que
+          visitor_approach deje de mirar al último visitante. «Corre» sólo cambia el límite de <code>/speed_limit</code>.</p>
+        <div class="flow">Gemini go_to_place → bridge → <b>/pepper/go_to</b> → place_navigator → navigate_to_pose → bt_navigator</div>
       </div>
     </div>
   </div>

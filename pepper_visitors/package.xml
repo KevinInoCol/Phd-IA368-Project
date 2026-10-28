@@ -19,6 +19,8 @@
   <exec_depend>action_msgs</exec_depend>
   <exec_depend>nav2_msgs</exec_depend>
   <exec_depend>tf2_ros_py</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
   <exec_depend>pepper_museum</exec_depend>
   <exec_depend>pepper_nav</exec_depend>
 

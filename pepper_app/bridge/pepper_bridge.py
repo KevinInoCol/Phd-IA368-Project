@@ -10,12 +10,13 @@ import wave
 import json
 import time
 import threading
+import unicodedata
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -62,6 +63,10 @@ class AppBridgeState:
         self.visitor_since = 0.0   # último cambio de fase
         self.visitor_log = []   # {'kind': 'visitor'|'pepper'|'phase', 'text', 'phase', 'time'}
         self.visitor_chat = []  # charla de la llamada en curso, para Gemini ({'sender', 'text'})
+
+        # Lugares con nombre del museo (place_navigator): [{'key', 'name', 'aliases', 'about', 'pose'}]
+        self.places = []
+        self.place_status = {}
 
     def add_visitor_log(self, kind, text, phase=None):
         with self.lock:
@@ -310,6 +315,7 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
                 'robot_y': round(self.state.robot_y, 3),
                 'robot_yaw': round(self.state.robot_yaw, 3),
                 'last_speech': self.state.last_speech,
+                'place_status': self.state.place_status,
                 'has_front_camera': self.state.front_frame_jpeg is not None
             }
         self.wfile.write(json.dumps(data).encode('utf-8'))
@@ -369,6 +375,10 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
         if '/stream/' in args[0] or '/status' in args[0]:
             return
         super().log_message(format, *args)
+
+
+def strip_accents(text):
+    return ''.join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
 
 
 def wav_to_pcm16k(data):
@@ -447,6 +457,12 @@ class PepperBridgeNode(Node):
         # Modo visitante: la frase va a visitor_approach como si la dijera alguien del museo
         self.visitor_call_pub = self.create_publisher(String, '/pepper/visitor_call', 10)
         self.create_subscription(String, '/pepper/visitor_status', self.visitor_status_cb, 10)
+
+        # Lugares con nombre: "vamos a la mesa" -> place_navigator (pepper_visitors) -> Nav2
+        self.go_to_pub = self.create_publisher(String, '/pepper/go_to', 10)
+        self.create_subscription(String, '/pepper/places', self.places_cb,
+                                 QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
+        self.create_subscription(String, '/pepper/place_status', self.place_status_cb, 10)
 
         # Voz del teléfono: la transcribe voice_listener (pepper_visitors, source:=topic)
         self.audio_pub = self.create_publisher(Int16MultiArray, '/pepper/voice/audio', 10)
@@ -609,6 +625,44 @@ class PepperBridgeNode(Node):
             self.state.visitor_since = time.time()
         self.state.add_visitor_log('phase', text, 'ended')
 
+    def places_cb(self, msg):
+        with self.state.lock:
+            self.state.places = json.loads(msg.data)
+        self.get_logger().info(f"{len(self.state.places)} lugares del museo (place_navigator)")
+
+    def place_status_cb(self, msg):
+        st = json.loads(msg.data)
+        with self.state.lock:
+            self.state.place_status = st
+        if st.get('phase') in ('arrived', 'failed') and st.get('text'):
+            self.state.add_chat('pepper', st['text'])  # la app lo ve al refrescar el chat
+
+    def go_to_place(self, key, run=False):
+        """Manda a Pepper a un lugar con nombre. Devuelve un error o None."""
+        if self.go_to_pub.get_subscription_count() == 0:
+            return 'place_navigator no está corriendo (visitors_demo.launch.py)'
+        with self.state.lock:
+            if self.state.visitor_phase in VISITOR_ACTIVE:
+                return 'Pepper está atendiendo a un visitante'
+        self.go_to_pub.publish(String(data=json.dumps({'place': key, 'run': bool(run)})))
+        return None
+
+    def cancel_go_to(self):
+        self.go_to_pub.publish(String(data=json.dumps({'cancel': True})))
+
+    def find_place(self, text):
+        """Lugar (dict) nombrado en `text` por su clave, nombre o alias, o None."""
+        t = ' ' + ' '.join(strip_accents(text.lower()).replace('?', ' ').replace(',', ' ').split()) + ' '
+        best = None
+        with self.state.lock:
+            places = list(self.state.places)
+        for p in places:
+            for alias in [p['key'].replace('_', ' '), *p.get('aliases', [])]:
+                a = strip_accents(alias.lower())
+                if f' {a} ' in t and (best is None or len(a) > best[0]):
+                    best = (len(a), p)
+        return best[1] if best else None
+
     def publish_cmd_vel(self, linear_x, linear_y, angular_z):
         msg = Twist()
         msg.linear.x = float(linear_x)
@@ -648,7 +702,18 @@ class PepperBridgeNode(Node):
 
     def process_local_chat_command(self, text):
         t = text.lower().strip()
+        place = self.find_place(t)
+        go_words = ["vamos", "ve a", "ve al", "anda", "dirígete", "dirigete", "llévame", "llevame",
+                    "corre", "regresa", "vuelve", "acompáñame", "acompañame", "lleva"]
 
+        # 0. Ir a un lugar con nombre ("vamos a la mesa", "corre a la entrada")
+        if place and any(w in t for w in go_words):
+            run = "corre" in t or "rápido" in t or "rapido" in t
+            err = self.go_to_place(place['key'], run)
+            name = place['name']
+            to = 'al ' + name[3:] if name.startswith('el ') else 'a ' + name
+            reply = (f"¡{'Corro' if run else 'Voy'} {to}!" if err is None
+                     else f"No puedo ir {to}: {err}.")
         # 1. Movimiento adelante
         if any(w in t for w in ["avanza", "adelante", "camina", "muévete adelante", "muevete adelante"]):
             self._execute_timed_move(0.25, 0.0, 1.5)
@@ -667,6 +732,7 @@ class PepperBridgeNode(Node):
             reply = "Girando hacia mi derecha."
         # 5. Parada
         elif any(w in t for w in ["para", "alto", "detente", "stop", "frena", "parada"]):
+            self.cancel_go_to()
             self.publish_cmd_vel(0.0, 0.0, 0.0)
             reply = "¡Parada inmediata! Me he detenido."
         # 6. Cabeza
@@ -707,7 +773,7 @@ class PepperBridgeNode(Node):
         elif any(w in t for w in ["gracias", "muchas gracias"]):
             reply = "¡Es un placer ayudarte! Estoy siempre a tus órdenes."
         elif "ayuda" in t or "comandos" in t:
-            reply = "Puedes decirme: 'avanza', 'retrocede', 'gira izquierda/derecha', 'alto', 'mira arriba/abajo/al frente', 'dónde estás' o 'qué ves'."
+            reply = "Puedes decirme: 'avanza', 'retrocede', 'gira izquierda/derecha', 'alto', 'mira arriba/abajo/al frente', 'dónde estás', 'qué ves' o 'vamos a la mesa'."
         else:
             reply = f"Recibí tu indicación: '{text}'. Ejecutando y atento a tus siguientes órdenes en el museo."
 
