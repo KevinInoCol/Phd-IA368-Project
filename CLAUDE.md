@@ -4,7 +4,26 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-25)
+## Estado y próximos pasos (actualizado 2026-10-28)
+
+**Punto de guardado (2026-10-28, último commit 24a40d7, todo en `main` y Vercel al día)**
+- Hecho y commiteado: Fases 1–3; voz sin micrófono; app de teléfono (`pepper_app/`, 3 pestañas:
+  Cámara & Control, Chat Pepper con Gemini 3.5 Flash vía Vertex, Visitante con llamada + charla);
+  autores y banderas PE/BR en las páginas; **lugares con nombre** (12 lugares, "vamos a la mesa",
+  "corre a la entrada", `place_navigator`, herramienta `go_to_place` de Gemini, chat de la app que
+  se refresca cada 2 s); **comparación hokuyo vs. `scan_fused`** en la demo (detalles en la sección
+  "App de teléfono" más abajo y en `results/navegacion/summary.md`).
+- Estado de las máquinas: simulación, bridge y app **parados**. Demo por defecto (hokuyo):
+  `visitors_demo.launch.py`; bridge aparte (`python3 pepper_app/bridge/pepper_bridge.py`).
+- APK actual compilado pero **no instalado** (no había teléfono conectado):
+  `~/Android/Sdk/platform-tools/adb install -r pepper_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`.
+- Sin commitear a propósito: `results/exploracion/` (prueba fallida) y `yolo11m.pt` (pesos).
+- Siguientes pasos ofrecidos al usuario (ninguno aprobado aún): (1) rehacer el mapa del museo con
+  la fusión entrando al bloque central y repetir `tools/eval_navigation.py`; (2) arreglar el falso
+  visitante (retrato de los paneles detrás de la mesa, prob. del clasificador 0.35–0.38: umbral o
+  descartar detecciones pegadas a una pared del mapa); (3) cámara de profundidad y sonares en el
+  costmap; (4) depurar la exploración autónoma; (5) etiquetar lugares por voz; (6) mapa con los
+  lugares en la app.
 
 **Hecho**
 - Fase 1 ✅: fusión + acumulación + ajuste de Karto; batería normal y con odometría degradada.
