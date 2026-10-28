@@ -23,6 +23,7 @@
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>pepper_museum</exec_depend>
   <exec_depend>pepper_nav</exec_depend>
+  <exec_depend>pepper_multilaser_slam</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

@@ -4,6 +4,8 @@
     ros2 launch pepper_visitors visitors_demo.launch.py x:=-2.0 y:=-1.5          # otra pose de arranque
     ros2 launch pepper_visitors visitors_demo.launch.py world:=museum_with_people_moving
     ros2 launch pepper_visitors visitors_demo.launch.py voice:=true              # llamada por micrófono
+    ros2 launch pepper_visitors visitors_demo.launch.py scan_fusion:=true scan:=/pepper/scan_fused \
+        map:=$(ros2 pkg prefix pepper_museum)/share/pepper_museum/maps/museum_fused.yaml   # sin el hokuyo
     ros2 launch pepper_visitors visitors_demo.launch.py voice:=true device:=pepper_test_audio capture_sink:=true
         # llamada con audio sintetizado (tools/voice_test.py crea el sumidero y reproduce las frases)
 
@@ -36,8 +38,7 @@ def generate_launch_description():
     )
     nav = IncludeLaunchDescription(
         PathJoinSubstitution([FindPackageShare("pepper_nav"), "launch", "amcl.launch.py"]),
-        launch_arguments={"map": PathJoinSubstitution([FindPackageShare("pepper_museum"), "maps",
-                                                       "museum_hokuyo.yaml"]),
+        launch_arguments={"map": LaunchConfiguration("map"),
                           "scan": LaunchConfiguration("scan"),
                           "rviz": LaunchConfiguration("rviz")}.items(),
     )
@@ -50,6 +51,13 @@ def generate_launch_description():
          "}, orientation: {w: 1.0}}, covariance: [0.05, 0, 0, 0, 0, 0, 0, 0.05, 0, 0, 0, 0, "
          "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02]}}"]],
         output="log")
+    # Los 3 láseres de Pepper en un barrido de 360° (como en el SLAM de la Fase 1: acc4nofree)
+    fusion = Node(
+        package="pepper_multilaser_slam", executable="scan_fusion", output="log",
+        parameters=[{"use_sim_time": True, "accumulate": LaunchConfiguration("accumulate"),
+                     "free_space": False, "sensor_frame": "base_footprint"}],
+        condition=IfCondition(LaunchConfiguration("scan_fusion")),
+    )
     approach = Node(
         package="pepper_visitors", executable="visitor_approach", output="screen",
         parameters=[{"use_sim_time": True, "log_file": LaunchConfiguration("log_file")}],
@@ -71,13 +79,21 @@ def generate_launch_description():
         DeclareLaunchArgument("x", default_value="-1.5", description="pose de arranque (mundo)"),
         DeclareLaunchArgument("y", default_value="1.0"),
         DeclareLaunchArgument("scan", default_value="/pepper/hokuyo_scan",
-                              description="láser de AMCL y costmaps: /pepper/hokuyo_scan o /pepper/laser_2"),
+                              description="láser de AMCL y costmaps: /pepper/hokuyo_scan, /pepper/scan_fused "
+                                          "(con scan_fusion:=true) o /pepper/laser_2"),
+        DeclareLaunchArgument("map", default_value=PathJoinSubstitution(
+            [FindPackageShare("pepper_museum"), "maps", "museum_hokuyo.yaml"]),
+            description="mapa de AMCL/Nav2: museum_hokuyo.yaml o museum_fused.yaml (3 láseres de Pepper)"),
+        DeclareLaunchArgument("scan_fusion", default_value="false",
+                              description="lanzar scan_fusion (/pepper/scan_fused)"),
+        DeclareLaunchArgument("accumulate", default_value="4", description="barridos acumulados de scan_fusion"),
         DeclareLaunchArgument("voice", default_value="false"),
         DeclareLaunchArgument("device", default_value="", description="micrófono (node.name de PipeWire)"),
         DeclareLaunchArgument("capture_sink", default_value="false",
                               description="escuchar el monitor del sumidero `device` (pruebas sin micrófono)"),
         DeclareLaunchArgument("log_file", default_value="", description="JSON por llamada"),
         sim,
+        fusion,
         # Nav2 y la percepción cuando la simulación ya publica reloj, TF y sensores
         TimerAction(period=25.0, actions=[nav]),
         TimerAction(period=40.0, actions=[initial_pose]),

@@ -1,0 +1,1779 @@
+[INFO] [launch]: All log files can be found below /home/kevao/.ros/log/2026-10-28-07-08-08-217588-kevao-System-Product-Name-988578
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gazebo-1]: process started with pid [988585]
+[INFO] [parameter_bridge-2]: process started with pid [988586]
+[INFO] [clock_throttle-3]: process started with pid [988587]
+[INFO] [robot_state_publisher-4]: process started with pid [988589]
+[INFO] [laser_publisher.py-5]: process started with pid [988590]
+[INFO] [sonar_to_range-6]: process started with pid [988591]
+[INFO] [point_cloud_xyz_node-7]: process started with pid [988592]
+[INFO] [create-8]: process started with pid [988593]
+[INFO] [scan_fusion-9]: process started with pid [988594]
+[robot_state_publisher-4] [INFO] [1793182088.960782273] [pepper.robot_state_publisher]: Robot initialized
+[create-8] [INFO] [1793182088.973221602] [ros_gz_sim]: Requesting list of world names.
+[scan_fusion-9] [INFO] [1793182089.388191198] [scan_fusion]: scan_fusion: /pepper/scan_left, /pepper/scan_front, /pepper/scan_right -> /pepper/scan_fused (360 rayos, accumulate=4, free_space=False, dynamic_filter=False)
+[laser_publisher.py-5] [INFO] [1793182089.389958896] [laser_publisher]: laser_publisher: scan_left/front/right -> /pepper/laser_2
+[create-8] [INFO] [1793182089.603066944] [ros_gz_sim]: Waiting messages on topic [/pepper/robot_description].
+[create-8] [INFO] [1793182089.615130173] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-8]: process has finished cleanly [pid 988593]
+[INFO] [spawner-10]: process started with pid [988757]
+[INFO] [spawner-11]: process started with pid [988758]
+[INFO] [arms_down.sh-12]: process started with pid [988759]
+[parameter_bridge-2] [INFO] [1793182090.017238806] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /pepper/clock_raw (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.020326935] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/front/image_raw (gz.msgs.Image) -> /pepper/camera/front/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.023312047] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/front/camera_info (gz.msgs.CameraInfo) -> /pepper/camera/front/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.024440482] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/bottom/image_raw (gz.msgs.Image) -> /pepper/camera/bottom/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.025230603] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/bottom/camera_info (gz.msgs.CameraInfo) -> /pepper/camera/bottom/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.025995092] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/depth_sensor/image (gz.msgs.Image) -> /pepper/camera/ir/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.026763493] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/depth_sensor/depth_image (gz.msgs.Image) -> /pepper/camera/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.027497880] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/camera/depth_sensor/camera_info (gz.msgs.CameraInfo) -> /pepper/camera/depth/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.028231918] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/scan_front (gz.msgs.LaserScan) -> /pepper/scan_front (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.029301058] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/scan_left (gz.msgs.LaserScan) -> /pepper/scan_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.030231980] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/scan_right (gz.msgs.LaserScan) -> /pepper/scan_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.030953656] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/hokuyo_scan (gz.msgs.LaserScan) -> /pepper/hokuyo_scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.031697193] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/sonar_front_scan (gz.msgs.LaserScan) -> /pepper/sonar_front_scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1793182090.032465873] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/pepper/sonar_back_scan (gz.msgs.LaserScan) -> /pepper/sonar_back_scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[spawner-10] [INFO] [1793182090.119211167] [spawner_joint_state_controller]: waiting for service /pepper/controller_manager/list_controllers to become available...
+[arms_down.sh-12] Waiting for controllers to be ready...
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="fake_hokuyo_laser_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="front_laser_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="left_laser_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="right_laser_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="SonarBack"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="base_footprint"]/sensor[@name="SonarFront"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="Head"]/sensor[@name="CameraBottom"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="Head"]/sensor[@name="CameraDepth_frame_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="JulietteY20MP"]/link[@name="Head"]/sensor[@name="CameraTop"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[arms_down.sh-12] Waiting for controllers to be ready...
+[gazebo-1] [INFO] [1793182091.776990384] [pepper.gz_ros_control]: Loading controller_manager
+[gazebo-1] [INFO] [1793182091.803220970] [pepper.controller_manager]: Using ROS clock for triggering controller manager cycles.
+[gazebo-1] [WARN] [1793182091.803258265] [pepper.controller_manager]: The resource manager is not yet initialized, will wait for the robot description to initialize it..
+[gazebo-1] [INFO] [1793182091.815387915] [pepper.controller_manager]: Subscribing to '/pepper/robot_description' topic for robot description.
+[gazebo-1] [WARN] [1793182091.815447560] [pepper.gz_ros_control]: Waiting RM to load and initialize hardware...
+[gazebo-1] [INFO] [1793182091.931506819] [pepper.controller_manager]: Received robot description from topic.
+[gazebo-1] [INFO] [1793182091.931653208] [pepper.controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[gazebo-1] [INFO] [1793182091.940256470] [pepper.gz_ros_control]: The position_proportional_gain has been set to: 0.1
+[gazebo-1] [INFO] [1793182091.940331760] [pepper.gz_ros_control]: Loading joint: HeadYaw
+[gazebo-1] [INFO] [1793182091.940353760] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.940380579] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940410821] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.940436802] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.940459221] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.940474098] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940503152] [pepper.gz_ros_control]: Loading joint: HeadPitch
+[gazebo-1] [INFO] [1793182091.940520333] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.940535140] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940550295] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.940565591] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.940580816] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.940594156] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940618461] [pepper.gz_ros_control]: Loading joint: HipRoll
+[gazebo-1] [INFO] [1793182091.940634874] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.940649471] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940665115] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.940681598] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.940694449] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.940708417] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940735516] [pepper.gz_ros_control]: Loading joint: HipPitch
+[gazebo-1] [INFO] [1793182091.940753046] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.940768411] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940783567] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.940800329] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.940816533] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.940830431] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940856203] [pepper.gz_ros_control]: Loading joint: KneePitch
+[gazebo-1] [INFO] [1793182091.940874222] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.940888679] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940905162] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.940922553] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.940936102] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.940950908] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.940983804] [pepper.gz_ros_control]: Loading joint: LShoulderPitch
+[gazebo-1] [INFO] [1793182091.941001893] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941016280] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941031017] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941047220] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941063424] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941078719] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941102954] [pepper.gz_ros_control]: Loading joint: LShoulderRoll
+[gazebo-1] [INFO] [1793182091.941119786] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941133964] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941172726] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941192142] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941208276] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941224269] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941250530] [pepper.gz_ros_control]: Loading joint: LElbowYaw
+[gazebo-1] [INFO] [1793182091.941268060] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941284403] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941299559] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941314854] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941328124] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941343070] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941366887] [pepper.gz_ros_control]: Loading joint: LElbowRoll
+[gazebo-1] [INFO] [1793182091.941393007] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941409350] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941427928] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941444551] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941461103] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941476748] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941505802] [pepper.gz_ros_control]: Loading joint: LWristYaw
+[gazebo-1] [INFO] [1793182091.941523821] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941542539] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941557206] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941574457] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941589682] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941604908] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941629771] [pepper.gz_ros_control]: Loading joint: LHand
+[gazebo-1] [INFO] [1793182091.941644927] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941657918] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941673492] [pepper.gz_ros_control]: 			 found initial value: 0.500000
+[gazebo-1] [INFO] [1793182091.941689416] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941703524] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941718261] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941741868] [pepper.gz_ros_control]: Loading joint: RShoulderPitch
+[gazebo-1] [INFO] [1793182091.941759119] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941774763] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941790128] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941807659] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941823443] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941839576] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941864929] [pepper.gz_ros_control]: Loading joint: RShoulderRoll
+[gazebo-1] [INFO] [1793182091.941882180] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.941896428] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941910745] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.941927787] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.941943711] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.941958797] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.941985127] [pepper.gz_ros_control]: Loading joint: RElbowYaw
+[gazebo-1] [INFO] [1793182091.942000632] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942016486] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942031153] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.942053223] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942069356] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942084163] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942109515] [pepper.gz_ros_control]: Loading joint: RElbowRoll
+[gazebo-1] [INFO] [1793182091.942129420] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942142900] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942156170] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.942184735] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942202056] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942216653] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942240609] [pepper.gz_ros_control]: Loading joint: RWristYaw
+[gazebo-1] [INFO] [1793182091.942254717] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942269104] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942282164] [pepper.gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1793182091.942296971] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942310800] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942324070] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942347467] [pepper.gz_ros_control]: Loading joint: RHand
+[gazebo-1] [INFO] [1793182091.942363321] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942388534] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942404737] [pepper.gz_ros_control]: 			 found initial value: 0.500000
+[gazebo-1] [INFO] [1793182091.942420940] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942435677] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942449994] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942477652] [pepper.gz_ros_control]: Loading joint: WheelB
+[gazebo-1] [INFO] [1793182091.942497766] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942513271] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942528567] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942543094] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942562789] [pepper.gz_ros_control]: Loading joint: WheelFL
+[gazebo-1] [INFO] [1793182091.942578853] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942602739] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942616637] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942631863] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942650022] [pepper.gz_ros_control]: Loading joint: WheelFR
+[gazebo-1] [INFO] [1793182091.942666155] [pepper.gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1793182091.942693812] [pepper.gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1793182091.942710086] [pepper.gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1793182091.942722937] [pepper.gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1793182091.942980025] [pepper.controller_manager]: Initialize hardware 'PepperGazeboSystem' 
+[gazebo-1] [WARN] [1793182091.943021092] [pepper.controller_manager.hardware_component.system.PepperGazeboSystem]: Executor is not available during hardware component initialization for 'PepperGazeboSystem'. Skipping node creation!
+[gazebo-1] [INFO] [1793182091.943165525] [pepper.controller_manager]: Successful initialization of hardware 'PepperGazeboSystem'
+[gazebo-1] [INFO] [1793182091.943665383] [pepper.controller_manager]: Activating component 'PepperGazeboSystem'.
+[gazebo-1] [INFO] [1793182091.943698767] [resource_manager]: 'configure' hardware 'PepperGazeboSystem' 
+[gazebo-1] [INFO] [1793182091.943711269] [pepper.gz_ros_control]: System Successfully configured!
+[gazebo-1] [INFO] [1793182091.943728799] [resource_manager]: Successful 'configure' of hardware 'PepperGazeboSystem'
+[gazebo-1] [INFO] [1793182091.943747936] [resource_manager]: 'activate' hardware 'PepperGazeboSystem' 
+[gazebo-1] [INFO] [1793182091.943773289] [resource_manager]: Successful 'activate' of hardware 'PepperGazeboSystem'
+[gazebo-1] [WARN] [1793182091.943885804] [pepper.controller_manager]: Component 'PepperGazeboSystem' does not have read or write statistics initialized, skipping registration.
+[gazebo-1] [INFO] [1793182091.943908782] [pepper.controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[spawner-10] [INFO] [1793182092.127250638] [spawner_joint_state_controller]: Setting controller param "params_file" to "['/tmp/launch_params_uap5ouh7']" for joint_state_controller
+[gazebo-1] [INFO] [1793182092.128890735] [pepper.controller_manager]: Loading controller : 'joint_state_controller' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[gazebo-1] [INFO] [1793182092.128936342] [pepper.controller_manager]: Loading controller 'joint_state_controller'
+[gazebo-1] [INFO] [1793182092.139402497] [pepper.controller_manager]: Controller 'joint_state_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_uap5ouh7 --param use_sim_time:=true 
+[spawner-10] [INFO] [1793182092.154105191] [spawner_joint_state_controller]: Loaded joint_state_controller
+[gazebo-1] [INFO] [1793182092.155226572] [pepper.controller_manager]: Configuring controller: 'joint_state_controller'
+[gazebo-1] [INFO] [1793182092.155460473] [pepper.joint_state_controller]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[gazebo-1] [INFO] [1793182092.170527602] [pepper.controller_manager]: Activating controllers: [ joint_state_controller ]
+[arms_down.sh-12] Waiting for controllers to be ready...
+[gazebo-1] [INFO] [1793182093.843012864] [pepper.gazebo_ros_model_velocity]: GazeboRosModelVelocity: escuchando /pepper/cmd_vel, odometría en /pepper/odom
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (0,0): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (1,1): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (2,2): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:149][0m [Inertia::setMoment] Passing in an invalid moment of inertia matrix. Results might not by physically accurate or meaningful.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (0,0): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (1,1): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (2,2): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:149][0m [Inertia::setMoment] Passing in an invalid moment of inertia matrix. Results might not by physically accurate or meaningful.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (0,0): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (1,1): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (2,2): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:149][0m [Inertia::setMoment] Passing in an invalid moment of inertia matrix. Results might not by physically accurate or meaningful.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (0,0): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (1,1): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:233][0m [Inertia::verifyMoment] Invalid entry for (2,2): 0. Value should be positive and greater than zero.
+[gazebo-1] [1;33mWarning [Inertia.cpp:149][0m [Inertia::setMoment] Passing in an invalid moment of inertia matrix. Results might not by physically accurate or meaningful.
+[gazebo-1] [WARN] [1793182094.175752722] [pepper.gz_ros_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[arms_down.sh-12] Waiting for controllers to be ready...
+[gazebo-1] libEGL warning: pci id for fd 97: 10de:2882, driver (null)
+[gazebo-1] 
+[gazebo-1] pci id for fd 98: 10de:2882, driver (null)
+[gazebo-1] pci id for fd 99: 10de:2882, driver (null)
+[gazebo-1] libEGL warning: egl: failed to create dri2 screen
+[gazebo-1] libEGL warning: pci id for fd 97: 10de:2882, driver (null)
+[gazebo-1] 
+[gazebo-1] pci id for fd 98: 10de:2882, driver (null)
+[gazebo-1] pci id for fd 99: 10de:2882, driver (null)
+[gazebo-1] libEGL warning: egl: failed to create dri2 screen
+[gazebo-1] libEGL warning: pci id for fd 97: 10de:2882, driver (null)
+[gazebo-1] 
+[gazebo-1] [INFO] [1793182095.692058543] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-10] [INFO] [1793182095.703174716] [spawner_joint_state_controller]: Configured and activated joint_state_controller
+[spawner-11] [INFO] [1793182095.807187229] [spawner_RightArm_controller]: waiting for service /pepper/controller_manager/list_controllers to become available...
+[INFO] [spawner-10]: process has finished cleanly [pid 988757]
+[arms_down.sh-12] Waiting for controllers to be ready...
+[spawner-11] [INFO] [1793182096.063645434] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for RightArm_controller
+[spawner-11] [INFO] [1793182096.069594286] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for RightArm_controller
+[gazebo-1] [INFO] [1793182096.071233545] [pepper.controller_manager]: Loading controller : 'RightArm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.071268605] [pepper.controller_manager]: Loading controller 'RightArm_controller'
+[gazebo-1] [INFO] [1793182096.078327105] [pepper.controller_manager]: Controller 'RightArm_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[spawner-11] [INFO] [1793182096.115279817] [spawner_RightArm_controller]: Loaded RightArm_controller
+[gazebo-1] [INFO] [1793182096.116630419] [pepper.controller_manager]: Configuring controller: 'RightArm_controller'
+[gazebo-1] [INFO] [1793182096.116975438] [pepper.RightArm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.117020276] [pepper.RightArm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.117056524] [pepper.RightArm_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.119587245] [pepper.RightArm_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.127066961] [pepper.RightArm_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.127117527] [pepper.RightArm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.135983116] [pepper.controller_manager]: Activating controllers: [ RightArm_controller ]
+[gazebo-1] [INFO] [1793182096.144389843] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.155290834] [spawner_RightArm_controller]: Configured and activated RightArm_controller
+[spawner-11] [INFO] [1793182096.162706226] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for LeftArm_controller
+[spawner-11] [INFO] [1793182096.168648234] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for LeftArm_controller
+[gazebo-1] [INFO] [1793182096.169443384] [pepper.controller_manager]: Loading controller : 'LeftArm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.169487733] [pepper.controller_manager]: Loading controller 'LeftArm_controller'
+[gazebo-1] [INFO] [1793182096.169717862] [pepper.controller_manager]: Controller 'LeftArm_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[scan_fusion-9] [WARN] [1793182096.200117659] [scan_fusion]: Sin TF odom <- base_footprint para el scan: descartado
+[spawner-11] [INFO] [1793182096.206173719] [spawner_RightArm_controller]: Loaded LeftArm_controller
+[gazebo-1] [INFO] [1793182096.206462864] [pepper.controller_manager]: Configuring controller: 'LeftArm_controller'
+[gazebo-1] [INFO] [1793182096.206702841] [pepper.LeftArm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.206735247] [pepper.LeftArm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.206757247] [pepper.LeftArm_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.208577746] [pepper.LeftArm_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.213731378] [pepper.LeftArm_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.213764274] [pepper.LeftArm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.215870077] [pepper.controller_manager]: Activating controllers: [ LeftArm_controller ]
+[gazebo-1] [INFO] [1793182096.225430173] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.236161867] [spawner_RightArm_controller]: Configured and activated LeftArm_controller
+[spawner-11] [INFO] [1793182096.242791259] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for Head_controller
+[spawner-11] [INFO] [1793182096.250263921] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for Head_controller
+[gazebo-1] [INFO] [1793182096.251811128] [pepper.controller_manager]: Loading controller : 'Head_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.251843814] [pepper.controller_manager]: Loading controller 'Head_controller'
+[gazebo-1] [INFO] [1793182096.252061581] [pepper.controller_manager]: Controller 'Head_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[spawner-11] [INFO] [1793182096.286243246] [spawner_RightArm_controller]: Loaded Head_controller
+[gazebo-1] [INFO] [1793182096.286557814] [pepper.controller_manager]: Configuring controller: 'Head_controller'
+[gazebo-1] [INFO] [1793182096.286699174] [pepper.Head_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.286723898] [pepper.Head_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.286739054] [pepper.Head_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.288474904] [pepper.Head_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.294051010] [pepper.Head_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.294096337] [pepper.Head_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.296274147] [pepper.controller_manager]: Activating controllers: [ Head_controller ]
+[gazebo-1] [INFO] [1793182096.305357154] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.316163788] [spawner_RightArm_controller]: Configured and activated Head_controller
+[spawner-11] [INFO] [1793182096.323357153] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for Pelvis_controller
+[spawner-11] [INFO] [1793182096.330938768] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for Pelvis_controller
+[gazebo-1] [INFO] [1793182096.331820313] [pepper.controller_manager]: Loading controller : 'Pelvis_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.331850414] [pepper.controller_manager]: Loading controller 'Pelvis_controller'
+[gazebo-1] [INFO] [1793182096.332099121] [pepper.controller_manager]: Controller 'Pelvis_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[spawner-11] [INFO] [1793182096.366310469] [spawner_RightArm_controller]: Loaded Pelvis_controller
+[gazebo-1] [INFO] [1793182096.366651577] [pepper.controller_manager]: Configuring controller: 'Pelvis_controller'
+[gazebo-1] [INFO] [1793182096.366831210] [pepper.Pelvis_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.366862569] [pepper.Pelvis_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.366877934] [pepper.Pelvis_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.368790554] [pepper.Pelvis_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.374151268] [pepper.Pelvis_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.374185071] [pepper.Pelvis_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.375803029] [pepper.controller_manager]: Activating controllers: [ Pelvis_controller ]
+[gazebo-1] [INFO] [1793182096.385175460] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.396421889] [spawner_RightArm_controller]: Configured and activated Pelvis_controller
+[spawner-11] [INFO] [1793182096.404645072] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for LeftHand_controller
+[spawner-11] [INFO] [1793182096.411787941] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for LeftHand_controller
+[gazebo-1] [INFO] [1793182096.412636520] [pepper.controller_manager]: Loading controller : 'LeftHand_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.412671860] [pepper.controller_manager]: Loading controller 'LeftHand_controller'
+[gazebo-1] [INFO] [1793182096.412897519] [pepper.controller_manager]: Controller 'LeftHand_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[spawner-11] [INFO] [1793182096.446396130] [spawner_RightArm_controller]: Loaded LeftHand_controller
+[gazebo-1] [INFO] [1793182096.446898154] [pepper.controller_manager]: Configuring controller: 'LeftHand_controller'
+[gazebo-1] [INFO] [1793182096.447050688] [pepper.LeftHand_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.447085958] [pepper.LeftHand_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.447103698] [pepper.LeftHand_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.450024276] [pepper.LeftHand_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.456099892] [pepper.LeftHand_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.456139352] [pepper.LeftHand_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.465994950] [pepper.controller_manager]: Activating controllers: [ LeftHand_controller ]
+[gazebo-1] [INFO] [1793182096.475228745] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.486233661] [spawner_RightArm_controller]: Configured and activated LeftHand_controller
+[spawner-11] [INFO] [1793182096.495625229] [spawner_RightArm_controller]: Setting controller param "node_options_args" to "['-r', '~/joint_trajectory:=~/command']" for RightHand_controller
+[spawner-11] [INFO] [1793182096.504797982] [spawner_RightArm_controller]: Setting controller param "params_file" to "['/tmp/launch_params_ci0g5kco']" for RightHand_controller
+[gazebo-1] [INFO] [1793182096.506061352] [pepper.controller_manager]: Loading controller : 'RightHand_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1793182096.506108914] [pepper.controller_manager]: Loading controller 'RightHand_controller'
+[gazebo-1] [INFO] [1793182096.507100809] [pepper.controller_manager]: Controller 'RightHand_controller' node arguments: --ros-args --params-file /home/kevao/pepper_ws/install/pepper_control/share/pepper_control/config/pepper_trajectory_control.yaml -p use_sim_time:=true --params-file /tmp/launch_params_ci0g5kco --param use_sim_time:=true --ros-args -r ~/joint_trajectory:=~/command 
+[spawner-11] [INFO] [1793182096.536558369] [spawner_RightArm_controller]: Loaded RightHand_controller
+[gazebo-1] [INFO] [1793182096.536898848] [pepper.controller_manager]: Configuring controller: 'RightHand_controller'
+[gazebo-1] [INFO] [1793182096.537033852] [pepper.RightHand_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1793182096.537061021] [pepper.RightHand_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1793182096.537080437] [pepper.RightHand_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1793182096.539136302] [pepper.RightHand_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1793182096.544716389] [pepper.RightHand_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1793182096.544747818] [pepper.RightHand_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1793182096.546161069] [pepper.controller_manager]: Activating controllers: [ RightHand_controller ]
+[gazebo-1] [INFO] [1793182096.555248825] [pepper.controller_manager]: Successfully switched controllers!
+[spawner-11] [INFO] [1793182096.566501400] [spawner_RightArm_controller]: Configured and activated RightHand_controller
+[INFO] [spawner-11]: process has finished cleanly [pid 988758]
+[arms_down.sh-12] Lowering arms.
+[INFO] [arms_down.sh-12]: process has finished cleanly [pid 988759]
+[INFO] [bash-13]: process started with pid [989250]
+[INFO] [bash-13]: process has finished cleanly [pid 989250]
+[INFO] [map_server-14]: process started with pid [989336]
+[INFO] [amcl-15]: process started with pid [989337]
+[INFO] [lifecycle_manager-16]: process started with pid [989338]
+[INFO] [controller_server-17]: process started with pid [989339]
+[INFO] [smoother_server-18]: process started with pid [989340]
+[INFO] [planner_server-19]: process started with pid [989341]
+[INFO] [route_server-20]: process started with pid [989342]
+[INFO] [behavior_server-21]: process started with pid [989343]
+[INFO] [bt_navigator-22]: process started with pid [989344]
+[INFO] [waypoint_follower-23]: process started with pid [989345]
+[INFO] [velocity_smoother-24]: process started with pid [989346]
+[INFO] [collision_monitor-25]: process started with pid [989347]
+[INFO] [opennav_docking-26]: process started with pid [989348]
+[INFO] [lifecycle_manager-27]: process started with pid [989349]
+[velocity_smoother-24] [INFO] [1793182114.347351032] [velocity_smoother]: 
+[velocity_smoother-24] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-24] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-24] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-19] [INFO] [1793182114.353602439] [planner_server]: 
+[planner_server-19] 	planner_server lifecycle node launched. 
+[planner_server-19] 	Waiting on external lifecycle transitions to activate
+[planner_server-19] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-19] [INFO] [1793182114.363107011] [planner_server]: Creating
+[collision_monitor-25] [INFO] [1793182114.378573077] [collision_monitor]: 
+[collision_monitor-25] 	collision_monitor lifecycle node launched. 
+[collision_monitor-25] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-25] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[route_server-20] [INFO] [1793182114.390979998] [route_server]: 
+[route_server-20] 	route_server lifecycle node launched. 
+[route_server-20] 	Waiting on external lifecycle transitions to activate
+[route_server-20] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-27] [INFO] [1793182114.405485459] [lifecycle_manager_navigation]: Creating
+[planner_server-19] [INFO] [1793182114.418316740] [global_costmap.global_costmap]: 
+[planner_server-19] 	global_costmap lifecycle node launched. 
+[planner_server-19] 	Waiting on external lifecycle transitions to activate
+[planner_server-19] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-19] [INFO] [1793182114.420047980] [global_costmap.global_costmap]: Creating Costmap
+[waypoint_follower-23] [INFO] [1793182114.427033076] [waypoint_follower]: 
+[waypoint_follower-23] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-23] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-23] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-16] [INFO] [1793182114.429042497] [lifecycle_manager_localization]: Creating
+[waypoint_follower-23] [INFO] [1793182114.433868082] [waypoint_follower]: Creating
+[lifecycle_manager-27] [INFO] [1793182114.440155039] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[smoother_server-18] [INFO] [1793182114.744753505] [smoother_server]: 
+[smoother_server-18] 	smoother_server lifecycle node launched. 
+[smoother_server-18] 	Waiting on external lifecycle transitions to activate
+[smoother_server-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-18] [INFO] [1793182114.747617232] [smoother_server]: Creating smoother server
+[controller_server-17] [INFO] [1793182114.752843500] [controller_server]: 
+[controller_server-17] 	controller_server lifecycle node launched. 
+[controller_server-17] 	Waiting on external lifecycle transitions to activate
+[controller_server-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[amcl-15] [INFO] [1793182114.756307657] [amcl]: 
+[amcl-15] 	amcl lifecycle node launched. 
+[amcl-15] 	Waiting on external lifecycle transitions to activate
+[amcl-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[amcl-15] [INFO] [1793182114.760011512] [amcl]: Creating
+[lifecycle_manager-16] [INFO] [1793182114.760826916] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[controller_server-17] [INFO] [1793182114.767772411] [controller_server]: Creating controller server
+[bt_navigator-22] [INFO] [1793182114.768790287] [bt_navigator]: 
+[bt_navigator-22] 	bt_navigator lifecycle node launched. 
+[bt_navigator-22] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-22] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-21] [INFO] [1793182114.769880100] [behavior_server]: 
+[behavior_server-21] 	behavior_server lifecycle node launched. 
+[behavior_server-21] 	Waiting on external lifecycle transitions to activate
+[behavior_server-21] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-22] [INFO] [1793182114.772320026] [bt_navigator]: Creating
+[map_server-14] [INFO] [1793182114.783497241] [map_server]: 
+[map_server-14] 	map_server lifecycle node launched. 
+[map_server-14] 	Waiting on external lifecycle transitions to activate
+[map_server-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-14] [INFO] [1793182114.783653687] [map_server]: Creating
+[opennav_docking-26] [INFO] [1793182114.786683777] [docking_server]: 
+[opennav_docking-26] 	docking_server lifecycle node launched. 
+[opennav_docking-26] 	Waiting on external lifecycle transitions to activate
+[opennav_docking-26] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-26] [INFO] [1793182114.786811588] [docking_server]: Creating docking_server
+[controller_server-17] [INFO] [1793182114.797547333] [local_costmap.local_costmap]: 
+[controller_server-17] 	local_costmap lifecycle node launched. 
+[controller_server-17] 	Waiting on external lifecycle transitions to activate
+[controller_server-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-17] [INFO] [1793182114.798195116] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-27] [INFO] [1793182115.796987246] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-27] [INFO] [1793182115.797075456] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-17] [INFO] [1793182115.797653398] [controller_server]: Configuring controller interface
+[controller_server-17] [INFO] [1793182115.797702566] [controller_server]: getting progress checker plugins..
+[controller_server-17] [INFO] [1793182115.798047026] [controller_server]: getting goal checker plugins..
+[controller_server-17] [INFO] [1793182115.798202983] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-17] [INFO] [1793182115.798261581] [local_costmap.local_costmap]: Configuring
+[controller_server-17] [INFO] [1793182115.810753430] [local_costmap.local_costmap]: Using plugin "voxel_layer"
+[controller_server-17] [INFO] [1793182115.815884713] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-17] [INFO] [1793182115.832311733] [local_costmap.local_costmap]: Initialized plugin "voxel_layer"
+[controller_server-17] [INFO] [1793182115.832345606] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-17] [INFO] [1793182115.833716253] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-17] [INFO] [1793182115.856832310] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-17] [INFO] [1793182115.857334263] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-17] [INFO] [1793182115.858037292] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-17] [INFO] [1793182115.859094768] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-17] [INFO] [1793182115.860985876] [controller_server]: Created controller : FollowPath of type nav2_mppi_controller::MPPIController
+[controller_server-17] [INFO] [1793182115.864806996] [controller_server]: Controller period is equal to model dt. Control sequence shifting is ON
+[controller_server-17] [INFO] [1793182115.868164085] [controller_server]: ConstraintCritic instantiated with 1 power and 4.000000 weight.
+[controller_server-17] [INFO] [1793182115.868225616] [controller_server]: Critic loaded : mppi::critics::ConstraintCritic
+[controller_server-17] [INFO] [1793182115.870627059] [controller_server]: InflationCostCritic instantiated with 1 power and 300.000000 / 0.015000 weights. Critic will collision check based on circular cost.
+[controller_server-17] [INFO] [1793182115.870669314] [controller_server]: Critic loaded : mppi::critics::CostCritic
+[controller_server-17] [INFO] [1793182115.871495333] [controller_server]: GoalCritic instantiated with 1 power and 5.000000 weight.
+[controller_server-17] [INFO] [1793182115.871522991] [controller_server]: Critic loaded : mppi::critics::GoalCritic
+[controller_server-17] [INFO] [1793182115.872717427] [controller_server]: GoalAngleCritic instantiated with 1 power, 3.000000 weight, 0.500000 angular threshold and symmetric_yaw_tolerance disabled
+[controller_server-17] [INFO] [1793182115.872753884] [controller_server]: Critic loaded : mppi::critics::GoalAngleCritic
+[controller_server-17] [INFO] [1793182115.874252900] [controller_server]: ReferenceTrajectoryCritic instantiated with 1 power and 14.000000 weight
+[controller_server-17] [INFO] [1793182115.874289148] [controller_server]: Critic loaded : mppi::critics::PathAlignCritic
+[controller_server-17] [INFO] [1793182115.875026958] [controller_server]: Critic loaded : mppi::critics::PathFollowCritic
+[controller_server-17] [INFO] [1793182115.876026186] [controller_server]: PathAngleCritic instantiated with 1 power and 2.000000 weight. Mode set to: Forward Preference
+[controller_server-17] [INFO] [1793182115.876053773] [controller_server]: Critic loaded : mppi::critics::PathAngleCritic
+[controller_server-17] [INFO] [1793182115.876579753] [controller_server]: TwirlingCritic instantiated with 1 power and 10.000000 weight.
+[controller_server-17] [INFO] [1793182115.876605524] [controller_server]: Critic loaded : mppi::critics::TwirlingCritic
+[controller_server-17] [INFO] [1793182115.880115149] [controller_server]: Optimizer reset
+[controller_server-17] [INFO] [1793182115.888599610] [MPPIController]: Configured MPPI Controller: FollowPath
+[controller_server-17] [INFO] [1793182115.888679649] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-27] [INFO] [1793182115.906617559] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-18] [INFO] [1793182115.907691727] [smoother_server]: Configuring smoother server
+[smoother_server-18] [INFO] [1793182115.940250336] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-18] [INFO] [1793182115.942037101] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-27] [INFO] [1793182115.951181778] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-19] [INFO] [1793182115.952665778] [planner_server]: Configuring
+[planner_server-19] [INFO] [1793182115.952741976] [global_costmap.global_costmap]: Configuring
+[planner_server-19] [INFO] [1793182115.968322861] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-19] [INFO] [1793182115.973466716] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-19] [INFO] [1793182115.975275830] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-19] [INFO] [1793182115.975304395] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-19] [INFO] [1793182115.976167152] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-19] [INFO] [1793182115.981354728] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-19] [INFO] [1793182115.981461516] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-19] [INFO] [1793182115.982275104] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-19] [INFO] [1793182116.006347296] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-19] [INFO] [1793182116.006397862] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-19] [INFO] [1793182116.007098096] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-27] [INFO] [1793182116.018569276] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[route_server-20] [INFO] [1793182116.018880701] [route_server]: Configuring
+[route_server-20] [INFO] [1793182116.060052281] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[route_server-20] [INFO] [1793182116.060091881] [route_server]: Configuring geojson graph file loader
+[route_server-20] [INFO] [1793182116.060107666] [route_server]: No graph file provided to load yet.
+[route_server-20] [INFO] [1793182116.064667642] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[route_server-20] [INFO] [1793182116.064706404] [route_server]: Configuring distance scorer.
+[route_server-20] [INFO] [1793182116.065308022] [route_server]: Created edge cost function plugin CostmapScorer of type nav2_route::CostmapScorer
+[route_server-20] [INFO] [1793182116.065332816] [route_server]: Configuring costmap scorer.
+[route_server-20] [INFO] [1793182116.069223847] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[route_server-20] [INFO] [1793182116.069261631] [route_server]: Configuring Adjust speed limit operation.
+[route_server-20] [INFO] [1793182116.071379796] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[route_server-20] [INFO] [1793182116.071430781] [route_server]: Configuring Rerouting service operation.
+[route_server-20] [INFO] [1793182116.074085890] [route_server]: Created route operation CollisionMonitor of type nav2_route::CollisionMonitor
+[route_server-20] [INFO] [1793182116.074327822] [route_server]: Using costmap topic: local_costmap/costmap_raw instead of server costmap topic: global_costmap/costmap_raw for CollisionMonitor.
+[lifecycle_manager-27] [INFO] [1793182116.080781072] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-21] [INFO] [1793182116.081085652] [behavior_server]: Configuring
+[behavior_server-21] [INFO] [1793182116.088798990] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-21] [INFO] [1793182116.090046855] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-21] [INFO] [1793182116.090977777] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-21] [INFO] [1793182116.091813575] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[behavior_server-21] [INFO] [1793182116.094432017] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-21] [INFO] [1793182116.103515932] [behavior_server]: Configuring spin
+[behavior_server-21] [INFO] [1793182116.113275706] [behavior_server]: Configuring backup
+[behavior_server-21] [INFO] [1793182116.120334066] [behavior_server]: Configuring drive_on_heading
+[behavior_server-21] [INFO] [1793182116.126934124] [behavior_server]: Configuring assisted_teleop
+[behavior_server-21] [INFO] [1793182116.135899238] [behavior_server]: Configuring wait
+[lifecycle_manager-27] [INFO] [1793182116.143081288] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-24] [INFO] [1793182116.143515146] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-27] [INFO] [1793182116.152254949] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-25] [INFO] [1793182116.152572590] [collision_monitor]: Configuring
+[collision_monitor-25] [INFO] [1793182116.161717546] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-25] [INFO] [1793182116.165148948] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-25] [INFO] [1793182116.165398423] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[collision_monitor-25] [INFO] [1793182116.167768088] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on /local_costmap/published_footprint topic
+[lifecycle_manager-27] [INFO] [1793182116.183309653] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-22] [INFO] [1793182116.183865594] [bt_navigator]: Configuring
+[bt_navigator-22] [INFO] [1793182116.193835313] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-22] [INFO] [1793182116.296555401] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-27] [INFO] [1793182116.337814213] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-23] [INFO] [1793182116.338165588] [waypoint_follower]: Configuring
+[waypoint_follower-23] [INFO] [1793182116.368457967] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-27] [INFO] [1793182116.369575507] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[opennav_docking-26] [INFO] [1793182116.369907955] [docking_server]: Configuring docking_server
+[opennav_docking-26] [INFO] [1793182116.369965644] [docking_server]: Controller frequency set to 50.0000Hz
+[opennav_docking-26] [INFO] [1793182116.415464068] [docking_server]: Created charging dock plugin simple_charging_dock of type opennav_docking::SimpleChargingDock
+[opennav_docking-26] [WARN] [1793182116.426995382] [docking_server]: Dock database filepath nor dock parameters set. Docking actions can only be executed specifying the dock pose via the action request. Or update the dock database via the reload_database service.
+[opennav_docking-26] [INFO] [1793182116.427043014] [docking_server]: Docking Server has 1 dock types and 0 dock instances available.
+[lifecycle_manager-27] [INFO] [1793182116.430884946] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-17] [INFO] [1793182116.431167875] [controller_server]: Activating
+[controller_server-17] [INFO] [1793182116.431217044] [local_costmap.local_costmap]: Activating
+[controller_server-17] [INFO] [1793182116.431234086] [local_costmap.local_costmap]: Checking transform
+[controller_server-17] [INFO] [1793182116.431386481] [local_costmap.local_costmap]: start
+[lifecycle_manager-16] [INFO] [1793182116.445353251] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-16] [INFO] [1793182116.445413594] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-14] [INFO] [1793182116.445868544] [map_server]: Configuring
+[map_server-14] [INFO] [1793182116.445948234] [map_io]: Loading yaml file: /home/kevao/pepper_ws/install/pepper_museum/share/pepper_museum/maps/museum_fused.yaml
+[map_server-14] [INFO] [1793182116.446258820] [map_io]: resolution: 0.05
+[map_server-14] [INFO] [1793182116.446271182] [map_io]: origin[0]: -5.864
+[map_server-14] [INFO] [1793182116.446279633] [map_io]: origin[1]: -14.024
+[map_server-14] [INFO] [1793182116.446284033] [map_io]: origin[2]: 0
+[map_server-14] [INFO] [1793182116.446290319] [map_io]: free_thresh: 0.196
+[map_server-14] [INFO] [1793182116.446296465] [map_io]: occupied_thresh: 0.65
+[map_server-14] [INFO] [1793182116.446303100] [map_io]: mode: trinary
+[map_server-14] [INFO] [1793182116.446310224] [map_io]: negate: 0
+[map_server-14] [INFO] [1793182116.450322081] [map_io]: Loading image_file: /home/kevao/pepper_ws/install/pepper_museum/share/pepper_museum/maps/museum_fused.pgm
+[map_server-14] [INFO] [1793182116.454844553] [map_io]: Read map /home/kevao/pepper_ws/install/pepper_museum/share/pepper_museum/maps/museum_fused.pgm: 380 X 445 map @ 0.05 m/cell
+[lifecycle_manager-16] [INFO] [1793182116.464576251] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-15] [INFO] [1793182116.464861764] [amcl]: Configuring
+[amcl-15] [INFO] [1793182116.464948787] [amcl]: initTransforms
+[amcl-15] [INFO] [1793182116.477055738] [amcl]: initPubSub
+[amcl-15] [INFO] [1793182116.488142508] [amcl]: Subscribed to map topic.
+[lifecycle_manager-16] [INFO] [1793182116.495507195] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-14] [INFO] [1793182116.495813870] [map_server]: Activating
+[map_server-14] [INFO] [1793182116.496312402] [map_server]: Creating bond (map_server) to lifecycle manager.
+[planner_server-19] [INFO] [1793182116.496760647] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 380 X 445 at 0.050000 m/pix
+[amcl-15] [INFO] [1793182116.496934274] [amcl]: Received a 380 X 445 map @ 0.050 m/pix
+[lifecycle_manager-16] [INFO] [1793182116.606794506] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-16] [INFO] [1793182116.606831802] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[amcl-15] [INFO] [1793182116.607192465] [amcl]: Activating
+[amcl-15] [INFO] [1793182116.607229551] [amcl]: initialPoseReceived
+[amcl-15] [INFO] [1793182116.607319647] [amcl]: Setting pose (20.013000): 0.000 0.000 0.000
+[amcl-15] [INFO] [1793182116.607696025] [amcl]: Creating bond (amcl) to lifecycle manager.
+[amcl-15] [INFO] [1793182116.630705224] [amcl]: createLaserObject
+[controller_server-17] [WARN] [1793182116.632813401] [controller_server]: Parameter controller_server.verbose not found
+[controller_server-17] [INFO] [1793182116.635857180] [controller_server]: Optimizer reset
+[controller_server-17] [INFO] [1793182116.636224828] [MPPIController]: Activated MPPI Controller: FollowPath
+[controller_server-17] [INFO] [1793182116.636259819] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-16] [INFO] [1793182116.713756301] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-16] [INFO] [1793182116.713801139] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-16] [INFO] [1793182116.713823000] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[lifecycle_manager-27] [INFO] [1793182116.746080520] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182116.746137302] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-18] [INFO] [1793182116.746735707] [smoother_server]: Activating
+[smoother_server-18] [INFO] [1793182116.746776774] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182116.854343679] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182116.854412333] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-19] [INFO] [1793182116.854794927] [planner_server]: Activating
+[planner_server-19] [INFO] [1793182116.854856108] [global_costmap.global_costmap]: Activating
+[planner_server-19] [INFO] [1793182116.854869937] [global_costmap.global_costmap]: Checking transform
+[planner_server-19] [INFO] [1793182116.854947252] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 20.244000 but the earliest data is at time 21.000000, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-19] [INFO] [1793182117.354993195] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 20.747000 but the earliest data is at time 21.000000, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-19] [INFO] [1793182117.855048008] [global_costmap.global_costmap]: start
+[planner_server-19] [INFO] [1793182118.906539468] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-19] [INFO] [1793182118.908354240] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [visitor_approach-28]: process started with pid [989695]
+[INFO] [place_navigator-29]: process started with pid [989696]
+[lifecycle_manager-27] [INFO] [1793182119.017152247] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.017204139] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[route_server-20] [INFO] [1793182119.017639953] [route_server]: Activating
+[route_server-20] [INFO] [1793182119.017818748] [route_server]: Creating bond (route_server) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.127139452] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.127180100] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-21] [INFO] [1793182119.127613468] [behavior_server]: Activating
+[behavior_server-21] [INFO] [1793182119.127664313] [behavior_server]: Activating spin
+[behavior_server-21] [INFO] [1793182119.127681844] [behavior_server]: Activating backup
+[behavior_server-21] [INFO] [1793182119.127694834] [behavior_server]: Activating drive_on_heading
+[behavior_server-21] [INFO] [1793182119.127707615] [behavior_server]: Activating assisted_teleop
+[behavior_server-21] [INFO] [1793182119.127720117] [behavior_server]: Activating wait
+[behavior_server-21] [INFO] [1793182119.127736739] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.237389541] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.237440735] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-24] [INFO] [1793182119.238340508] [velocity_smoother]: Activating
+[velocity_smoother-24] [INFO] [1793182119.238436401] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.350154986] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.350210231] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-25] [INFO] [1793182119.350731950] [collision_monitor]: Activating
+[collision_monitor-25] [INFO] [1793182119.350787195] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.462413449] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.462464434] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-22] [INFO] [1793182119.462870145] [bt_navigator]: Activating
+[bt_navigator-22] [INFO] [1793182119.592932980] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.703637461] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.703689284] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-23] [INFO] [1793182119.704388820] [waypoint_follower]: Activating
+[waypoint_follower-23] [INFO] [1793182119.704429957] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.818596919] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.818646576] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[opennav_docking-26] [INFO] [1793182119.820422446] [docking_server]: Activating docking_server
+[place_navigator-29] [INFO] [1793182119.832366665] [place_navigator]: 12 lugares de /home/kevao/pepper_ws/install/pepper_museum/share/pepper_museum/maps/museum_places.yaml; esperando órdenes en /pepper/go_to
+[opennav_docking-26] [INFO] [1793182119.856722624] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793182119.977679195] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[lifecycle_manager-27] [INFO] [1793182119.977731646] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-27] [INFO] [1793182119.977747431] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[visitor_approach-28] [INFO] [1793182124.077507578] [visitor_approach]: YOLO cargado en 1.1 s (clasificador: sí)
+[visitor_approach-28] [INFO] [1793182124.139622433] [visitor_approach]: Esperando llamadas en /pepper/visitor_call
+[INFO] [ros2-30]: process started with pid [989963]
+[amcl-15] [INFO] [1793182130.015088732] [amcl]: initialPoseReceived
+[amcl-15] [WARN] [1793182130.015183088] [amcl]: Failed to transform initial pose in time (Lookup would require extrapolation into the future.  Requested time 32.694000 but the latest data is at time 32.673000, when looking up transform from frame [base_footprint] to frame [odom])
+[amcl-15] [INFO] [1793182130.015205996] [amcl]: Setting pose (32.694000): 0.000 0.000 0.000
+[INFO] [ros2-30]: process has finished cleanly [pid 989963]
+[place_navigator-29] [INFO] [1793182162.438134957] [place_navigator]: Caminando a mesa (-3.8, 1.4, 180°)
+[bt_navigator-22] [INFO] [1793182162.439189569] [bt_navigator]: Begin navigating from current location (-0.02, 0.00) to (-3.80, 1.40)
+[controller_server-17] [INFO] [1793182162.460256884] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [WARN] [1793182162.460301722] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-17] [WARN] [1793182162.460318345] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[controller_server-17] [INFO] [1793182163.510406103] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182164.560458522] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182165.560406724] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182166.560405142] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182167.610456791] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182168.660454800] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182169.660507973] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182170.710457303] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182171.710406480] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182172.760652008] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182173.760462479] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182174.760408861] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182175.810531326] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182176.810408286] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182177.860411041] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182178.860470915] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182179.910489035] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182180.910460488] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182181.961261325] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182182.960461095] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182184.010410699] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182185.010408691] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182186.060500282] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182187.060407897] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182188.110454509] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182189.110478691] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182190.160412996] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182191.160404979] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182192.210475126] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182193.210405159] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182194.260410911] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182195.260422100] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182195.610482731] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182195.612323064] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182195.639668465] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182195.640518301] [place_navigator]: Llegué a la mesa interactiva.
+[visitor_approach-28] [INFO] [1793182196.707387094] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182196.707889397] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182201.439020710] [visitor_approach]: HeadYaw +0.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182206.041192547] [visitor_approach]: HeadYaw +1.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182210.412721697] [visitor_approach]: HeadYaw +2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182214.725680602] [visitor_approach]: HeadYaw -1.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182219.113715679] [visitor_approach]: HeadYaw -2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182220.189199739] [visitor_approach]: Miro atrás: giro de la base 180°
+[behavior_server-21] [INFO] [1793182220.190356670] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182220.190506760] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182225.390724029] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182229.751082849] [visitor_approach]: HeadYaw -0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182234.131247073] [visitor_approach]: HeadYaw +0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182234.645654579] [visitor_approach]: Pepper: Te veo. Voy hacia ti.
+[visitor_approach-28] [INFO] [1793182234.646453431] [visitor_approach]: Objetivo: (-5.64, 1.37) a 1.88 m, clase male_03 (0.38)
+[visitor_approach-28] [INFO] [1793182234.647055188] [visitor_approach]: Nav2: intento 1 a (-4.65, 1.43)
+[bt_navigator-22] [INFO] [1793182234.648395035] [bt_navigator]: Begin navigating from current location (-3.78, 1.45) to (-4.65, 1.43)
+[controller_server-17] [INFO] [1793182234.669258550] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182235.719413539] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182236.769412082] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182237.769415573] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182238.769408726] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182239.819413484] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182240.869412095] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182241.869408950] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182242.919411332] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182243.919407417] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182244.969413500] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182245.969418524] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182247.019418391] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182247.619439256] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182247.619945121] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182247.648765023] [bt_navigator]: Goal succeeded
+[visitor_approach-28] [INFO] [1793182247.847315845] [visitor_approach]: Me giro -12° hacia la persona
+[visitor_approach-28] [INFO] [1793182252.873301326] [visitor_approach]: Pepper: Hola, ¿en qué te puedo ayudar?
+[place_navigator-29] [INFO] [1793182253.907798807] [place_navigator]: Caminando a entrada (9.0, 3.5, 0°)
+[bt_navigator-22] [INFO] [1793182253.908428012] [bt_navigator]: Begin navigating from current location (-4.63, 1.44) to (9.00, 3.50)
+[planner_server-19] [ERROR] [1793182253.911730416] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182253.911862975] [planner_server]: GridBased plugin failed to plan from (-4.63, 1.44) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182253.911887769] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182253.929012998] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182254.863181922] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.9608 Hz
+[controller_server-17] [INFO] [1793182254.879546293] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182255.929716850] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182256.921892457] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182256.922018801] [planner_server]: GridBased plugin failed to plan from (-4.51, 1.47) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182256.922043944] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182256.939077679] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182257.862869077] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182257.862975028] [planner_server]: GridBased plugin failed to plan from (-4.44, 1.47) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182257.862995142] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-17] [INFO] [1793182257.879705091] [controller_server]: Cancellation was successful. Stopping the robot.
+[controller_server-17] [INFO] [1793182257.879742805] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-17] [INFO] [1793182257.880158155] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-17] [INFO] [1793182257.880326125] [controller_server]: Optimizer reset
+[planner_server-19] [INFO] [1793182257.880579022] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182258.864467051] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182258.864553865] [planner_server]: GridBased plugin failed to plan from (-4.42, 1.48) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182258.864573211] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182258.879041864] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182259.862852787] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182259.862946166] [planner_server]: GridBased plugin failed to plan from (-4.42, 1.48) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182259.862992541] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-21] [INFO] [1793182259.879349649] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182259.879428360] [behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-21] [INFO] [1793182263.179627791] [behavior_server]: spin completed successfully
+[planner_server-19] [ERROR] [1793182263.202641598] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182263.202764589] [planner_server]: GridBased plugin failed to plan from (-4.39, 1.46) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182263.202787009] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182263.218936825] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182263.862647345] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 2.5000 Hz
+[controller_server-17] [INFO] [1793182263.879364627] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182264.929547333] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182265.979559066] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182266.942308331] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182266.942398916] [planner_server]: GridBased plugin failed to plan from (-4.10, 1.43) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182266.942416655] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182266.959417495] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182267.863057623] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.8182 Hz
+[controller_server-17] [INFO] [1793182267.879543100] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182268.929552527] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182269.921694745] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182269.921775971] [planner_server]: GridBased plugin failed to plan from (-3.68, 1.41) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182269.921792873] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182269.938970972] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182270.863231494] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.6949 Hz
+[controller_server-17] [INFO] [1793182270.879546207] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182271.892134495] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182271.892242191] [planner_server]: GridBased plugin failed to plan from (-3.39, 1.41) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182271.892266496] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182271.909008153] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182272.863348105] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.6667 Hz
+[controller_server-17] [INFO] [1793182272.929545144] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182273.929550509] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182274.922085167] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182274.922188533] [planner_server]: GridBased plugin failed to plan from (-2.98, 1.43) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182274.922213327] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182274.938932565] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182275.862232341] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182275.862328233] [planner_server]: GridBased plugin failed to plan from (-2.86, 1.47) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182275.862347300] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-17] [INFO] [1793182275.879602714] [controller_server]: Cancellation was successful. Stopping the robot.
+[controller_server-17] [INFO] [1793182275.879652441] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-17] [INFO] [1793182275.880455134] [controller_server]: Optimizer reset
+[behavior_server-21] [INFO] [1793182275.880748889] [behavior_server]: Running wait
+[behavior_server-21] [INFO] [1793182282.680962462] [behavior_server]: wait completed successfully
+[planner_server-19] [ERROR] [1793182282.702526840] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182282.702625596] [planner_server]: GridBased plugin failed to plan from (-2.81, 1.45) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182282.702643616] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182282.718961542] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182282.862971023] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182282.863069850] [planner_server]: GridBased plugin failed to plan from (-2.81, 1.45) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182282.863092129] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-21] [INFO] [1793182282.879470189] [behavior_server]: Running backup
+[behavior_server-21] [INFO] [1793182286.079842016] [behavior_server]: backup completed successfully
+[planner_server-19] [ERROR] [1793182286.101783191] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182286.101859948] [planner_server]: GridBased plugin failed to plan from (-3.06, 1.64) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182286.101875173] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182286.118944388] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182286.862982620] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.8868 Hz
+[controller_server-17] [INFO] [1793182286.879324852] [controller_server]: Received a goal, begin computing control effort.
+[planner_server-19] [ERROR] [1793182287.892161003] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182287.892248096] [planner_server]: GridBased plugin failed to plan from (-2.96, 1.66) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182287.892266255] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182287.908994362] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182288.862881105] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.4472 Hz
+[controller_server-17] [INFO] [1793182288.879499281] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182289.929496410] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182290.979504921] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182291.947668740] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182291.947773293] [planner_server]: GridBased plugin failed to plan from (-2.27, 1.62) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182291.947796202] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182291.959238047] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182292.864702927] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.5625 Hz
+[controller_server-17] [INFO] [1793182292.879500814] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182293.891652932] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182293.891740235] [planner_server]: GridBased plugin failed to plan from (-1.93, 1.64) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182293.891757765] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182293.909022747] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182294.862540793] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.4085 Hz
+[controller_server-17] [INFO] [1793182294.929498480] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182295.929501114] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182296.979811062] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182297.979508277] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182299.029497719] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182299.991862006] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182299.991949797] [planner_server]: GridBased plugin failed to plan from (-0.74, 1.41) to (9.00, 3.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182299.991968445] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182300.009106454] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182300.862630067] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.2484 Hz
+[controller_server-17] [INFO] [1793182300.879499395] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182301.929502875] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182302.929650009] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182303.979839687] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182304.979501700] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182306.029497705] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182307.029508857] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182308.079504932] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182309.079495130] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182310.129500982] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182311.129501656] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182312.179503387] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182313.179673916] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182314.229504393] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182315.230411753] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182316.279499672] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182317.279511239] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182318.279733659] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182319.329529843] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182320.379503076] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182321.379511150] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182322.429511621] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182323.429500139] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182324.479498653] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182325.480389318] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182326.529592193] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182327.529502557] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182328.579497787] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182329.579506977] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182330.629505489] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182331.629507484] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182332.679502434] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182333.679502403] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182334.729502940] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182335.729506331] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182336.779524816] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182337.779514587] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182338.829502970] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182339.829498328] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182340.879501796] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182341.879713384] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182342.929504952] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182343.929501915] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182344.979499585] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182345.979501437] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182347.029822264] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182348.029517091] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182348.529534499] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182348.530117120] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182348.558795242] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182348.559959156] [place_navigator]: Llegué a la entrada.
+[visitor_approach-28] [INFO] [1793182349.637824362] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182349.638547994] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182352.845187300] [visitor_approach]: HeadYaw +0.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182355.977249168] [visitor_approach]: HeadYaw +1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182359.185298646] [visitor_approach]: HeadYaw +2.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182362.414942880] [visitor_approach]: HeadYaw -1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182365.637224311] [visitor_approach]: HeadYaw -2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182366.213806781] [visitor_approach]: Miro atrás: giro de la base 180°
+[behavior_server-21] [INFO] [1793182366.214738332] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182366.214821234] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182369.815057421] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182373.210751683] [visitor_approach]: HeadYaw -0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182376.328681241] [visitor_approach]: HeadYaw +0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182376.378548270] [visitor_approach]: Pepper: Te veo, la persona de camisa a cuadros roja. Voy hacia ti.
+[visitor_approach-28] [INFO] [1793182376.379477516] [visitor_approach]: Objetivo: (7.65, -0.46) a 3.96 m, clase male_03 (1.00)
+[visitor_approach-28] [INFO] [1793182376.380020327] [visitor_approach]: Nav2: intento 1 a (7.97, 0.48)
+[bt_navigator-22] [INFO] [1793182376.380965428] [bt_navigator]: Begin navigating from current location (8.96, 3.32) to (7.97, 0.48)
+[controller_server-17] [INFO] [1793182376.401713703] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182377.451875841] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182378.501869242] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182379.501873669] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182380.551874472] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182381.551871355] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182382.601883682] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182383.601881822] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182384.651881227] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182385.651877551] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182386.701887083] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182387.701902752] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182388.751879737] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182389.751927952] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182390.801875533] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182391.801877722] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182392.401912531] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182392.403302245] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182392.431414508] [bt_navigator]: Goal succeeded
+[visitor_approach-28] [INFO] [1793182392.512448963] [visitor_approach]: Me giro +15° hacia la persona
+[visitor_approach-28] [INFO] [1793182395.438854483] [visitor_approach]: Pepper: Hola, ¿en qué te puedo ayudar?
+[place_navigator-29] [INFO] [1793182396.442047117] [place_navigator]: Caminando a cartel (8.6, -6.8, -90°)
+[bt_navigator-22] [INFO] [1793182396.442721790] [bt_navigator]: Begin navigating from current location (7.94, 0.52) to (8.60, -6.80)
+[controller_server-17] [INFO] [1793182396.463646695] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182397.513816860] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182398.563827786] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182399.563817401] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182400.613821202] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182401.613821154] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182402.663820205] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182403.663813172] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182404.713825492] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182405.713816922] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182406.763816531] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182407.763817669] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182408.813832433] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182409.813824281] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182410.863821793] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182411.863815736] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182412.913813667] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182413.913827654] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182414.963818740] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182415.963813729] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182417.013821437] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182418.013823061] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182419.063814635] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182420.063821287] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182421.113817261] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182422.113825030] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182423.163822889] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182424.163813685] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182425.213864763] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182426.213819242] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182427.263822897] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182428.263817743] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182429.263813148] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182430.313817012] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182431.363821224] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182431.813849999] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182431.814550443] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182431.843068487] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182431.844054863] [place_navigator]: Llegué al cartel del museo.
+[place_navigator-29] [INFO] [1793182432.875564668] [place_navigator]: Caminando a introduccion (7.6, -2.0, 180°)
+[bt_navigator-22] [INFO] [1793182432.876637369] [bt_navigator]: Begin navigating from current location (8.42, -6.67) to (7.60, -2.00)
+[controller_server-17] [INFO] [1793182432.897422171] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182433.947568302] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182434.947607566] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182435.997571130] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182436.997570933] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182437.997575346] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182439.047570826] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182440.097585583] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182441.097579379] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182442.147571856] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182443.147582483] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182444.197574191] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182445.197570151] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182446.247571776] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182447.247566339] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182448.297598973] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182449.297678743] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182450.347575534] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182451.347572750] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182452.397574652] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182453.397581506] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182454.447571256] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182455.447568401] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182456.497579033] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182457.497573385] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182458.547572841] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182459.247603605] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182459.248220728] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182459.277065143] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182459.278351071] [place_navigator]: Llegué al panel de introducción.
+[visitor_approach-28] [INFO] [1793182460.378577521] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182460.379170758] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182463.537858642] [visitor_approach]: HeadYaw +0.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182466.732136407] [visitor_approach]: HeadYaw +1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182469.919532859] [visitor_approach]: HeadYaw +2.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182472.996762134] [visitor_approach]: HeadYaw -1.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182476.282576747] [visitor_approach]: HeadYaw -2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182476.873594959] [visitor_approach]: Miro atrás: giro de la base 180°
+[behavior_server-21] [INFO] [1793182476.874559895] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182476.874634765] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182480.474860941] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182483.635706157] [visitor_approach]: HeadYaw -0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182486.936512601] [visitor_approach]: HeadYaw +0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182486.973120568] [visitor_approach]: Pepper: Te veo, la persona de camisa a cuadros roja. Voy hacia ti.
+[visitor_approach-28] [INFO] [1793182486.974069510] [visitor_approach]: Objetivo: (7.36, -0.82) a 1.44 m, clase male_03 (1.00)
+[visitor_approach-28] [INFO] [1793182486.974867104] [visitor_approach]: Nav2: intento 1 a (7.52, -1.81)
+[bt_navigator-22] [INFO] [1793182486.976263662] [bt_navigator]: Begin navigating from current location (7.65, -2.21) to (7.52, -1.81)
+[controller_server-17] [INFO] [1793182486.997017105] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182488.047168950] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182489.047170558] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182490.097171335] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182491.147173020] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182491.497207571] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182491.498058874] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182491.526642987] [bt_navigator]: Goal succeeded
+[visitor_approach-28] [INFO] [1793182491.629357127] [visitor_approach]: Me giro +14° hacia la persona
+[visitor_approach-28] [INFO] [1793182494.408644306] [visitor_approach]: Pepper: Hola, ¿en qué te puedo ayudar?
+[place_navigator-29] [INFO] [1793182495.532358220] [place_navigator]: Caminando a computadores (3.6, -2.6, 90°)
+[bt_navigator-22] [INFO] [1793182495.533147783] [bt_navigator]: Begin navigating from current location (7.53, -1.84) to (3.60, -2.60)
+[controller_server-17] [INFO] [1793182495.554019678] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182496.604189191] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182497.654183611] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182498.654187940] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182499.704196607] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182500.704180962] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182501.754178454] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182502.754178523] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182503.804183766] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182504.804181390] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182505.854184608] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182506.816272901] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182506.816407207] [planner_server]: GridBased plugin failed to plan from (7.05, -3.67) to (3.60, -2.60): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182506.816433886] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182506.833823395] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-17] [INFO] [1793182506.904181470] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182507.954187062] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182508.954182869] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182510.004176518] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182511.004185874] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182512.054178126] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182513.054183919] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182514.054181332] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182515.065132953] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182515.065222630] [planner_server]: GridBased plugin failed to plan from (6.02, -4.45) to (3.60, -2.60): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182515.065239881] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182515.083614300] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182515.865690470] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.3316 Hz
+[controller_server-17] [INFO] [1793182515.904183819] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182516.904272304] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182517.954186890] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182519.004400050] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182520.004185422] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182521.054178579] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182522.054183952] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182523.104178576] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182524.104186323] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182525.154181505] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182526.154188903] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182527.204179335] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182528.204179818] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182529.254190644] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182530.254179114] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182531.304206212] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182531.704189992] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182531.705008539] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182531.733522182] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182531.734859235] [place_navigator]: Llegué a los paneles del desarrollo de los computadores.
+[place_navigator-29] [INFO] [1793182532.765160055] [place_navigator]: Caminando a tecnologia (-0.6, -5.5, 0°)
+[bt_navigator-22] [INFO] [1793182532.765769914] [bt_navigator]: Begin navigating from current location (3.48, -2.45) to (-0.60, -5.50)
+[controller_server-17] [INFO] [1793182532.786746851] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182533.836902877] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182534.886900921] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182535.886898190] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182536.936901192] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182537.936903349] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182538.986912427] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182539.986906622] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182541.036914302] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182542.036911221] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182543.040095931] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182543.040224231] [planner_server]: GridBased plugin failed to plan from (3.47, -3.85) to (-0.60, -5.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182543.040246650] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182543.046637181] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182543.871462300] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.2821 Hz
+[controller_server-17] [INFO] [1793182543.886897424] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182544.936905733] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182545.986916486] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182546.986909422] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182548.036908231] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182549.036906615] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182550.086902560] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182551.086909395] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182552.136905340] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182553.136935571] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182554.186861743] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182555.186904755] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182556.236910686] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182557.236901805] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182558.286902079] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182559.286902696] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182560.286902195] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182561.336911199] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182562.386914475] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182563.386905174] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182564.437154573] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182565.436902640] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182566.486901935] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182567.486927344] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182568.536904219] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182569.536907349] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182570.586902731] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182571.586910191] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182572.636900195] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182573.598561882] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182573.598697445] [planner_server]: GridBased plugin failed to plan from (2.91, -9.24) to (-0.60, -5.50): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182573.598720423] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182573.616328537] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182573.868833028] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 4.3478 Hz
+[controller_server-17] [INFO] [1793182573.886913203] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182574.936901531] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182575.986904176] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182576.987104468] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182578.036902895] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182579.036899737] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182580.086911880] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182581.086908652] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182582.136913671] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182583.136901014] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182584.186912667] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182585.186908111] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182586.236909009] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182587.236909271] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182588.286907375] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182589.286907288] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182590.336903785] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182591.336906491] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182592.386903476] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182593.386900665] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182594.436903447] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182595.436901054] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182596.486907677] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182597.486908636] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182598.536914211] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182599.536900433] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182600.586913062] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182601.586906757] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182602.636903810] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182603.636902464] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182604.686892742] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182605.686914304] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182606.736927909] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182607.736900860] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182608.786903779] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182609.786871911] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182610.836913103] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182611.836908961] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182612.886916629] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182613.886905223] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182614.936905837] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182615.936900437] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182616.986900491] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182617.986899841] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182618.986907362] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182620.036908673] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182620.836932164] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182620.837979163] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182620.866111469] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182620.867046652] [place_navigator]: Llegué a los paneles de tecnología y aplicaciones.
+[visitor_approach-28] [INFO] [1793182622.110588451] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182622.111201034] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182625.343278034] [visitor_approach]: HeadYaw +0.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182628.552704824] [visitor_approach]: HeadYaw +1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182631.965928101] [visitor_approach]: HeadYaw +2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182635.231009501] [visitor_approach]: HeadYaw -1.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182638.616736378] [visitor_approach]: HeadYaw -2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182639.239682994] [visitor_approach]: Miro atrás: giro de la base 180°
+[behavior_server-21] [INFO] [1793182639.240401038] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182639.240467178] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182642.841764902] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182646.130121101] [visitor_approach]: HeadYaw -0.5: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182649.315700094] [visitor_approach]: HeadYaw +0.5: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182649.441273126] [visitor_approach]: Pepper: Te veo. Voy hacia ti.
+[visitor_approach-28] [INFO] [1793182649.441963443] [visitor_approach]: Objetivo: (-2.36, -4.58) a 1.94 m, clase female_02 (0.39)
+[visitor_approach-28] [INFO] [1793182649.442646846] [visitor_approach]: Nav2: intento 1 a (-1.48, -5.05)
+[bt_navigator-22] [INFO] [1793182649.443590409] [bt_navigator]: Begin navigating from current location (-0.62, -5.43) to (-1.48, -5.05)
+[controller_server-17] [INFO] [1793182649.464355166] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182650.514521857] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182651.515145728] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182652.564526069] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182653.564527579] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182654.614523296] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182654.664540902] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182654.665093491] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182654.693957321] [bt_navigator]: Goal succeeded
+[visitor_approach-28] [INFO] [1793182654.779614885] [visitor_approach]: Me giro -19° hacia la persona
+[visitor_approach-28] [INFO] [1793182657.904807125] [visitor_approach]: Pepper: Hola, ¿en qué te puedo ayudar?
+[place_navigator-29] [INFO] [1793182659.084878509] [place_navigator]: Caminando a puertas_sur (4.3, -11.6, -90°)
+[bt_navigator-22] [INFO] [1793182659.085760961] [bt_navigator]: Begin navigating from current location (-1.47, -5.15) to (4.30, -11.60)
+[controller_server-17] [INFO] [1793182659.106716037] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182660.156890968] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182661.206888501] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182662.207142906] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182663.256878462] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182664.256879551] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182665.306971509] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182666.306902406] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182667.356878217] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182668.356884962] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182669.406988723] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182670.406879740] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182671.456882719] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182672.456879895] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182673.507414929] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182674.506881027] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182675.556877790] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182676.556884114] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182677.606884089] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182678.606948592] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182679.656883614] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182680.656882744] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182681.706883906] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182682.706883595] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182683.756883289] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182684.756885422] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182685.806914520] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182686.806894513] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182687.856880099] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182688.856878181] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182689.906884300] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182690.907144847] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182691.956876557] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182692.956882740] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182694.007052637] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182695.007072788] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182696.056876575] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182697.057406222] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182698.106886570] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182699.107331359] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182700.156950622] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182701.156876765] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182702.206881206] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182703.206883267] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182704.257002737] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182705.256886975] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182706.306939676] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182707.306884047] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182708.356884506] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182709.357428958] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182710.407045706] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182710.556915815] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182710.557514919] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182710.586185077] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182710.587069485] [place_navigator]: Llegué a las puertas del sur.
+[visitor_approach-28] [INFO] [1793182711.852660136] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182711.853257703] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182715.133512003] [visitor_approach]: HeadYaw +0.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182718.201595776] [visitor_approach]: HeadYaw +1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182721.316683826] [visitor_approach]: HeadYaw +2.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182724.521162904] [visitor_approach]: HeadYaw -1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182727.816657393] [visitor_approach]: HeadYaw -2.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182728.349555898] [visitor_approach]: Nadie delante: giro de la base 180°
+[behavior_server-21] [INFO] [1793182728.350827230] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182728.350919002] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182731.951128335] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182735.273950688] [visitor_approach]: HeadYaw -0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182738.389390315] [visitor_approach]: HeadYaw +0.5: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182738.390060797] [visitor_approach]: Pepper: No veo a nadie cerca.
+[place_navigator-29] [INFO] [1793182739.559849419] [place_navigator]: Caminando a sala_oeste (-3.3, -4.2, 180°)
+[bt_navigator-22] [INFO] [1793182739.560691363] [bt_navigator]: Begin navigating from current location (4.08, -11.61) to (-3.30, -4.20)
+[controller_server-17] [INFO] [1793182739.581521492] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182740.631683281] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182741.681676332] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182742.681681252] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182743.731681426] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182744.731682574] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182745.781694692] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182746.781681521] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182747.831681207] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182748.831677330] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182749.881680374] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182750.881688676] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182751.931683068] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182752.931712822] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182753.981693816] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182754.981676788] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182756.031677978] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182757.031677653] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182758.081679973] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182759.081685875] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182760.131701406] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182761.131693910] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182762.181685358] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182763.181687930] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182764.231677224] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182765.231680296] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182766.281685037] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182767.281696082] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182768.331681069] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182769.331688982] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182770.381690812] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182771.381684838] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182772.431678089] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182773.431675409] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182774.481686201] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182775.481688979] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182776.531687561] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182777.531684553] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182778.581693133] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182779.581857057] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182780.631679381] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182781.631717391] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182782.681682134] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182783.681677551] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182784.681734225] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182785.731692419] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182786.781692454] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182787.781667778] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182788.831675646] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182789.831677381] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182790.831676048] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182791.881682326] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182792.881697347] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182793.931684010] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182794.931687308] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182795.981678662] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182796.981682878] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182798.031681925] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182799.031678539] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182800.081691216] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182801.081680577] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182801.331719037] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182801.332445530] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182801.361122936] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182801.362779161] [place_navigator]: Llegué a la sala oeste.
+[visitor_approach-28] [INFO] [1793182802.463437393] [visitor_approach]: Llamada: 'hola pepper'
+[visitor_approach-28] [INFO] [1793182802.514511484] [visitor_approach]: Pepper: ¿Sí? Déjame ver quién me llama.
+[visitor_approach-28] [INFO] [1793182805.790662052] [visitor_approach]: HeadYaw +0.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182809.129343383] [visitor_approach]: HeadYaw +1.0: 0 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182812.398647829] [visitor_approach]: HeadYaw +2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182815.560730352] [visitor_approach]: HeadYaw -1.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182818.739873358] [visitor_approach]: HeadYaw -2.0: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182819.274974522] [visitor_approach]: Miro atrás: giro de la base 180°
+[behavior_server-21] [INFO] [1793182819.276906622] [behavior_server]: Running spin
+[behavior_server-21] [INFO] [1793182819.276990152] [behavior_server]: Turning 3.14 for spin behavior.
+[behavior_server-21] [INFO] [1793182823.077229948] [behavior_server]: spin completed successfully
+[visitor_approach-28] [INFO] [1793182826.319590887] [visitor_approach]: HeadYaw -0.5: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182829.575425032] [visitor_approach]: HeadYaw +0.5: 1 persona(s) hasta ahora
+[visitor_approach-28] [INFO] [1793182829.656535938] [visitor_approach]: Pepper: Te veo, la persona de camisa a cuadros roja. Voy hacia ti.
+[visitor_approach-28] [INFO] [1793182829.657244481] [visitor_approach]: Objetivo: (-2.60, -4.79) a 0.90 m, clase male_03 (0.84)
+[visitor_approach-28] [INFO] [1793182829.657779608] [visitor_approach]: Me giro -46° hacia la persona
+[visitor_approach-28] [INFO] [1793182833.349237834] [visitor_approach]: Pepper: Hola, ¿en qué te puedo ayudar?
+[place_navigator-29] [INFO] [1793182834.440387363] [place_navigator]: Caminando a rotonda (-0.2, -0.8, 180°)
+[bt_navigator-22] [INFO] [1793182834.441265412] [bt_navigator]: Begin navigating from current location (-3.31, -4.06) to (-0.20, -0.80)
+[controller_server-17] [INFO] [1793182834.462063006] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182835.512223649] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182836.562222753] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182837.562230030] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182838.612223278] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182839.612228190] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182840.662226407] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182841.662236776] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182842.712222710] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182843.712224079] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182844.762219522] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182845.762245555] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182846.812224805] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182847.812365596] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182848.862220957] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182849.862228710] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182850.912229909] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182851.912233411] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182852.962498273] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182853.932834295] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182853.933779113] [planner_server]: GridBased plugin failed to plan from (-0.46, -1.54) to (-0.20, -0.80): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182853.933809704] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182853.951802667] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182854.862929711] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.1628 Hz
+[controller_server-17] [INFO] [1793182854.912221874] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182855.912227349] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182856.962229415] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182857.962225472] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182859.012226151] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182860.012242400] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182861.062428240] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182861.962267989] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182861.963081156] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182861.991771839] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182861.992528085] [place_navigator]: Llegué a la rotonda.
+[place_navigator-29] [INFO] [1793182863.069903580] [place_navigator]: Caminando a sala_norte (3.5, 5.0, 90°)
+[bt_navigator-22] [INFO] [1793182863.070893097] [bt_navigator]: Begin navigating from current location (-0.19, -0.72) to (3.50, 5.00)
+[controller_server-17] [INFO] [1793182863.091698935] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182864.141852871] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182865.191900163] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182866.191856167] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182867.241866453] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182868.241852987] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182869.291857974] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182870.291858346] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182871.341857546] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182872.341853247] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182873.391876901] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182874.391859690] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182875.441865125] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182876.441851624] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182877.491860560] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182878.491860269] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182879.541855735] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182880.541861808] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182881.592178066] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793182882.552920547] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182882.553005405] [planner_server]: GridBased plugin failed to plan from (0.45, 2.35) to (3.50, 5.00): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182882.553022167] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182882.571590348] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [ERROR] [1793182882.863675275] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182882.863757968] [planner_server]: GridBased plugin failed to plan from (0.46, 2.36) to (3.50, 5.00): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182882.863774241] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-17] [INFO] [1793182882.891853114] [controller_server]: Cancellation was successful. Stopping the robot.
+[controller_server-17] [INFO] [1793182882.891901864] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-17] [INFO] [1793182882.892359816] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-19] [INFO] [1793182882.892782288] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-17] [INFO] [1793182882.893256094] [controller_server]: Optimizer reset
+[planner_server-19] [WARN] [1793182883.864832074] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.0846 Hz
+[controller_server-17] [INFO] [1793182883.881783909] [controller_server]: Received a goal, begin computing control effort.
+[planner_server-19] [ERROR] [1793182884.892688936] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182884.892770162] [planner_server]: GridBased plugin failed to plan from (0.51, 2.50) to (3.50, 5.00): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182884.892788041] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182884.912315149] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793182885.864008047] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 1.1236 Hz
+[controller_server-17] [INFO] [1793182885.881941367] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182886.931953489] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182887.981945570] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182888.981949235] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182890.031948729] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182891.031949608] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182892.081957353] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182893.081959149] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182894.131952445] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182895.131951875] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182896.181944691] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182897.181950346] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182898.231947012] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182899.232028104] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182900.281952563] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182901.281947060] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182902.282450916] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182903.331949564] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182904.331958111] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182905.381961095] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182906.381945066] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182906.981972397] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182906.982881456] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182907.011302627] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182907.012350392] [place_navigator]: Llegué a la sala norte.
+[place_navigator-29] [INFO] [1793182908.111477801] [place_navigator]: Caminando a escalera (9.0, -5.0, 0°)
+[bt_navigator-22] [INFO] [1793182908.112598551] [bt_navigator]: Begin navigating from current location (3.26, 4.99) to (9.00, -5.00)
+[controller_server-17] [INFO] [1793182908.133799207] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-17] [INFO] [1793182909.183971783] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182910.183972741] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182911.233967997] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182912.233967986] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182913.283971283] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182914.283973236] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182915.333979614] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182916.333974241] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182917.383978952] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182918.383994540] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182919.433967831] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182920.433971834] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182921.483970625] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182922.483982668] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182923.533975251] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182924.533972915] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182925.583974028] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182926.583972607] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182927.633969818] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182928.633976088] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182929.683979941] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182930.683979515] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182931.734396910] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182932.733981352] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182933.783970067] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182934.783975383] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182935.833968855] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182936.833970827] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182937.883976390] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182938.883976903] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182939.933970462] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182940.933975033] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182941.983988086] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182942.983963192] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182944.033971295] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182945.033972320] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182946.083975122] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182947.083974828] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182948.133999220] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182949.133976585] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182950.183967600] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182951.183971093] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182952.233985723] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182953.233968550] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182954.283972852] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182955.284316978] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182956.333970892] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182957.333977201] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182958.333970175] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182959.383974286] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182960.433978262] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182961.433977673] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182962.435041963] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182963.483978560] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182964.533976266] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182965.534518641] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182966.583978085] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182966.634013386] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793182966.634945284] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793182966.662949575] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793182966.663865619] [place_navigator]: Llegué a la escalera.
+[place_navigator-29] [INFO] [1793182967.767576433] [place_navigator]: Caminando a inicio (0.0, 0.0, 0°)
+[bt_navigator-22] [INFO] [1793182967.768602897] [bt_navigator]: Begin navigating from current location (8.92, -4.82) to (0.00, 0.00)
+[controller_server-17] [INFO] [1793182967.789712065] [controller_server]: Received a goal, begin computing control effort.
+[planner_server-19] [ERROR] [1793182968.803103511] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793182968.803210928] [planner_server]: GridBased plugin failed to plan from (8.86, -4.70) to (0.00, 0.00): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793182968.803234674] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793182968.819166686] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-17] [INFO] [1793182968.889875833] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182969.939875794] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182970.939875798] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182971.989880307] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182972.989877734] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182974.039871774] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182975.039880104] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182976.089873244] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182977.089886959] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182978.139883878] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182979.139873994] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182980.189893200] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182981.189874872] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182982.239880397] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182983.239873530] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182984.289877666] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182985.289891270] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182986.339874880] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182987.339883253] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182988.389884191] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182989.389877485] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182990.439877034] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182991.439875225] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182992.489881905] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182993.489934229] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182994.539876593] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182995.539875496] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182996.589904400] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182997.589874256] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182998.639874672] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793182999.639889304] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183000.689877366] [controller_server]: Passing new path to controller.
+[planner_server-19] [ERROR] [1793183001.652029550] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-19] [WARN] [1793183001.652129214] [planner_server]: GridBased plugin failed to plan from (6.60, 0.39) to (0.00, 0.00): "Failed to create plan with tolerance of: 0.500000"
+[planner_server-19] [WARN] [1793183001.652146325] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-19] [INFO] [1793183001.669171502] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-19] [WARN] [1793183001.863013147] [planner_server]: Planner loop missed its desired rate of 20.0000 Hz. Current loop rate is 5.5556 Hz
+[controller_server-17] [INFO] [1793183001.890053696] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183002.939874355] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183003.939877477] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183004.989882665] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183005.989879229] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183007.039875555] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183008.039873522] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183009.090114301] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183010.089873836] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183011.139875135] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183012.139877446] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183013.189876867] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183014.189875344] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183015.239885177] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183016.239878213] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183017.289882397] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183018.289880050] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183019.339877745] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183020.339874147] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183021.389880789] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183022.389874474] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183023.439880774] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183024.439901075] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183025.489880214] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183026.489875239] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183027.539881972] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183028.539876585] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183029.589876480] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183030.590183990] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183031.639875053] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183032.639889653] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183033.689901226] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183034.690353182] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183035.739881038] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183036.739874908] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183037.789876926] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183038.789878416] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183039.839875273] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183040.839878375] [controller_server]: Passing new path to controller.
+[controller_server-17] [INFO] [1793183041.239915251] [controller_server]: Reached the goal!
+[controller_server-17] [INFO] [1793183041.241185742] [controller_server]: Optimizer reset
+[bt_navigator-22] [INFO] [1793183041.268966128] [bt_navigator]: Goal succeeded
+[place_navigator-29] [INFO] [1793183041.269791238] [place_navigator]: Llegué al punto de partida.
+[opennav_docking-26] [INFO] [1793183044.081723423] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-26] [INFO] [1793183044.081877215] [docking_server]: Running Nav2 LifecycleNode rcl preshutdown (docking_server)
+[opennav_docking-26] [INFO] [1793183044.081946777] [docking_server]: Deactivating docking_server
+[bt_navigator-22] [INFO] [1793183044.081778878] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-22] [INFO] [1793183044.081859475] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-22] [INFO] [1793183044.081935393] [bt_navigator]: Deactivating
+[bt_navigator-22] [INFO] [1793183044.081976320] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[amcl-15] [INFO] [1793183044.081799760] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-15] [INFO] [1793183044.081877215] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[amcl-15] [INFO] [1793183044.081951037] [amcl]: Deactivating
+[amcl-15] [INFO] [1793183044.081985330] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[route_server-20] [INFO] [1793183044.081816941] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[route_server-20] [INFO] [1793183044.081913882] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[route_server-20] [INFO] [1793183044.081985330] [route_server]: Deactivating
+[route_server-20] [INFO] [1793183044.082017806] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[lifecycle_manager-27] [INFO] [1793183044.081884827] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-27] [INFO] [1793183044.081988193] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[lifecycle_manager-27] [INFO] [1793183044.082033171] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[velocity_smoother-24] [INFO] [1793183044.082044416] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-24] [INFO] [1793183044.082143312] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[velocity_smoother-24] [INFO] [1793183044.082217693] [velocity_smoother]: Deactivating
+[velocity_smoother-24] [INFO] [1793183044.082252544] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[point_cloud_xyz_node-7] [INFO] [1793183044.082283554] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-14] [INFO] [1793183044.082336424] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-14] [INFO] [1793183044.082436437] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-14] [INFO] [1793183044.082502717] [map_server]: Deactivating
+[map_server-14] [INFO] [1793183044.082526603] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[clock_throttle-3] [INFO] [1793183044.082432177] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-25] [INFO] [1793183044.082898091] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-25] [INFO] [1793183044.082980784] [collision_monitor]: Running Nav2 LifecycleNode rcl preshutdown (collision_monitor)
+[collision_monitor-25] [INFO] [1793183044.083060543] [collision_monitor]: Deactivating
+[collision_monitor-25] [INFO] [1793183044.083091553] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-16] [INFO] [1793183044.083083381] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-16] [INFO] [1793183044.083166423] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-16] [INFO] [1793183044.083199319] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[waypoint_follower-23] [INFO] [1793183044.083252817] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-23] [INFO] [1793183044.083342494] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[waypoint_follower-23] [INFO] [1793183044.083409752] [waypoint_follower]: Deactivating
+[waypoint_follower-23] [INFO] [1793183044.083440552] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[parameter_bridge-2] [INFO] [1793183044.083696452] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[sonar_to_range-6] [INFO] [1793183044.083961571] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-17] [INFO] [1793183044.084435238] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-17] [INFO] [1793183044.084489295] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-17] [INFO] [1793183044.084546566] [controller_server]: Deactivating
+[controller_server-17] [INFO] [1793183044.084584210] [MPPIController]: Deactivated MPPI Controller: FollowPath
+[controller_server-17] [INFO] [1793183044.084608585] [local_costmap.local_costmap]: Deactivating
+[robot_state_publisher-4] [INFO] [1793183044.084798974] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-21] [INFO] [1793183044.087163885] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-21] [INFO] [1793183044.087255866] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-21] [INFO] [1793183044.087332622] [behavior_server]: Deactivating
+[behavior_server-21] [INFO] [1793183044.087400438] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[planner_server-19] [INFO] [1793183044.090026278] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-19] [INFO] [1793183044.090104291] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-19] [INFO] [1793183044.090237270] [planner_server]: Deactivating
+[planner_server-19] [INFO] [1793183044.090280572] [global_costmap.global_costmap]: Deactivating
+[route_server-20] [INFO] [1793183044.092424294] [route_server]: Cleaning up
+[smoother_server-18] [INFO] [1793183044.092666295] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-18] [INFO] [1793183044.092773922] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[smoother_server-18] [INFO] [1793183044.092843624] [smoother_server]: Deactivating
+[smoother_server-18] [INFO] [1793183044.092882316] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[map_server-14] [INFO] [1793183044.092835941] [map_server]: Cleaning up
+[map_server-14] [INFO] [1793183044.092882316] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[amcl-15] [INFO] [1793183044.093040018] [amcl]: Cleaning up
+[bt_navigator-22] [INFO] [1793183044.094773700] [bt_navigator]: Cleaning up
+[velocity_smoother-24] [INFO] [1793183044.103400760] [velocity_smoother]: Cleaning up
+[velocity_smoother-24] [INFO] [1793183044.103459427] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[collision_monitor-25] [INFO] [1793183044.103721683] [collision_monitor]: Cleaning up
+[collision_monitor-25] [INFO] [1793183044.103760584] [collision_monitor]: [FootprintApproach]: Destroying Polygon
+[collision_monitor-25] [INFO] [1793183044.103781746] [collision_monitor]: [scan]: Destroying Scan
+[behavior_server-21] [INFO] [1793183044.109919368] [behavior_server]: Cleaning up
+[waypoint_follower-23] [INFO] [1793183044.113751933] [waypoint_follower]: Cleaning up
+[amcl-15] [INFO] [1793183044.117263785] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[map_server-14] [INFO] [1793183044.127590653] [map_server]: Destroying
+[smoother_server-18] [INFO] [1793183044.136597233] [smoother_server]: Cleaning up
+[behavior_server-21] [INFO] [1793183044.138953413] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[velocity_smoother-24] [INFO] [1793183044.138971642] [velocity_smoother]: Destroying
+[lifecycle_manager-16] [INFO] [1793183044.153087424] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[amcl-15] [INFO] [1793183044.159109597] [amcl]: Destroying
+[opennav_docking-26] [INFO] [1793183044.163814276] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[collision_monitor-25] [INFO] [1793183044.173149182] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[smoother_server-18] [INFO] [1793183044.177086509] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[opennav_docking-26] [INFO] [1793183044.178055214] [docking_server]: Cleaning up docking_server
+[collision_monitor-25] [INFO] [1793183044.180753479] [collision_monitor]: Destroying
+[waypoint_follower-23] [INFO] [1793183044.181669593] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[route_server-20] [INFO] [1793183044.186207141] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[smoother_server-18] [INFO] [1793183044.194120069] [smoother_server]: Destroying
+[route_server-20] [INFO] [1793183044.200134630] [route_server]: Destroying
+[waypoint_follower-23] [INFO] [1793183044.230581434] [waypoint_follower]: Destroying
+[controller_server-17] [INFO] [1793183044.234471897] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-17] [INFO] [1793183044.244903318] [controller_server]: Cleaning up
+[laser_publisher.py-5] Traceback (most recent call last):
+[laser_publisher.py-5]   File "/home/kevao/pepper_ws/install/pepper_gazebo_plugin/lib/pepper_gazebo_plugin/laser_publisher.py", line 160, in <module>
+[laser_publisher.py-5]     main()
+[laser_publisher.py-5]   File "/home/kevao/pepper_ws/install/pepper_gazebo_plugin/lib/pepper_gazebo_plugin/laser_publisher.py", line 151, in main
+[laser_publisher.py-5]     rclpy.spin(node)
+[laser_publisher.py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[laser_publisher.py-5]     executor.spin_once()
+[laser_publisher.py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[laser_publisher.py-5]     self._spin_once_impl(timeout_sec)
+[laser_publisher.py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[laser_publisher.py-5]     handler, entity, node = self.wait_for_ready_callbacks(
+[laser_publisher.py-5]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[laser_publisher.py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[laser_publisher.py-5]     return next(self._cb_iter)
+[laser_publisher.py-5]            ^^^^^^^^^^^^^^^^^^^
+[laser_publisher.py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+[laser_publisher.py-5]     raise ExternalShutdownException()
+[laser_publisher.py-5] rclpy.executors.ExternalShutdownException
+[opennav_docking-26] [INFO] [1793183044.251651845] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[controller_server-17] [INFO] [1793183044.255926997] [MPPIController]: Cleaned up MPPI Controller: FollowPath
+[controller_server-17] [INFO] [1793183044.256340810] [local_costmap.local_costmap]: Cleaning up
+[opennav_docking-26] [INFO] [1793183044.282526570] [docking_server]: Destroying
+[behavior_server-21] [INFO] [1793183044.283607929] [behavior_server]: Destroying
+[INFO] [clock_throttle-3]: process has finished cleanly [pid 988587]
+[scan_fusion-9] Traceback (most recent call last):
+[scan_fusion-9]   File "/home/kevao/pepper_ws/install/pepper_multilaser_slam/lib/pepper_multilaser_slam/scan_fusion", line 33, in <module>
+[scan_fusion-9]     sys.exit(load_entry_point('pepper-multilaser-slam', 'console_scripts', 'scan_fusion')())
+[scan_fusion-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[scan_fusion-9]   File "/home/kevao/pepper_ws/build/pepper_multilaser_slam/pepper_multilaser_slam/scan_fusion.py", line 286, in main
+[scan_fusion-9]     rclpy.spin(node)
+[scan_fusion-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[scan_fusion-9]     executor.spin_once()
+[scan_fusion-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[scan_fusion-9]     self._spin_once_impl(timeout_sec)
+[scan_fusion-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 988586]
+[INFO] [robot_state_publisher-4]: process has finished cleanly [pid 988589]
+[scan_fusion-9]     handler, entity, node = self.wait_for_ready_callbacks(
+[scan_fusion-9]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[scan_fusion-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[scan_fusion-9]     return next(self._cb_iter)
+[scan_fusion-9]            ^^^^^^^^^^^^^^^^^^^
+[scan_fusion-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+[scan_fusion-9]     raise ExternalShutdownException()
+[scan_fusion-9] rclpy.executors.ExternalShutdownException
+[INFO] [sonar_to_range-6]: process has finished cleanly [pid 988591]
+[INFO] [point_cloud_xyz_node-7]: process has finished cleanly [pid 988592]
+[controller_server-17] [INFO] [1793183044.332857035] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-17] [INFO] [1793183044.337891087] [local_costmap.local_costmap]: Destroying
+[controller_server-17] [INFO] [1793183044.349403239] [controller_server]: Destroying
+[INFO] [velocity_smoother-24]: process has finished cleanly [pid 989346]
+[bt_navigator-22] [INFO] [1793183044.365695848] [bt_navigator]: Completed Cleaning up
+[bt_navigator-22] [INFO] [1793183044.365790763] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [map_server-14]: process has finished cleanly [pid 989336]
+[INFO] [lifecycle_manager-16]: process has finished cleanly [pid 989338]
+[bt_navigator-22] [INFO] [1793183044.375564834] [bt_navigator]: Destroying
+[INFO] [collision_monitor-25]: process has finished cleanly [pid 989347]
+[INFO] [amcl-15]: process has finished cleanly [pid 989337]
+[lifecycle_manager-27] [INFO] [1793183044.384579865] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[INFO] [smoother_server-18]: process has finished cleanly [pid 989340]
+[INFO] [route_server-20]: process has finished cleanly [pid 989342]
+[INFO] [waypoint_follower-23]: process has finished cleanly [pid 989345]
+[INFO] [opennav_docking-26]: process has finished cleanly [pid 989348]
+[INFO] [behavior_server-21]: process has finished cleanly [pid 989343]
+[gazebo-1] [INFO] [1793183044.437622704] [pepper.controller_manager.pal_statistics]: Async messages lost 0
+[gazebo-1] [INFO] [1793183044.437692196] [pepper.controller_manager.pal_statistics]: publish_async_failures_ 0
+[gazebo-1] [INFO] [1793183044.440387528] [pepper.controller_manager.pal_statistics]: Async messages lost 0
+[gazebo-1] [INFO] [1793183044.440413370] [pepper.controller_manager.pal_statistics]: publish_async_failures_ 2
+[INFO] [place_navigator-29]: process has finished cleanly [pid 989696]
+[INFO] [controller_server-17]: process has finished cleanly [pid 989339]
+[ERROR] [laser_publisher.py-5]: process has died [pid 988590, exit code 1, cmd '/home/kevao/pepper_ws/install/pepper_gazebo_plugin/lib/pepper_gazebo_plugin/laser_publisher.py --ros-args --params-file /tmp/launch_params_r5e77jel'].
+[INFO] [bt_navigator-22]: process has finished cleanly [pid 989344]
+[INFO] [lifecycle_manager-27]: process has finished cleanly [pid 989349]
+[ERROR] [scan_fusion-9]: process has died [pid 988594, exit code 1, cmd '/home/kevao/pepper_ws/install/pepper_multilaser_slam/lib/pepper_multilaser_slam/scan_fusion --ros-args --params-file /tmp/launch_params_xymj1get'].
+[INFO] [gazebo-1]: process has finished cleanly [pid 988585]
+[planner_server-19] [INFO] [1793183044.855387370] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[planner_server-19] [INFO] [1793183044.855435910] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-19] [INFO] [1793183044.865646771] [planner_server]: Cleaning up
+[planner_server-19] [INFO] [1793183044.869858507] [global_costmap.global_costmap]: Cleaning up
+[planner_server-19] [INFO] [1793183044.872138560] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-19] [INFO] [1793183044.872266230] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[planner_server-19] [INFO] [1793183044.877516862] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-19] [INFO] [1793183044.879867246] [global_costmap.global_costmap]: Destroying
+[planner_server-19] [INFO] [1793183044.883986790] [planner_server]: Destroying
+[INFO] [planner_server-19]: process has finished cleanly [pid 989341]
+[INFO] [visitor_approach-28]: process has finished cleanly [pid 989695]

@@ -1,0 +1,11 @@
+# Museo vacío mapeado con los 3 láseres de Pepper (scan_fusion accumulate=4, free_space=false;
+# slam_toolbox, ruta "museum" de route_driver): results/museo/vacio/acc4nofree_r3, la mejor de las
+# corridas (ATE 0.20 m, completitud 60 %). Mismo frame map que museum_hokuyo (mundo + (1.5, -1)).
+# El interior del bloque central no está: la ruta no entró ahí.
+image: museum_fused.pgm
+mode: trinary
+resolution: 0.050
+origin: [-5.864, -14.024, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

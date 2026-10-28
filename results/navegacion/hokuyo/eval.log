@@ -1,0 +1,23 @@
+esperando TF map, place_navigator y visitor_approach…
+esperando TF map, place_navigator y visitor_approach…
+esperando TF map, place_navigator y visitor_approach…
+{"kind": "place", "place": "mesa", "goal": [-3.8, 1.4, 180], "result": "arrived", "t": 26.3, "real": [-3.826, 1.359, 2.921], "amcl": [-3.805, 1.463, 2.923]}
+{"kind": "call", "at": "mesa", "result": "reached", "text": "A 1.00 m, de frente (-3°).", "t": 35.9, "real": [-4.632, 1.356, -2.948], "amcl": [-4.673, 1.44, -2.939]}
+{"kind": "place", "place": "entrada", "goal": [9.0, 3.5, 0], "result": "arrived", "t": 67.0, "real": [8.93, 3.668, 0.205], "amcl": [8.931, 3.645, 0.231]}
+{"kind": "call", "at": "entrada", "result": "reached", "text": "A 1.05 m, de frente (+2°).", "t": 44.8, "real": [7.922, 0.75, -1.937], "amcl": [7.874, 0.71, -1.936]}
+{"kind": "place", "place": "cartel", "goal": [8.6, -6.8, -90], "result": "arrived", "t": 33.8, "real": [8.576, -6.698, -1.715], "amcl": [8.414, -6.685, -1.694]}
+{"kind": "place", "place": "introduccion", "goal": [7.6, -2.0, 180], "result": "arrived", "t": 26.2, "real": [7.706, -2.178, 2.935], "amcl": [7.621, -2.197, 2.928]}
+{"kind": "call", "at": "introduccion", "result": "reached", "text": "A 1.02 m, de frente (+2°).", "t": 36.9, "real": [7.671, -1.5, 1.682], "amcl": [7.608, -1.502, 1.643]}
+{"kind": "place", "place": "computadores", "goal": [3.6, -2.6, 90], "result": "arrived", "t": 36.0, "real": [3.676, -2.754, 1.818], "amcl": [3.502, -2.663, 1.774]}
+{"kind": "place", "place": "tecnologia", "goal": [-0.6, -5.5, 0], "result": "arrived", "t": 68.8, "real": [-0.648, -5.574, 0.166], "amcl": [-0.557, -5.5, 0.177]}
+{"kind": "call", "at": "tecnologia", "result": "reached", "text": "A 1.04 m, de frente (-3°).", "t": 36.4, "real": [-1.407, -5.209, 2.486], "amcl": [-1.431, -5.153, 2.495]}
+{"kind": "place", "place": "puertas_sur", "goal": [4.3, -11.6, -90], "result": "arrived", "t": 44.7, "real": [4.187, -11.628, -1.388], "amcl": [4.066, -11.61, -1.389]}
+{"kind": "call", "at": "puertas_sur", "result": "reached", "text": "A 1.04 m, de frente (-2°).", "t": 42.2, "real": [6.132, -11.495, 0.049], "amcl": [6.072, -11.448, 0.051]}
+{"kind": "place", "place": "sala_oeste", "goal": [-3.3, -4.2, 180], "result": "arrived", "t": 65.1, "real": [-3.37, -4.304, 2.96], "amcl": [-3.361, -4.195, 2.924]}
+{"kind": "call", "at": "sala_oeste", "result": "reached", "text": "A 0.77 m, de frente (-2°).", "t": 28.9, "real": [-3.37, -4.304, -0.209], "amcl": [-3.33, -4.336, -0.227]}
+{"kind": "place", "place": "rotonda", "goal": [-0.2, -0.8, 180], "result": "arrived", "t": 25.3, "real": [-0.359, -0.683, 3.007], "amcl": [-0.214, -0.705, 2.98]}
+{"kind": "place", "place": "sala_norte", "goal": [3.5, 5.0, 90], "result": "arrived", "t": 32.7, "real": [3.19, 4.983, 1.547], "amcl": [3.285, 4.943, 1.557]}
+{"kind": "place", "place": "escalera", "goal": [9.0, -5.0, 0], "result": "arrived", "t": 55.9, "real": [9.025, -4.792, -0.25], "amcl": [8.966, -4.808, -0.229]}
+{"kind": "place", "place": "inicio", "goal": [0.0, 0.0, 0], "result": "arrived", "t": 67.6, "real": [0.037, 0.018, 0.203], "amcl": [0.076, 0.002, 0.203]}
+terminate called without an active exception
+timeout: la orden monitorizada ha volcado un 'core'

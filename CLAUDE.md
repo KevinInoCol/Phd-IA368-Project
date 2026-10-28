@@ -239,6 +239,15 @@ localización de la voz.
 - Probado (sim, `museum_test_people`): 12/12 lugares alcanzados, error medio 0.16 m (máx. 0.29), yaw ±13° (tolerancia de Nav2); fotos de llegada coinciden con cada lugar. "Corre" vs caminar: máx. 0.42 vs 0.26 m/s. `ros2 topic pub --once` a veces pierde el
   mensaje antes del descubrimiento: usar `-w 2`.
 
+**Hokuyo vs. 3 láseres de Pepper en la demo (2026-10-28)**: `visitors_demo.launch.py` acepta
+`scan_fusion:=true scan:=/pepper/scan_fused map:=.../museum_fused.yaml` (mapa = mejor corrida de
+SLAM fusionado, `results/museo/vacio/acc4nofree_r3`; le falta el interior del bloque central).
+Prueba `tools/eval_navigation.py` (12 lugares + 6 llamadas), resultados en
+`results/navegacion/summary.md`: 12/12 lugares en ambas; error al llegar 0.20 vs 0.15 m; AMCL RMSE
+0.32 vs 0.12 m (fuera del bloque central 0.24 vs 0.10; dentro 0.90 vs 0.31, por el mapa); sin
+choques; llamadas 4/5 vs 5/5 válidas. Hallazgo: desde la mesa, visitor_approach toma un retrato
+de los paneles por una persona (en las dos configuraciones).
+
 **Próximo paso propuesto (pendiente de aprobación del usuario)**
 - Opcional: pasar las detecciones de `/yolo/detections` como texto para que "sí, la veo" dependa
   de YOLO.
