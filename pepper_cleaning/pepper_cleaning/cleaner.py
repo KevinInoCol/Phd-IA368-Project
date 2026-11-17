@@ -18,12 +18,20 @@ Si autodock empieza a ir a la base (batería baja, /pepper/dock_status deja IDLE
 pausa: cancela Nav2, apaga el cepillo y, cuando autodock vuelve a IDLE tras cargar, sigue en el
 tramo donde se quedó. Al terminar dice cuánto limpió y, con `dock_when_done`, vuelve a la base.
 
+Visitantes: si alguien llama a Pepper mientras limpia, visitor_approach (pepper_visitors) publica
+`searching` en /pepper/visitor_status; la limpieza se pausa igual (PAUSED_VISITOR) y Pepper busca a
+la persona con la cámara, se acerca y conversa. Cuando la charla termina (`done`), o si no encontró
+a nadie (`nobody`), no pudo llegar (`nav_failed`), no podía atender por batería (`charging`) o
+falló (`error`), sigue limpiando en el tramo donde se quedó. Si lo llaman mientras carga en la
+base, visitor_approach lo saca de ella: al volver autodock a IDLE no retoma hasta que acabe la
+charla (con poca batería autodock lo volverá a llevar a la base).
+
 Órdenes en /pepper/clean_cmd (std_msgs/String):
     "start"              todas las zonas, la más cercana primero
     "start sala_oeste"   una zona (clave o nombre de config/dirt.yaml; también JSON {"zones": [...]})
     "stop"               cancela
 Estado en /pepper/clean_status (JSON): {state, zone, zone_name, segment, segments, zones_done,
-zones_left, percent, text}; state = IDLE | CLEANING | PAUSED_DOCK | DONE.
+zones_left, percent, text}; state = IDLE | CLEANING | PAUSED_DOCK | PAUSED_VISITOR | DONE.
 Plan en /pepper/clean_plan (nav_msgs/Path, latched) para RViz.
 """
 
@@ -102,9 +110,12 @@ class Cleaner(Node):
         self.in_gaps = False     # la zona actual está en el repaso
         self.sparse = True       # tramos de carril: waypoints espaciados; repaso: todos los puntos
         self.brush_on = False
+        self.visitor = False     # visitor_approach atiende a alguien (searching .. done)
+        self.visitors = 0        # llamadas atendidas en esta misión
 
         self.create_subscription(String, "/pepper/clean_cmd", self._cmd_cb, 10)
         self.create_subscription(String, "/pepper/dock_status", self._dock_cb, 10)
+        self.create_subscription(String, "/pepper/visitor_status", self._visitor_cb, 10)
         latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.create_subscription(String, "/pepper/dirt/status", self._dirt_cb, latched)
         self.tf_buffer = Buffer()
@@ -289,15 +300,41 @@ class Cleaner(Node):
     def _dock_cb(self, msg):
         st = json.loads(msg.data).get("state", "IDLE")
         prev, self.dock_state = self.dock_state, st
-        if self.state == "CLEANING" and st not in ("IDLE",) and prev == "IDLE":
+        if self.state in ("CLEANING", "PAUSED_VISITOR") and st not in ("IDLE",) and prev == "IDLE":
             self.pause_for_dock()
         elif self.state == "PAUSED_DOCK" and st == "IDLE" and prev == "UNDOCK":
-            self.resume()
+            if self.visitor:      # salió de la base para atender a alguien
+                self.state = "PAUSED_VISITOR"
+            else:
+                self.resume()
         elif self.pending is not None and st == "IDLE" and prev == "UNDOCK":
             zones, self.pending = self.pending, None
             self.start(zones or None)
         elif self.state == "PAUSED_DOCK" and st == "FAILED":
             self.stop("No pude cargarme; dejo la limpieza.")
+
+    def _visitor_cb(self, msg):
+        try:
+            phase = json.loads(msg.data).get("phase", "")
+        except ValueError:
+            return
+        if phase in ("searching", "approaching", "facing", "reached"):
+            if not self.visitor and self.state in ("CLEANING", "PAUSED_DOCK"):
+                self.visitors += 1
+            self.visitor = True
+            if self.state == "CLEANING":
+                self.cancel_nav()
+                self.brush(False)
+                self.set_speed(0.0)
+                self.state = "PAUSED_VISITOR"
+                self.text = "Atiendo a un visitante."
+                self.get_logger().info(f"pausa por un visitante en {self.zone}, tramo {self.seg}")
+        elif phase in ("done", "nobody", "nav_failed", "charging", "error"):
+            self.visitor = False
+            if self.state == "PAUSED_VISITOR":
+                # deja de mirar al visitante (visitor_approach suelta el objetivo con /pepper/go_to)
+                self.pub_go_to.publish(String(data=json.dumps({"cancel": True})))
+                self.resume()
 
     # ------------------------------------------------------------ control
     def say(self, text):
@@ -328,6 +365,7 @@ class Cleaner(Node):
         self.mission = list(self.queue)
         self.covered = set()
         self.done_zones = []
+        self.visitors = 0
         self.t_start = self.get_clock().now()
         names = ", ".join(self.zones[z].get("name", z) for z in self.queue)
         self.say(f"Empiezo a limpiar {names}." if len(self.queue) < 3 else "Empiezo a limpiar el museo.")
@@ -524,7 +562,7 @@ class Cleaner(Node):
             "segment": self.seg, "segments": len(self.segments), "zones_done": self.done_zones,
             "zones_left": self.queue, "percent": self.dirt.get("percent"),
             "mission_percent": None if self.mission_percent() is None else round(self.mission_percent(), 1),
-            "text": self.text},
+            "visitors": self.visitors, "text": self.text},
             ensure_ascii=False)))
 
 

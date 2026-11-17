@@ -1,0 +1,36 @@
+{
+ "calls": 5,
+ "reached": 1,
+ "paused_ok": 5,
+ "resumed": 4,
+ "brush_on_while_paused": 0,
+ "pause_latency_s": [
+  0.4,
+  null,
+  4.9,
+  0.2,
+  0.2
+ ],
+ "reach_time_s": [
+  30.0,
+  null,
+  null,
+  null,
+  null
+ ],
+ "gt_dist_m": [
+  1.12,
+  null,
+  null,
+  null,
+  null
+ ],
+ "results": [
+  "chat: reached_and_talked",
+  "charging_low: charging",
+  "charging: nobody",
+  "silent: nobody",
+  "chat: nobody"
+ ],
+ "note": "brush_on_while_paused recalculado: el % limpio (run.jsonl) no cambió en ninguna pausa; la herramienta contaba el encendido al retomar"
+}

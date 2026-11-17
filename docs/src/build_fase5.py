@@ -15,6 +15,11 @@ import os
 import re
 import statistics
 
+import yaml
+
+VISIT_CAPTION = ("Llamada en mitad de la sala oeste, en el museo con gente caminando: Pepper dejó el zigzag, "
+                 "eligió a la visitante quieta del vestido negro (arriba) y quedó a 1.1 m, de frente. El de verde es "
+                 "un actor que camina y no lo eligió. Abajo, una franja que todavía le falta limpiar.")
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "..", "..", "results", "limpieza")
 PAGE = os.path.join(HERE, "..", "proyecto.html")
@@ -33,6 +38,54 @@ def row(label, s, cls=""):
     cells += [f'<td class="num">{s["duration_min"]:.1f} min</td>', f'<td class="num">{s["path_m"]:.0f} m</td>',
               f'<td class="num">{s["dock_cycles"]}</td>']
     return "          <tr>" + "".join(cells) + "</tr>"
+
+
+ZONE_NAMES = {"sala_oeste": "sala oeste", "esquina_base": "esquina de la base", "pasillo_sur": "pasillo sur",
+              "sala_norte": "sala norte", "entrada": "entrada"}
+CFG = os.path.join(HERE, "..", "..", "pepper_cleaning", "config", "dirt.yaml")
+
+
+def visitor_calls():
+    """Filas de la tabla de llamadas (results/limpieza/visitantes_r*/calls.jsonl) y sus números."""
+    rects = {k: z["rect"] for k, z in yaml.safe_load(open(CFG))["zones"].items()}
+    rows, calls = [], []
+    for d in sorted(glob.glob(os.path.join(RES, "visitantes_r*"))):
+        f = os.path.join(d, "calls.jsonl")
+        if not os.path.exists(f):
+            continue
+        run = os.path.basename(d).replace("visitantes_", "")
+        for c in map(json.loads, open(f)):
+            calls.append(c)
+            if c.get("dock_state") == "CHARGING":
+                where = f"en la base ({c.get('battery', 0):.0f} %)"
+            else:
+                # "limpiando" sólo si está dentro de la zona que limpia (si no, va de camino a ella)
+                x, y = c.get("gt_call") or (None, None)
+                z = c.get("zone")
+                x0, x1, y0, y1 = rects.get(z, (0, 0, 0, 0))
+                inside = x is not None and x0 <= x <= x1 and y0 <= y <= y1
+                where = f"limpiando {ZONE_NAMES.get(z, z)}" if inside else f"de camino a {ZONE_NAMES.get(z, z)}"
+            talk = {"chat": "se despide", "silent": "nadie habla"}.get(c["kind"], "—")
+            res = {"reached_and_talked": "se acerca y conversa", "nobody": "nadie quieto cerca",
+                   "charging": "no va: batería baja", "nav_failed": "no puede llegar",
+                   "error": "error"}.get(c.get("result", "").strip(), c.get("result", ""))
+            if c.get("result") == "reached_and_talked" and c["kind"] != "chat":   # la prueba no simula charla
+                res, talk = "se acerca; cierra a los 60 s", "nadie habla"
+            reach = f'{c["dt_reached"]:.0f} s' if c.get("dt_reached") is not None else "—"
+            dist = f'{c["gt_dist"]:.2f} m' if c.get("gt_dist") is not None else "—"
+            if c.get("dt_resumed") is not None:
+                back = f'{c["dt_resumed"]:.0f} s'
+            elif c.get("dock_after") in ("TO_PREDOCK", "SEEK", "APPROACH"):
+                back = "va a cargar (batería) y sigue después"
+            elif c.get("result") == "charging":
+                back = "sigue cargando"
+            else:
+                back = "—"
+            cls = ' class="new"' if c.get("dt_reached") is not None else ""
+            rows.append(f'          <tr><td>{run} · {c["n"]}</td><td>{where}</td><td>{talk}</td>'
+                        f'<td{cls}>{res}</td><td class="num">{reach}</td><td class="num">{dist}</td>'
+                        f'<td>{back}</td></tr>')
+    return rows, calls
 
 
 def main():
@@ -68,12 +121,29 @@ def main():
     good = [s["amcl_rmse_by_zone_m"][k] for _, s in runs for k in ("sala_oeste", "esquina_base", "pasillo_sur")
             if "amcl_rmse_by_zone_m" in s and k in s["amcl_rmse_by_zone_m"]]
 
+    vrows, calls = visitor_calls()
+    found = [c for c in calls if c.get("target")]
+    reached = [c for c in found if c.get("dt_reached") is not None]
+    cleaning = [c for c in calls if c.get("clean_state") == "CLEANING"]
+    paused = [c["dt_paused"] for c in cleaning if c.get("dt_paused") is not None]
+    back = [c for c in cleaning if c.get("dt_resumed") is not None or c.get("dock_after") == "TO_PREDOCK"]
+    dists = [c["gt_dist"] for c in reached if c.get("gt_dist") is not None]
+    vsum = f"{len(calls)} llamadas:"
+    vsum += (f" se acercó a la persona elegida en {len(reached)} de {len(found)}"
+             f" ({min(dists):.2f}–{max(dists):.2f} m), y en {len(back)} de {len(cleaning)} llamadas en mitad de la"
+             f" limpieza volvió a limpiar." if dists else "")
+    vsum += (" Cuando no encontró a nadie, lo habían llamado cerca de la base o en un pasillo, donde no hay"
+             " gente quieta en ese mundo. La llamada a 0.45 m fue porque ya estaba limpiando junto a la persona y no"
+             " se apartó. Ahora, si está a menos de 0.75 m, retrocede a 1 m (prueba aparte: de 0.50 a 1.11 m).")
     html = open(os.path.join(HERE, "fase5.tpl.html"), encoding="utf-8").read()
     subs = {"KPI_PCT": f"{pct:.0f} %", "KPI_RUNS": str(len(runs)), "KPI_DOCKS": str(docks),
             "ALL_RUNS": str(len(allf)),
             "KPI_MIN": f"{mins:.0f}", "RESULTS_ROWS": "\n".join(rows),
             "AMCL_BAD": f"{statistics.mean(bad):.2f}" if bad else "—",
-            "AMCL_GOOD": f"{statistics.mean(good):.2f}" if good else "—"}
+            "AMCL_GOOD": f"{statistics.mean(good):.2f}" if good else "—",
+            "VISIT_ROWS": "\n".join(vrows), "VISIT_SUMMARY": vsum,
+            "VISIT_PAUSE": f"{statistics.median(paused):.1f}" if paused else "—",
+            "VISIT_CAPTION": VISIT_CAPTION}
 
     def sub(m):
         k = m.group(1)

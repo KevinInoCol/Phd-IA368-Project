@@ -7,6 +7,13 @@
 #
 # orden: "start" (todo el museo, por defecto) o "start <zona>". Deja en <dir>: run.jsonl,
 # summary.json, cleaning.png (tools/record_cleaning.py) y logs/sim.log.
+#
+# Variables opcionales:
+#   GUI=true          con Gazebo y RViz en pantalla (por defecto sin GUI)
+#   CALLS=chat,silent visitantes que llaman a Pepper mientras limpia (tools/visitor_calls.py):
+#                     deja además calls.jsonl y calls_summary.json
+#   CALL_ZONES=sala_oeste,entrada   sólo llamar mientras limpia esas zonas (con gente quieta cerca)
+#   CALL_GAP=90       s simulados entre retomar la limpieza y la siguiente llamada
 OUT=$1
 WORLD=${2:-museum_test_people}
 BATTERY=${3:-45.0}
@@ -25,6 +32,7 @@ fi
 
 cleanup() {
     [ -n "${REC:-}" ] && kill -INT "$REC" 2>/dev/null
+    [ -n "${CALLER:-}" ] && kill -INT "$CALLER" 2>/dev/null
     if [ -n "${SIM:-}" ]; then
         # todo el grupo de procesos del launch: matar sólo ros2 launch dejaba gz sim huérfano
         kill -INT -- -"$SIM" 2>/dev/null
@@ -36,7 +44,9 @@ cleanup() {
 trap cleanup EXIT
 
 set -m   # control de trabajos: el launch va en su propio grupo de procesos, con PGID = $!
-ros2 launch pepper_cleaning cleaning_demo.launch.py gui:=false rviz:=false world:="$WORLD" \
+GUI=${GUI:-false}
+CALLS=${CALLS:-}
+ros2 launch pepper_cleaning cleaning_demo.launch.py gui:="$GUI" rviz:="$GUI" world:="$WORLD" \
     battery:="$BATTERY" > "$OUT/logs/sim.log" 2>&1 &
 SIM=$!
 set +m
@@ -48,8 +58,17 @@ sleep 12   # AMCL con la pose inicial
 
 python3 "$HERE/tools/record_cleaning.py" "$OUT" --timeout 3000 > "$OUT/logs/record.log" 2>&1 &
 REC=$!
+if [ -n "$CALLS" ]; then
+    python3 "$HERE/tools/visitor_calls.py" "$OUT" --plan "$CALLS" \
+        --zones "${CALL_ZONES:-}" --gap "${CALL_GAP:-90}" > "$OUT/logs/calls.log" 2>&1 &
+    CALLER=$!
+fi
 sleep 4
 ros2 topic pub -w 1 --once /pepper/clean_cmd std_msgs/msg/String "data: $ORDER" > /dev/null
 wait "$REC"
 REC=
+if [ -n "${CALLER:-}" ]; then
+    kill -INT "$CALLER" 2>/dev/null; wait "$CALLER"; CALLER=
+    cat "$OUT/calls_summary.json"
+fi
 cat "$OUT/summary.json"

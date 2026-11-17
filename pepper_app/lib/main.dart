@@ -1446,7 +1446,7 @@ class _VisitorViewState extends State<VisitorView> {
     ('Charlamos', Icons.forum_rounded),
   ];
   static const _stepOf = {'searching': 1, 'approaching': 2, 'facing': 3, 'talking': 4, 'ended': 5};
-  static const _failures = {'nobody', 'nav_failed', 'error'};
+  static const _failures = {'nobody', 'nav_failed', 'charging', 'error'};
 
   final AudioRecorder _recorder = AudioRecorder();
   final ScrollController _scrollCtrl = ScrollController();
@@ -1834,6 +1834,7 @@ class _CleaningViewState extends State<CleaningView> {
     'IDLE': 'Sin limpiar',
     'CLEANING': 'Limpiando',
     'PAUSED_DOCK': 'En pausa: cargando',
+    'PAUSED_VISITOR': 'En pausa: atiende a un visitante',
     'DONE': 'Terminó',
   };
 

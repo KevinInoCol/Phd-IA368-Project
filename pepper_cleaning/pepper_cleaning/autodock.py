@@ -27,6 +27,9 @@ lejos de la base se vuelve antes, para llegar con `reserve` % y no con lo justo;
 la base (para que cleaner siga limpiando). Si se pidió con "dock", se queda en la base. Al empezar el docking cancela
 cualquier ir-a-lugar (/pepper/go_to {cancel}).
 
+Mientras visitor_approach atiende a un visitante (/pepper/visitor_status de searching a done), el
+docking automático espera, salvo que la batería baje de `reserve` %: no se va a mitad de la charla.
+
     ros2 topic pub -w 1 --once /pepper/dock_cmd std_msgs/String "data: dock"
 """
 
@@ -88,6 +91,8 @@ class AutoDock(Node):
         self.create_subscription(Float32, "/pepper/dock/relative_angle", self._angle_cb, 10)
         self.create_subscription(Bool, "/pepper/dock/contact", self._contact_cb, 10)
         self.create_subscription(String, "/pepper/dock_cmd", self._cmd_cb, 10)
+        self.create_subscription(String, "/pepper/visitor_status", self._visitor_cb, 10)
+        self.visitor = False
         self.pub_vel = self.create_publisher(Twist, "/pepper/cmd_vel", 10)
         self.pub_status = self.create_publisher(String, "/pepper/dock_status", 10)
         self.pub_say = self.create_publisher(String, "/pepper/say", 10)
@@ -114,6 +119,16 @@ class AutoDock(Node):
 
     def _contact_cb(self, msg):
         self.contact = msg.data
+
+    def _visitor_cb(self, msg):
+        try:
+            phase = json.loads(msg.data).get("phase", "")
+        except ValueError:
+            return
+        if phase in ("searching", "approaching", "facing", "reached"):
+            self.visitor = True
+        elif phase in ("done", "nobody", "nav_failed", "charging", "error"):
+            self.visitor = False
 
     def _cmd_cb(self, msg):
         cmd = msg.data.strip().lower()
@@ -239,7 +254,8 @@ class AutoDock(Node):
     def step(self):
         b = self.battery
         if self.state == "IDLE":
-            if self.auto_dock and b is not None and not self.contact and b < self.threshold():
+            if (self.auto_dock and b is not None and not self.contact and b < self.threshold()
+                    and (not self.visitor or b < self.reserve)):
                 self.start_docking(f"Me queda {b:.0f} % de batería. Voy a cargarme.")
                 self.auto_started = True
             elif self.contact and self.charging and b is not None and b < self.full:

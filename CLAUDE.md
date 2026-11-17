@@ -6,6 +6,21 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
 ## Estado y próximos pasos (actualizado 2026-11-16)
 
+**Punto de guardado (2026-11-17): Pepper atiende a quien lo llama mientras limpia**
+- Pedido del usuario: "si alguien le habla debe acercarse para interactuar con ese alguien".
+  Hecho: `visitor_approach` (dock-aware: sale de la base con ≥ 40 %, si no "charging"; fin de
+  charla `done` por `/pepper/visitor_done` o 60 s sin `/pepper/say`; se aparta a 1 m si está a
+  < 0.75 m), `cleaner` PAUSED_VISITOR (pausa con `searching`, retoma con done/nobody/nav_failed/
+  charging/error), `autodock` aplaza el docking automático mientras atiende (salvo < reserve),
+  bridge publica `/pepper/visitor_done` y entiende `done`. Prueba `tools/visitor_calls.py` +
+  `CALLS=... GUI=true run_cleaning.sh`. 3 corridas `results/limpieza/visitantes_r1..3`: 16
+  llamadas, se acerca 11/11, retoma 13/13. Página: sección 06 de la pestaña 5. README "Si le
+  hablan mientras limpia".
+- Pendiente: en visitantes_r3 Pepper rozó a una persona quieta en un tránsito de Nav2 (0.47 m;
+  cabeza 0.45 m durante 75 s; se enderezó solo). `robot_radius` 0.24 del repo base no cuenta los
+  brazos → más margen en Nav2 sin cerrar pasillos (override en nuestro launch, no tocar la base).
+- v4 del cleaner medida sólo con llamadas (91.5/88.2/85.0 %); falta medirla sin llamadas.
+
 **Punto de guardado (2026-11-16): Fase 4 = limpiar el museo + base de carga (pedido del profesor)**
 - Hecho: paquete `pepper_cleaning` (ver la sección "Limpieza del museo" más abajo), mapa de
   navegación `pepper_museum/maps/museum_nav` (paneles colgantes), bridge/Gemini/app (pestaña
@@ -297,8 +312,8 @@ El profesor pidió añadir **limpiar el escenario**. Se tomó la tarea del curso
 `autodocking.py`). **No** la de la Sección 5 (cacas/plátanos). El usuario eligió "piso sucio que
 se limpia al pasar por encima" (no objetos que se recogen) y dejó elegir dónde va la base.
 
-- **Base de carga**: `config/dock.yaml`, contacto en map (−5.10, −7.0) contra la pared oeste
-  (x ≈ −5.21), haz hacia +x, predock (−3.3, −7.0, 180°). Esquina suroeste: ninguna persona
+- **Base de carga**: `config/dock.yaml`, contacto en map (−4.60, −7.0), 0.5 m separada de la
+  pared oeste (inclinada: a 0.9 m de altura llega a x = −4.77), haz hacia +x, predock (−2.8, −7.0, 180°). Esquina suroeste: ninguna persona
   estática ni trayectoria de actor a < ~2 m en los 3 mundos. Modelo `models/charging_dock`
   (panel con colisión que ven los láseres + placa sin colisión), creado con `ros_gz_sim create`.
 - Nodos: `dock_station` (haz IR emulado con el ground truth = física del sensor; sólo publica con

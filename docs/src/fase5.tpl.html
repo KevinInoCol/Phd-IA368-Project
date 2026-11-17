@@ -132,10 +132,37 @@
   </div>
 </section>
 
+<section id="visitante5">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">06</span>Si le hablan mientras limpia</div>
+      <h2>Deja la limpieza, busca a quien lo llamó, conversa y vuelve a su tramo</h2>
+      <p class="lead">La limpieza no tapa lo de la fase 3. Cuando alguien llama a Pepper (voz por <code>voice_listener</code> o la pestaña Visitante de la app), <code>visitor_approach</code> publica <code>searching</code>. El limpiador cancela su tramo, apaga el cepillo y queda en <b>PAUSED_VISITOR</b>. Pepper busca con la cámara (YOLO más la profundidad, girando la cabeza y luego la base), elige a la persona quieta más cercana, se pone a 1 m de frente y conversa con Gemini. La charla termina cuando el visitante se despide (el bridge publica <code>/pepper/visitor_done</code>) o tras 60 s sin que nadie hable. Si no encontró a nadie o no pudo llegar, también termina. Entonces Pepper vuelve al tramo de limpieza donde estaba.</p>
+    </div>
+    <figure class="shots">
+      <img alt="Vista cenital de Pepper frente a una visitante, en mitad de la limpieza de la sala" src="@@visitor">
+      <figcaption><span>@@VISIT_CAPTION</span></figcaption>
+    </figure>
+    <ol class="steps" style="margin-top:24px">
+      <li class="ours"><span class="k">PAUSA</span><h3>Al instante</h3><p>El limpiador escucha <code>/pepper/visitor_status</code>: pausa en @@VISIT_PAUSE s de mediana y el cepillo se apaga. El % limpio no sube durante ninguna pausa.</p></li>
+      <li class="ours"><span class="k">EN LA BASE</span><h3>Sale si tiene batería</h3><p>Con 40 % o más, <code>visitor_approach</code> pide a autodock salir de la base y luego busca. Con menos responde “Ahora necesito cargarme… ven a hablar conmigo a la base de carga” y no se mueve.</p></li>
+      <li class="ours"><span class="k">BATERÍA</span><h3>No se va a mitad de la charla</h3><p>Mientras atiende, autodock aplaza el docking, salvo bajo 10 %. En una prueba la batería cruzó el umbral durante la charla y Pepper fue a cargarse justo al terminarla. Después siguió limpiando.</p></li>
+    </ol>
+    <div class="table-wrap" style="margin-top:24px">
+      <table>
+        <thead><tr><th>Corrida · llamada</th><th>Dónde lo llaman</th><th>Charla</th><th>Resultado</th><th>Llega en</th><th>Distancia</th><th>Vuelve a limpiar</th></tr></thead>
+        <tbody>
+@@VISIT_ROWS
+        </tbody>
+      </table>
+    </div>
+    <p class="tree-cap">@@VISIT_SUMMARY La charla de la prueba la simula <code>tools/visitor_calls.py</code>: publica tres frases y la despedida. En la app las responde Gemini. Distancia = ground truth de Pepper a la persona elegida. Tiempos simulados, contados desde la llamada.</p>
+  </div>
+</section>
 <section id="app5">
   <div class="wrap">
     <div class="head">
-      <div class="eyebrow"><span class="n">06</span>En la app y por voz</div>
+      <div class="eyebrow"><span class="n">07</span>En la app y por voz</div>
       <h2>“Limpia la sala oeste”, “ve a cargarte”, “¿cuánta batería tienes?”</h2>
       <p class="lead">La app tiene una cuarta pestaña, <b>Limpieza</b>: batería y estado de la base, el porcentaje limpio de cada zona con un botón para limpiarla, “Limpiar todo”, “Detener”, “Ir a cargar” y la cámara inferior de Pepper para ver el piso. En el chat, Gemini tiene las herramientas <code>clean_area</code>, <code>stop_cleaning</code>, <code>charge</code> y <code>get_status</code>, y las frases de Pepper (“Me queda 20 % de batería. Voy a cargarme.”) aparecen en el chat. Sin Gemini, el parser local entiende las mismas órdenes.</p>
     </div>
@@ -153,7 +180,7 @@
 <section id="plan5">
   <div class="wrap">
     <div class="head">
-      <div class="eyebrow"><span class="n">07</span>Estado</div>
+      <div class="eyebrow"><span class="n">08</span>Estado</div>
       <h2>Qué quedó hecho y qué se puede mejorar</h2>
     </div>
     <ol class="steps">
@@ -161,7 +188,9 @@
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Piso sucio</h3><p>Una malla por zona, material calibrado, sin costo para la simulación.</p></li>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Cobertura con repaso</h3><p>Zigzag, cortes con el costmap, repaso y pausas para cargar.</p></li>
       <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>App, chat y voz</h3><p>Pestaña Limpieza y cuatro herramientas de Gemini.</p></li>
-      <li><span class="k"><span class="st">EN CURSO</span></span><h3>Bordes y personas</h3><p>Carriles pegados al borde de cada zona (contra el corrimiento de AMCL) y 0.45 m de margen a las personas: implementado, falta medirlo con las corridas.</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Atiende a quien lo llama</h3><p>Pausa la limpieza, se acerca y conversa, y luego vuelve a su tramo. Llega a la persona en 11 de 11 llamadas y retoma la limpieza en 13 de 13. Si está en la base, sale si tiene batería.</p></li>
+      <li><span class="k"><span class="st">EN CURSO</span></span><h3>Bordes y personas</h3><p>Carriles pegados al borde de cada zona y 0.45 m de margen a las personas. Las tres corridas con visitantes ya usan esta versión: 91.5 %, 88.2 % y 85.0 % limpio, aun atendiendo 5 o 6 llamadas cada una. Falta medirla sin llamadas, para compararla con la tabla.</p></li>
+      <li><span class="k"><span class="st">PENDIENTE</span></span><h3>Margen de Nav2 a las personas</h3><p>En la corrida con gente caminando, Pepper pasó de camino a la sala norte a 0.47 m de una persona quieta. Quedó doblado 75 s y se enderezó solo. Esa ruta la planifica Nav2, con un radio de 0.24 m para Pepper (el del repo base) que no cuenta los brazos. Falta darle más margen a Nav2 sin cerrar los pasillos estrechos.</p></li>
       <li><span class="k"><span class="st">IDEA</span></span><h3>Ver la suciedad</h3><p>Detectar las manchas con la cámara inferior y limpiar primero donde hay, en lugar de recorrerlo todo.</p></li>
       <li><span class="k"><span class="st">IDEA</span></span><h3>Profundidad en el costmap</h3><p>Que la cámara de profundidad marque los paneles colgantes, en vez de sacarlos de la malla.</p></li>
     </ol>

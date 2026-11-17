@@ -494,6 +494,8 @@ class PepperBridgeNode(Node):
 
         # Modo visitante: la frase va a visitor_approach como si la dijera alguien del museo
         self.visitor_call_pub = self.create_publisher(String, '/pepper/visitor_call', 10)
+        # fin de la charla: visitor_approach deja de mirarlo y cleaner sigue limpiando
+        self.visitor_done_pub = self.create_publisher(String, '/pepper/visitor_done', 10)
         self.create_subscription(String, '/pepper/visitor_status', self.visitor_status_cb, 10)
 
         # Lugares con nombre: "vamos a la mesa" -> place_navigator (pepper_visitors) -> Nav2
@@ -636,6 +638,9 @@ class PepperBridgeNode(Node):
         phase = st.get('phase', '')
         if phase == 'busy':
             return
+        if phase == 'done':   # visitor_approach cerró la charla (nadie habló en un rato)
+            self.visitor_end(st.get('text') or 'Terminó la charla.', notify=False)
+            return
         with self.state.lock:
             # al llegar empieza la charla: las frases siguientes las responde Gemini
             self.state.visitor_phase = 'talking' if phase == 'reached' else phase
@@ -663,7 +668,7 @@ class PepperBridgeNode(Node):
             self.visitor_end('El visitante terminó la charla.')
         return reply, ended
 
-    def visitor_end(self, text):
+    def visitor_end(self, text, notify=True):
         with self.state.lock:
             if self.state.visitor_phase != 'talking':
                 return
@@ -671,6 +676,8 @@ class PepperBridgeNode(Node):
             self.state.visitor_status = {'phase': 'ended', 'text': text}
             self.state.visitor_since = time.time()
         self.state.add_visitor_log('phase', text, 'ended')
+        if notify:
+            self.visitor_done_pub.publish(String(data=text))
 
     def places_cb(self, msg):
         with self.state.lock:
@@ -955,6 +962,8 @@ class PepperBridgeNode(Node):
             parts.append(f"estoy limpiando {cs.get('zone_name')}")
         elif cs.get('state') == 'PAUSED_DOCK':
             parts.append("pausé la limpieza para cargarme")
+        elif cs.get('state') == 'PAUSED_VISITOR':
+            parts.append("pausé la limpieza para atender a un visitante")
         if st.dirt_status.get('percent') is not None:
             parts.append(f"el piso del museo está {st.dirt_status['percent']:.0f} % limpio")
         if not parts:

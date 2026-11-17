@@ -29,10 +29,19 @@ Al recibir /pepper/visitor_call (std_msgs/String, de voice_listener):
      (`face_tolerance`, control proporcional en /pepper/cmd_vel): cuerpo y cabeza quedan
      alineados con ella.
 
+  7. La charla (Gemini, en el bridge de la app) termina con /pepper/visitor_done o cuando pasan
+     `talk_timeout` s sin que nadie hable (/pepper/say): publica `phase` = done y deja de mirarla.
+     Así el limpiador (pepper_cleaning/cleaner) sabe cuándo retomar lo que hacía.
+
+Base de carga (sólo si corre pepper_cleaning/autodock, /pepper/dock_status): si Pepper está en la
+base con al menos `min_battery` %, sale de ella antes de buscar; con menos, o si va camino de la
+base, no atiende ("charging") y pide al visitante que se acerque a la base.
+
 Publica /pepper/say (lo que diría Pepper), /pepper/visitor_target (PointStamped, la persona
 elegida), /pepper/visitor_status (std_msgs/String con JSON: `phase` = searching | approaching |
-facing | reached | nobody | nav_failed | busy | error, `text` y la llamada; lo muestra la app) y,
-si `log_file` no está vacío, una línea JSON por llamada (candidatos, elegida, éxito).
+facing | reached | done | nobody | nav_failed | charging | busy | error, `text` y la llamada; lo
+muestra la app) y, si `log_file` no está vacío, una línea JSON por llamada (candidatos, elegida,
+éxito).
 """
 
 import json
@@ -106,6 +115,8 @@ class VisitorApproach(Node):
         self.map_clearance = self.declare_parameter("map_clearance", 0.2).value
         self.face_tol = self.declare_parameter("face_tolerance", 0.05).value  # rad
         self.log_file = self.declare_parameter("log_file", "").value
+        self.talk_timeout = self.declare_parameter("talk_timeout", 60.0).value   # s sin hablar: fin
+        self.min_battery = self.declare_parameter("min_battery", 40.0).value     # % para salir de la base
 
         from ultralytics import YOLO
         t = time.time()
@@ -128,6 +139,10 @@ class VisitorApproach(Node):
         self.create_subscription(CameraInfo, "/pepper/camera/depth/camera_info", self._depth_info_cb, qos_profile_sensor_data, callback_group=cb)
         self.create_subscription(String, "/pepper/visitor_call", self._call_cb, 10, callback_group=cb)
         self.create_subscription(String, "/pepper/go_to", self._go_to_cb, 10, callback_group=cb)
+        self.create_subscription(String, "/pepper/visitor_done", self._done_cb, 10, callback_group=cb)
+        self.create_subscription(String, "/pepper/say", self._say_cb, 10, callback_group=cb)
+        self.create_subscription(String, "/pepper/dock_status", self._dock_cb, 10, callback_group=cb)
+        self.pub_dock = self.create_publisher(String, "/pepper/dock_cmd", 10)
         self.map = None
         self.create_subscription(OccupancyGrid, "/map", self._map_cb,
                                  QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL), callback_group=cb)
@@ -142,7 +157,11 @@ class VisitorApproach(Node):
         self.target = None          # (x, y) en map de la persona que mira
         self.busy = False
         self.call_id = 0
+        self.talking = False        # charla en curso (tras llegar), hasta done
+        self.t_talk = 0.0           # última frase de la charla (monotonic)
+        self.dock = None            # último /pepper/dock_status (None: no hay base de carga)
         self.create_timer(0.1, self._look_at_target, callback_group=cb)
+        self.create_timer(1.0, self._talk_watchdog, callback_group=cb)
         self.get_logger().info("Esperando llamadas en /pepper/visitor_call")
 
     @staticmethod
@@ -188,7 +207,34 @@ class VisitorApproach(Node):
             self.status("busy", "Estoy atendiendo otra llamada.", call=msg.data)
             return
         self.busy = True
+        self.talking = False
         threading.Thread(target=self._handle_call, args=(msg.data,), daemon=True).start()
+
+    def _done_cb(self, msg):
+        """El bridge de la app dio la charla por terminada (el visitante se despidió)."""
+        if self.talking:
+            self.end_talk(msg.data or "El visitante terminó la charla.")
+
+    def _say_cb(self, msg):
+        if self.talking:
+            self.t_talk = time.monotonic()
+
+    def _dock_cb(self, msg):
+        try:
+            self.dock = json.loads(msg.data)
+        except ValueError:
+            pass
+
+    def _talk_watchdog(self):
+        if self.talking and not self.busy and time.monotonic() - self.t_talk > self.talk_timeout:
+            self.end_talk(f"Nadie me habló en {self.talk_timeout:.0f} s.")
+
+    def end_talk(self, text):
+        self.talking = False
+        self.target = None
+        self.head(0.0, 0.0)
+        self.get_logger().info(f"Fin de la charla: {text}")
+        self.status("done", text)
 
     def _go_to_cb(self, msg):
         """place_navigator lleva a Pepper a otro lugar: deja de mirar al visitante."""
@@ -417,6 +463,8 @@ class VisitorApproach(Node):
     def _behave(self, text, log):
         self.get_logger().info(f"Llamada: '{text}'")
         self.target = None
+        if not self.leave_dock(text, log):
+            return
         self.status("searching", "Busco con la cámara a quien me habló.", call=text)
         self.say("¿Sí? Déjame ver quién me llama.")
         robot = self.robot_pose()
@@ -472,7 +520,15 @@ class VisitorApproach(Node):
         self.get_logger().info(f"Objetivo: ({tgt['pos'][0]:.2f}, {tgt['pos'][1]:.2f}) a {tgt['dist']:.2f} m, "
                                f"clase {label} ({prob:.2f})")
 
-        if tgt["dist"] <= self.approach + 0.3:
+        if tgt["dist"] < self.approach - 0.25:
+            # demasiado cerca (p. ej. lo llamaron mientras limpiaba junto a la persona): se aparta a
+            # approach_distance en la recta persona → robot; si Nav2 no puede, se queda donde está
+            px, py = tgt["pos"]
+            a = math.atan2(robot[1] - py, robot[0] - px)
+            self.get_logger().info(f"Estoy a {tgt['dist']:.2f} m: me aparto a {self.approach:.1f} m")
+            self.go_to(px + self.approach * math.cos(a), py + self.approach * math.sin(a), a + math.pi)
+            ok = True
+        elif tgt["dist"] <= self.approach + 0.3:
             ok = True     # ya está a la distancia de conversación
         else:
             ok = False
@@ -495,6 +551,7 @@ class VisitorApproach(Node):
         log["result"] = "reached" if ok else "nav_failed"
         if ok:
             self.say("Hola, ¿en qué te puedo ayudar?")
+            self.talking, self.t_talk = True, time.monotonic()
             err = log["facing_error"]
             self.status("reached", f"A {log.get('final_dist', 0):.2f} m, de frente"
                         + (f" ({math.degrees(err):+.0f}°)." if err is not None else "."),
@@ -502,7 +559,34 @@ class VisitorApproach(Node):
         else:
             self.say("Lo siento, no consigo llegar hasta ti.")
             self.status("nav_failed", "Nav2 no encontró cómo llegar.", target=list(tgt["pos"]))
-        # Sigue mirando a self.target (timer) hasta la siguiente llamada
+        # Sigue mirando a self.target (timer) hasta que termina la charla o la siguiente llamada
+
+    def leave_dock(self, text, log):
+        """Con la base de carga (autodock): False si no puede atender ahora. Si está en la base y
+        tiene batería, sale de ella antes de buscar (autodock retrocede y queda IDLE)."""
+        d = self.dock
+        if d is None:
+            return True
+        state, b = d.get("state", "IDLE"), d.get("battery")
+        if state in ("TO_PREDOCK", "SEEK", "APPROACH", "LOST") or (
+                (state == "CHARGING" or d.get("contact")) and b is not None and b < self.min_battery):
+            msg = (f"Ahora necesito cargarme, me queda {b:.0f} % de batería." if b is not None
+                   else "Ahora necesito cargarme.")
+            self.say(msg + " Si quieres, ven a hablar conmigo a la base de carga.")
+            self.status("charging", msg, call=text, battery=b)
+            log["result"] = "charging"
+            return False
+        if state in ("CHARGING", "UNDOCK") or d.get("contact"):
+            self.status("searching", "Salgo de la base de carga para atenderte.", call=text)
+            self.say("Un momento, salgo de la base de carga.")
+            if state != "UNDOCK":
+                self.pub_dock.publish(String(data="undock"))
+            end = time.monotonic() + 30.0
+            self.wait(1.0)
+            while time.monotonic() < end and (self.dock or {}).get("state") != "IDLE":
+                time.sleep(0.1)
+            log["undocked"] = (self.dock or {}).get("state") == "IDLE"
+        return True
 
     def face(self, xy):
         """Gira la base hasta que la persona en `xy` quede de frente (Nav2 deja ±0.25 rad de
