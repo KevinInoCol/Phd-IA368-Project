@@ -1,0 +1,11 @@
+# Base de carga de Pepper en el museo (frame map = mundo + (1.5, -1)).
+# Esquina suroeste: ninguna persona estática ni trayectoria de actor a menos de ~2 m en los tres
+# mundos del museo. Separada 0.5 m de la pared oeste porque esa pared está inclinada (paneles de
+# exhibición): a 0.1 m de altura está en x = −5.23 pero a 0.9–1.0 m sobresale hasta x = −4.77, y
+# con la base contra la pared el torso de Pepper acoplado se metía en el panel. Con el contacto en
+# x = −4.60 el torso queda a ~0.27 m del saliente. La base tiene su propio panel trasero.
+dock:
+  contact: [-4.60, -7.0]     # punto de contacto (cara frontal de la base), donde debe llegar el frente de Pepper
+  facing_deg: 0              # el haz IR sale hacia +x del mapa (hacia el interior de la sala)
+  predock: [-2.8, -7.0, 180] # pose de Nav2 delante de la base (x, y, yaw en grados): Pepper mira a la base
+map_offset: [1.5, -1.0]      # map = mundo + offset

@@ -1,0 +1,26 @@
+{
+  "amcl_rmse_m": 0.187,
+  "amcl_p95_m": 0.33,
+  "amcl_rmse_by_zone_m": {
+    "sala_oeste": 0.128,
+    "pasillo_sur": 0.134,
+    "sala_norte": 0.246,
+    "entrada": 0.219,
+    "esquina_base": 0.141
+  },
+  "head_z_min_m": 1.004,
+  "bent_from_min": null,
+  "duration_min": 21.7,
+  "percent": 85.7,
+  "zones": {
+    "sala_oeste": 100.0,
+    "pasillo_sur": 87.5,
+    "sala_norte": 81.0,
+    "entrada": 75.0,
+    "esquina_base": 97.7
+  },
+  "path_m": 213.5,
+  "dock_cycles": 2,
+  "battery_min": 11.4,
+  "finished": true
+}

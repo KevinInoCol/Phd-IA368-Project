@@ -153,6 +153,46 @@ class GeminiAgent:
                 "con su clave y run=true si piden correr o ir rápido; responde en una frase que vas para "
                 "allá (avisarás al llegar). Si nombran un lugar que no está en la lista, dilo. ")
 
+    def _cleaning_instruction(self):
+        """Zonas para limpiar y estado actual de batería/limpieza (vacío si pepper_cleaning no corre)."""
+        node = self.bridge_node
+        if node is None or not hasattr(node, "clean_zones"):
+            return ""
+        zones = node.clean_zones()
+        if not zones:
+            return ""
+        with node.state.lock:
+            summary = node.state_cleaning_summary()
+        names = "; ".join(f"{z['key']} = {z['name']}" for z in zones)
+        return ("También limpias el piso del museo (pasas por encima de la suciedad con tu base) y tienes una "
+                "base de carga en la esquina suroeste. Zonas que puedes limpiar: " + names + ". "
+                "Si te piden limpiar, llama a clean_area (zone=todo para todo el museo); para dejar de limpiar, "
+                "stop_cleaning; para ir a cargarte o salir de la base, charge. Si tu batería baja del 20 % vas "
+                "a cargarte solo y luego sigues limpiando donde te quedaste. Estado actual: " + summary + " ")
+
+    def _cleaning_tools(self):
+        node = self.bridge_node
+        zones = node.clean_zones() if node is not None and hasattr(node, "clean_zones") else []
+        if not zones:
+            return []
+        return [
+            {"name": "clean_area",
+             "description": "Limpia una zona del museo (o todo el museo) recorriéndola en zigzag con Nav2.",
+             "parameters": {"type": "OBJECT", "properties": {
+                 "zone": {"type": "STRING", "enum": [z["key"] for z in zones] + ["todo"],
+                          "description": "Clave de la zona, o 'todo' para todo el museo."}},
+                 "required": ["zone"]}},
+            {"name": "stop_cleaning", "description": "Deja de limpiar.",
+             "parameters": {"type": "OBJECT", "properties": {}}},
+            {"name": "charge",
+             "description": "Va a la base de carga y se acopla (dock), o sale de ella (undock).",
+             "parameters": {"type": "OBJECT", "properties": {
+                 "action": {"type": "STRING", "enum": ["dock", "undock"]}}, "required": ["action"]}},
+            {"name": "get_status",
+             "description": "Batería, si está cargando, qué está limpiando y el % limpio de cada zona.",
+             "parameters": {"type": "OBJECT", "properties": {}}},
+        ]
+
     def _get_tools_spec(self):
         places = self._places()
         go_to = [{
@@ -171,7 +211,7 @@ class GeminiAgent:
         }] if places else []
         return [
             {
-                "functionDeclarations": go_to + [
+                "functionDeclarations": go_to + self._cleaning_tools() + [
                     {
                         "name": "move_robot",
                         "description": "Mueve la base móvil del robot Pepper en una dirección determinada.",
@@ -255,9 +295,28 @@ class GeminiAgent:
             self.bridge_node.publish_head(yaw_rad, pitch_rad)
             return {"status": "executed", "yaw_deg": yaw_deg, "pitch_deg": pitch_deg}
 
+        elif name == "clean_area":
+            zone = args.get("zone", "todo")
+            err = self.bridge_node.start_cleaning(None if zone == "todo" else zone)
+            if err:
+                return {"status": "error", "error": err}
+            zname = next((z["name"] for z in self.bridge_node.clean_zones() if z["key"] == zone), "el museo")
+            return {"status": "cleaning", "zone": zname}
+
+        elif name == "stop_cleaning":
+            self.bridge_node.stop_cleaning()
+            return {"status": "stopped"}
+
+        elif name == "charge":
+            action = args.get("action", "dock")
+            err = self.bridge_node.dock(action)
+            return {"status": "error", "error": err} if err else {"status": "ok", "action": action}
+
+        elif name == "get_status":
+            return self.bridge_node.cleaning_status()
+
         elif name == "stop_robot":
-            self.bridge_node.cancel_go_to()
-            self.bridge_node.publish_cmd_vel(0.0, 0.0, 0.0)
+            self.bridge_node.stop_all()
             return {"status": "stopped"}
 
         elif name == "go_to_place":
@@ -299,7 +358,7 @@ class GeminiAgent:
             + MUSEUM_DESCRIPTION +
             "Tienes herramientas para mover tu cuerpo (move_robot), tu cabeza (move_head), frenar (stop_robot) "
             "y consultar tu posición (get_robot_pose). "
-            + self._places_instruction() +
+            + self._places_instruction() + self._cleaning_instruction() +
             "Con cada mensaje del usuario recibes la imagen actual de tu cámara frontal: úsala cuando "
             "te pregunten qué ves o necesites mirar algo, y describe sólo lo que de verdad aparece en ella. "
             "Cuando el usuario te pida una acción física, invoca la herramienta correspondiente. "
@@ -324,6 +383,19 @@ class GeminiAgent:
                 to = "al " + name[3:] if name.startswith("el ") else "a " + name
                 speech_text = (f"¡{'Corro' if res.get('run') else 'Voy'} {to}!"
                                if res.get("status") == "going" else f"No puedo ir: {res.get('error')}.")
+            elif action_name == "clean_area":
+                res = executed_actions[0][1]
+                speech_text = (f"Voy a limpiar {res.get('zone')}." if res.get("status") == "cleaning"
+                               else f"No puedo limpiar: {res.get('error')}.")
+            elif action_name == "stop_cleaning":
+                speech_text = "Dejo de limpiar."
+            elif action_name == "charge":
+                res = executed_actions[0][1]
+                speech_text = ("Voy a la base de carga." if res.get("action") == "dock" else "Salgo de la base.") \
+                    if res.get("status") == "ok" else f"No puedo: {res.get('error')}."
+            elif action_name == "get_status":
+                with self.bridge_node.state.lock:
+                    speech_text = self.bridge_node.state_cleaning_summary()
             elif action_name == "get_robot_pose":
                 pose = executed_actions[0][1]
                 speech_text = f"Estoy en la posición X: {pose.get('x')} m, Y: {pose.get('y')} m."

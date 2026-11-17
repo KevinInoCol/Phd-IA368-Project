@@ -4,9 +4,21 @@ Proyecto de curso con **Pepper simulado** en ROS 2 Jazzy + Gazebo Harmonic (Ubun
 RTX 4060). Empezado el 2026-10-15. `README.md` es el documento del proyecto (explicación,
 uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
-## Estado y próximos pasos (actualizado 2026-10-28)
+## Estado y próximos pasos (actualizado 2026-11-16)
 
-**Punto de guardado (2026-10-28, último commit 24a40d7, todo en `main` y Vercel al día)**
+**Punto de guardado (2026-11-16): Fase 4 = limpiar el museo + base de carga (pedido del profesor)**
+- Hecho: paquete `pepper_cleaning` (ver la sección "Limpieza del museo" más abajo), mapa de
+  navegación `pepper_museum/maps/museum_nav` (paneles colgantes), bridge/Gemini/app (pestaña
+  Limpieza), README "Fase 4", `results/limpieza/summary.md`, pestaña 5 del HTML
+  (`docs/src/fase5.tpl.html` + `build_fase5.py`). Resultados: 84 % limpio de media (3 corridas),
+  87 % con gente caminando, 8/8 recargas en mitad de la misión.
+- Implementado y **sin evaluar**: carriles de borde (`edge_inset`) y `people_margin` 0.45 m en
+  `cleaner` (v4). Siguiente: 3 corridas con `run_cleaning.sh` (mover las actuales test_r* a
+  historial_v3_*), `build_fase5.py`, README, Vercel.
+- APK con la pestaña Limpieza: hay que compilarla e instalarla
+  (`flutter build apk --release --split-per-abi --target-platform android-arm64 --no-tree-shake-icons`).
+
+**Punto de guardado anterior (2026-10-28, commit 24a40d7)**
 - Hecho y commiteado: Fases 1–3; voz sin micrófono; app de teléfono (`pepper_app/`, 3 pestañas:
   Cámara & Control, Chat Pepper con Gemini 3.5 Flash vía Vertex, Visitante con llamada + charla);
   autores y banderas PE/BR en las páginas; **lugares con nombre** (12 lugares, "vamos a la mesa",
@@ -276,6 +288,60 @@ de los paneles por una persona (en las dos configuraciones).
   modelo; (D) para eso hay que lanzar `visitors_demo.launch.py` en lugar de `demo.launch.py`.
 - Otros pendientes: mapa `/map` con los lugares en la app; etiquetar un lugar nuevo por voz
   ("este lugar se llama…", guardando la pose de AMCL en el YAML).
+
+## Limpieza del museo y base de carga — paquete `pepper_cleaning` (2026-11-16, pedido del profesor)
+
+El profesor pidió añadir **limpiar el escenario**. Se tomó la tarea del curso
+`Curso-Robotica/Section 2 - Homework - External Docking Script with ROS 2` (escena
+`dirty_evaluation3.ttt`: piso sucio que se limpia al pasar + base de carga con haz IR +
+`autodocking.py`). **No** la de la Sección 5 (cacas/plátanos). El usuario eligió "piso sucio que
+se limpia al pasar por encima" (no objetos que se recogen) y dejó elegir dónde va la base.
+
+- **Base de carga**: `config/dock.yaml`, contacto en map (−5.10, −7.0) contra la pared oeste
+  (x ≈ −5.21), haz hacia +x, predock (−3.3, −7.0, 180°). Esquina suroeste: ninguna persona
+  estática ni trayectoria de actor a < ~2 m en los 3 mundos. Modelo `models/charging_dock`
+  (panel con colisión que ven los láseres + placa sin colisión), creado con `ros_gz_sim create`.
+- Nodos: `dock_station` (haz IR emulado con el ground truth = física del sensor; sólo publica con
+  señal, como el `charging_base_node` del curso; `/pepper/dock/{signal,relative_angle,contact}`),
+  `battery_sim` (`/pepper/battery`, consumo 0.02 %/s + 0.6 %/m, carga 2 %/s; `/pepper/battery/set`),
+  `autodock` (máquina de estados de `autodocking.py`: TO_PREDOCK con Nav2 → SEEK → APPROACH → LOST →
+  CHARGING → UNDOCK; `/pepper/dock_cmd` dock|undock|cancel; umbral = max(20 %, 10 % + 1.4·0.6 %/m·d)),
+  `dirt_floor` (baldosas de 0.3 m en 5 zonas de `config/dirt.yaml`, 451 en `museum_test_people`;
+  se limpian con `/pepper/brush` y el ground truth = física del cepillo), `cleaner` (zigzag con
+  NavigateThroughPoses, cortado con el costmap global; repaso de huecos con su memoria de
+  cobertura **según AMCL**, nunca con el ground truth; pausa para cargar y sigue).
+- Launch `cleaning_demo.launch.py` (incluye visitors_demo **dentro de `GroupAction(scoped=True)`**:
+  museum.launch.py redefine `world` como "-s <ruta>" y se filtraba). Corridas sin GUI:
+  `pepper_cleaning/scripts/run_cleaning.sh <dir> [mundo] [batería]` → `tools/record_cleaning.py`
+  (run.jsonl, summary.json, cleaning.png). Fotos cenitales: `tools/overhead_shot.py`.
+- Bridge/app: `/api/clean`, `/api/dock`, estado en `/api/status`; herramientas de Gemini
+  `clean_area`, `stop_cleaning`, `charge`, `get_status`; pestaña 4 "Limpieza" en la app.
+
+**Trampas encontradas (verificadas)**
+- **Un modelo por baldosa (~450) bajó el RTF de ~0.93 a ~0.35** (todos los sensores renderizan
+  cada visual). Solución: una malla OBJ por zona con textura atlas; al limpiar se regenera la
+  malla (archivo nuevo: Gazebo cachea mallas y texturas por nombre) y se reemplaza el modelo, a
+  lo sumo 1 vez/s. Con eso RTF ~1.0 quieto; navegando ~0.65–0.9, igual con o sin cepillo
+  (es Nav2 + YOLO, no la suciedad).
+- **PBR de SDF: metalness por defecto 0.5** → la baldosa sale mucho más oscura que el piso.
+  Material que coincide con el `ground_plane` (difuso 0.8): ambient/specular 0.8, difuso 1,
+  `metalness 0`, `roughness 0.5`, y la textura en sRGB con el gris del piso (0.8 lineal → 231)
+  ya mezclado (`tools/make_dirt_textures.py`). Medido: 196/255 igual que el piso.
+- Gazebo sólo hace alpha *test* en texturas (no mezcla): por eso las texturas son opacas.
+- Borrar y crear un modelo **con el mismo nombre** en el mismo instante: la creación falla
+  (el borrado se aplica en el siguiente paso). Usar nombres nuevos.
+- `battery:=45` llega como entero y el parámetro es double → el nodo muere. En el launch:
+  `ParameterValue(..., value_type=float)`.
+- Nav2 rechaza (status 6 al instante, "another navigator is processing") un NavigateToPose
+  mientras NavigateThroughPoses sigue activo: autodock reintenta a 1 s.
+- `colcon --symlink-install` deja enlaces rotos en `build/` si se borran archivos de datos
+  (`error: can't copy ...`): borrar `build/pepper_cleaning install/pepper_cleaning`.
+- En un Node de rclpy no llamar `_clock` a un método (choca con el atributo interno).
+- **Matar sólo el PID de `ros2 launch` deja `gz sim` y todos los nodos huérfanos** (padre =
+  systemd). La corrida siguiente se conecta a ese Gazebo viejo (Pepper aparece acoplado en la
+  base, no en el inicio) y hay nodos duplicados. `run_cleaning.sh` lanza con `set -m` (grupo propio) y mata el
+  grupo (`kill -- -PGID`), y no arranca si ya hay un `gz sim -r` vivo. Antes de cualquier corrida:
+  `ps -eo pid,args | grep -E "gz sim|pepper_ws/install|/opt/ros/jazzy/lib/"` debe salir vacío.
 
 ## Regla principal: no duplicar la base
 

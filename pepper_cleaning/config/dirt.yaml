@@ -1,0 +1,25 @@
+# Piso sucio del museo (frame map = mundo + (1.5, -1), mapa museum_hokuyo).
+# Cada zona es un rectángulo [xmin, xmax, ymin, ymax] cubierto de baldosas sucias de `tile` m; sólo
+# se ponen baldosas sobre celdas libres del mapa (con `wall_margin` m a las paredes) y lejos de las
+# personas estáticas del mundo (`person_margin`) y de la base de carga (`dock_margin`).
+tile: 0.30
+wall_margin: 0.30
+person_margin: 0.55
+dock_margin: 0.9
+brush_radius: 0.25      # una baldosa se limpia si su centro pasa a menos de esto del centro de Pepper
+zones:
+  sala_oeste:
+    name: la sala oeste
+    rect: [-4.8, -2.4, -5.4, -1.8]
+  pasillo_sur:
+    name: el pasillo sur
+    rect: [-3.0, 3.0, -11.4, -9.6]
+  sala_norte:
+    name: la sala norte
+    rect: [-1.0, 4.0, 4.5, 6.6]
+  entrada:
+    name: la entrada
+    rect: [8.0, 10.0, 1.0, 4.0]
+  esquina_base:
+    name: la esquina de la base de carga
+    rect: [-4.8, -2.4, -8.7, -6.0]

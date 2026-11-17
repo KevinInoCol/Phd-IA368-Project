@@ -13,6 +13,7 @@ configuraciones de la base.
 | 1 | SLAM 2D con los **3 láseres bajos** de Pepper | ✅ primera versión (2026-10-15) |
 | 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | ✅ SLAM evaluado en el museo vacío, estático y dinámico; estelas y filtro dinámico (2026-10-20) |
 | 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada: 10/10 llamadas (2026-10-20); voz probada de punta a punta con audio sintetizado (2026-10-21); falta el micrófono real |
+| 4 | **Limpiar el escenario**: piso sucio que Pepper limpia al pasar, base de carga y autodocking (pedido del profesor) | ✅ todo el museo: 84 % limpio de media (87 % con gente caminando), 8/8 recargas en mitad de la misión (2026-11-16) |
 
 Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
 publicada en **https://pepper-ia368.vercel.app**.
@@ -468,3 +469,104 @@ frente a la persona estática más cercana (a su espalda) 39 s después de empez
 Detalle en [`results/fase3/voice/summary.md`](results/fase3/voice/summary.md).
 
 **Pendiente**: ajustar el nivel (`energy_factor`, `min_rms`) con el micrófono real.
+
+---
+
+## Fase 4 — Limpiar el museo y recargarse en la base
+
+Pedido del profesor: añadir al proyecto la función de **limpiar el escenario**. Se trajo al museo
+la tarea del curso de la Sección 2 (escena `dirty_evaluation3.ttt` de CoppeliaSim: un robot
+aspiradora limpia un piso sucio al pasar por encima y vuelve a una base de carga siguiendo un haz
+infrarrojo, `autodocking.py`). Paquete nuevo: **`pepper_cleaning`**.
+
+### Qué hay
+
+| Pieza | Qué hace |
+|---|---|
+| Base de carga (`models/charging_dock`, `config/dock.yaml`) | Esquina suroeste del museo, contra la pared oeste: contacto en map (−5.10, −7.0). Elegida porque ninguna persona estática ni trayectoria de actor pasa a menos de ~2 m en los tres mundos. Panel con contactos y emisor IR (lo ven los láseres) y placa en el piso |
+| `dock_station` | Emula el haz IR como el `charging_base_node` del curso: abanico de ±20° y 2.5 m; intensidad = 1 − d/2.5 y ángulo relativo **sólo cuando hay señal**; contacto cuando el frente de Pepper llega a los contactos |
+| `battery_sim` | `/pepper/battery` (`BatteryState`): consume 0.02 %/s + 0.6 % por metro recorrido; carga 2 %/s en la base. Valores de demo (el Pepper real dura horas) |
+| `autodock` | La máquina de estados de `autodocking.py`: Nav2 hasta delante de la base → busca el haz girando → sigue el haz → si lo pierde, gira hacia el último ángulo y, si no lo recupera, retrocede y vuelve a empezar → carga → sale. Se dispara cuando la batería baja de `max(20 %, 10 % + 1.4 · 0.6 %/m · distancia a la base)`: lejos de la base vuelve antes |
+| `dirt_floor` | **Piso sucio**: 451 baldosas de 0.3 m (41 m²) en 5 zonas (`config/dirt.yaml`), sobre celdas libres del mapa y lejos de las personas estáticas. Una baldosa se limpia cuando el centro de Pepper pasa a < 0.25 m con el cepillo encendido (`/pepper/brush`), y desaparece de Gazebo |
+| `cleaner` | **Limpieza por cobertura**: cada zona en zigzag (carriles cada 0.4 m) con Nav2 `NavigateThroughPoses`, cortando los carriles donde el costmap ve obstáculos (personas). Después hace un **repaso** de los huecos que no cubrió, según su propia memoria de cobertura (pose de AMCL). Si la batería baja, pausa, va a cargarse y **sigue donde se quedó**. Al terminar vuelve a la base |
+
+Pepper **no sabe dónde está la suciedad**, como una aspiradora real: recorre la zona entera.
+Ni la cobertura ni el repaso usan el ground truth. El ground truth sólo se usa para la física
+simulada del cepillo, el haz IR y la batería.
+
+**Detalle de implementación del piso sucio.** Con un modelo de Gazebo por baldosa (~450) el
+renderizado de los sensores bajaba el factor de tiempo real de ~0.93 a ~0.35. Ahora cada zona es
+una sola malla (OBJ) con una textura atlas, y al limpiar se regenera la malla de la zona (como
+mucho una vez por segundo). La textura es ruido periódico (barro y polvo) mezclado con el gris del
+piso en espacio lineal: lo limpio de una baldosa se ve igual que el piso (196/255 en la cámara de
+Pepper, medido), así que no se notan bordes (`tools/make_dirt_textures.py`).
+
+### Uso
+
+```bash
+# Demo con Gazebo y RViz (museo de prueba con 4 personas)
+ros2 launch pepper_cleaning cleaning_demo.launch.py
+ros2 launch pepper_cleaning cleaning_demo.launch.py world:=museum_with_people_moving battery:=45
+
+# Órdenes
+ros2 topic pub -w 1 --once /pepper/clean_cmd std_msgs/String "data: start"              # todo el museo
+ros2 topic pub -w 1 --once /pepper/clean_cmd std_msgs/String "data: start sala_oeste"   # una zona
+ros2 topic pub -w 1 --once /pepper/clean_cmd std_msgs/String "data: stop"
+ros2 topic pub -w 1 --once /pepper/dock_cmd std_msgs/String "data: dock"                # ir a cargarse
+ros2 topic pub -w 1 --once /pepper/battery/set std_msgs/Float32 "data: 15.0"            # batería baja
+ros2 topic pub -w 1 --once /pepper/dirt/reset std_msgs/Empty "{}"                       # ensuciar de nuevo
+
+# Corrida completa sin GUI con grabación (run.jsonl, summary.json, cleaning.png)
+pepper_cleaning/scripts/run_cleaning.sh results/limpieza/<nombre> [mundo] [batería inicial]
+```
+
+Desde la app (pestaña **Limpieza**) o el chat: "limpia la sala oeste", "limpia el museo", "deja
+de limpiar", "ve a cargarte", "¿cuánta batería tienes?". Gemini tiene las herramientas
+`clean_area`, `stop_cleaning`, `charge` y `get_status`. Sin Gemini, el parser local reconoce las
+mismas frases.
+
+### Resultados (2026-11-16)
+
+| Versión | Limpio | Sala oeste | Esquina base | Pasillo sur | Sala norte | Entrada | Tiempo (sim.) | Recorrido | Recargas en la misión |
+|---|---|---|---|---|---|---|---|---|---|
+| v1: sólo zigzag, mapa del láser | **80.9 %** | 98 % | 88 % | 87 % | 72 % | 69 % | 13.3 min | 151 m | 1 |
+| v2: + repaso, mapa del láser | **92.9 %** | 98 % | 96 % | 99 % | 90 % | 83 % | 22.1 min | 223 m | 2 |
+| final, corrida 1 | **85.7 %** | 100 % | 98 % | 88 % | 81 % | 75 % | 21.7 min | 214 m | 2 |
+| final, corrida 2 | **84.8 %** | 100 % | 91 % | 86 % | 82 % | 75 % | 22.9 min | 218 m | 2 |
+| final, corrida 3 | **81.5 %** | 77 % | 98 % | 88 % | 79 % | 73 % | 23.0 min | 217 m | 2 |
+| **final, media de 3** | **84.0 %** | 92 % | 95 % | 87 % | 80 % | 74 % | 22.5 min | 216 m | 6 |
+| final, museo con gente caminando | **87.1 %** | 100 % | 97 % | 92 % | 86 % | 69 % | 22.3 min | 215 m | 2 |
+
+Mundo `museum_test_people` (4 personas quietas) salvo la última fila (`museum_with_people_moving`: 10
+quietas y 16 caminando). Batería inicial 45 % para forzar recargas. v1 y v2 usaban el mapa del láser
+(41 m² de suciedad); las finales, el mapa de navegación con los salientes (39 m², 38 m² con la gente
+caminando). Detalle por corrida: `results/limpieza/*/summary.json` y `cleaning.png`.
+
+| Zona | sala_oeste | esquina_base | pasillo_sur | sala_norte | entrada |
+|---|---|---|---|---|---|
+| RMSE de AMCL (media de las 3) | 0.13 m | 0.15 m | 0.14 m | 0.26 m | 0.23 m |
+
+- **El repaso suma ~12 puntos** (v1 81 % → v2 93 %): bordes y tramos que Nav2 abandonó.
+- **8 de 8 recargas en mitad de la misión** salieron bien: pausa, Nav2 hasta la base, haz, carga,
+  salida y vuelta al mismo tramo. Con la reserva según la distancia, desde la sala norte Pepper
+  decidió volver con 22 % (con el umbral fijo de 20 % llegaba a la base con 8 %).
+- **Lo que queda sucio es sobre todo localización**: en la sala norte y la entrada AMCL se
+  equivoca ~0.24 m (0.13–0.15 m en el resto). Pepper recorre los carriles donde cree estar, la
+  pasada queda corrida y una franja del borde no se limpia; el repaso no la ve, porque usa la misma
+  pose. Por eso la entrada se queda en ~70–75 %.
+- **Con gente caminando no empeora** (87 %): los tramos se cortan con el costmap y Nav2 esquiva.
+- **Hallazgo: obstáculos que el láser no ve.** En dos corridas Pepper chocó al volver a la base
+  con la punta de un panel colgante en (−1.9, −5.7): a la altura de los láseres el panel termina 1 m
+  antes que a la de los hombros. Quedó doblado por la cadera (cabeza a 0.45 m) y no pudo acoplarse
+  (`results/limpieza/choque_panel/`). En el museo hay 13 m² así (paneles, salientes, vitrinas):
+  `pepper_museum/tools/museum_nav_map.py` los suma al mapa del hokuyo (`maps/museum_nav`), que es
+  ahora el mapa de Nav2/AMCL en `cleaning_demo`. La base también se separó 0.5 m de la pared
+  oeste, que está inclinada. Con eso no volvió a haber choques con paneles.
+- **Roce con una persona** (corrida 3): el carril pasó a 0.34 m de una persona quieta y el brazo
+  de Pepper la tocó; la cabeza bajó a 0.66 m y se recuperó en 3 s. El láser ve las piernas, no
+  los brazos.
+
+**Siguiente versión (implementada, sin evaluar todavía)**: carriles pegados al borde de cada zona
+(`edge_inset` 0.12 m, contra el corrimiento de AMCL) y 0.45 m de margen a todo obstáculo del costmap
+que no está en el mapa (`people_margin`).
+

@@ -67,6 +67,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   double _robotX = 0.0;
   double _robotY = 0.0;
   double _robotYaw = 0.0;
+  Map<String, dynamic> _status = {};  // /api/status completo (batería y limpieza para la pestaña 3)
 
   Timer? _telemetryTimer;
 
@@ -139,6 +140,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             _robotX = (data['robot_x'] as num?)?.toDouble() ?? 0.0;
             _robotY = (data['robot_y'] as num?)?.toDouble() ?? 0.0;
             _robotYaw = (data['robot_yaw'] as num?)?.toDouble() ?? 0.0;
+            _status = Map<String, dynamic>.from(data as Map);
             final speech = data['last_speech'] as String?;
             if (speech != null && speech.isNotEmpty) {
               _lastSpeech = speech;
@@ -357,6 +359,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             isConnected: _isConnected,
             isActive: _currentTabIndex == 2,
           ),
+
+          // Tab 3: limpieza del piso y base de carga
+          CleaningView(
+            baseUrl: _baseUrl,
+            isConnected: _isConnected,
+            isActive: _currentTabIndex == 3,
+            status: _status,
+            onCommand: _fetchStatus,
+          ),
         ],
       ),
       bottomNavigationBar: Container(
@@ -367,6 +378,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: BottomNavigationBar(
           currentIndex: _currentTabIndex,
           onTap: (idx) => setState(() => _currentTabIndex = idx),
+          type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
           selectedItemColor: const Color(0xFF00E5FF),
           unselectedItemColor: Colors.white38,
@@ -387,6 +399,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               icon: Icon(Icons.person_pin_circle_outlined),
               activeIcon: Icon(Icons.person_pin_circle_rounded, color: Color(0xFF00E5FF)),
               label: 'Visitante',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.cleaning_services_outlined),
+              activeIcon: Icon(Icons.cleaning_services_rounded, color: Color(0xFF00E5FF)),
+              label: 'Limpieza',
             ),
           ],
         ),
@@ -1769,5 +1786,295 @@ class _VisitorViewState extends State<VisitorView> {
         ),
       ),
     );
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+// TAB 3: LIMPIEZA Y BASE DE CARGA (pepper_cleaning)
+// -----------------------------------------------------------------------------
+class CleaningView extends StatefulWidget {
+  final String baseUrl;
+  final bool isConnected;
+  final bool isActive;
+  final Map<String, dynamic> status;
+  final VoidCallback onCommand;
+
+  const CleaningView({
+    super.key,
+    required this.baseUrl,
+    required this.isConnected,
+    required this.isActive,
+    required this.status,
+    required this.onCommand,
+  });
+
+  @override
+  State<CleaningView> createState() => _CleaningViewState();
+}
+
+class _CleaningViewState extends State<CleaningView> {
+  static const _accent = Color(0xFF00E5FF);
+  static const _card = Color(0xFF131A29);
+  static const _green = Color(0xFF00E676);
+  static const _amber = Color(0xFFFFB300);
+  bool _busy = false;
+
+  static const _dockText = {
+    'IDLE': 'Libre',
+    'TO_PREDOCK': 'Yendo a la base',
+    'SEEK': 'Buscando la señal',
+    'APPROACH': 'Acercándose a la base',
+    'LOST': 'Señal perdida: recuperando',
+    'CHARGING': 'Cargando en la base',
+    'UNDOCK': 'Saliendo de la base',
+    'FAILED': 'No pudo acoplarse',
+  };
+  static const _cleanText = {
+    'IDLE': 'Sin limpiar',
+    'CLEANING': 'Limpiando',
+    'PAUSED_DOCK': 'En pausa: cargando',
+    'DONE': 'Terminó',
+  };
+
+  Future<void> _post(String path, Map<String, dynamic> body) async {
+    setState(() => _busy = true);
+    try {
+      final res = await http
+          .post(Uri.parse('${widget.baseUrl}$path'), headers: {'Content-Type': 'application/json'}, body: json.encode(body))
+          .timeout(const Duration(seconds: 5));
+      final data = json.decode(res.body);
+      if (res.statusCode != 200 && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No se pudo: ${data['error'] ?? res.statusCode}')));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sin conexión con el bridge: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+      widget.onCommand();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final st = widget.status;
+    final battery = (st['battery'] as num?)?.toDouble();
+    final charging = st['charging'] == true;
+    final dock = st['dock_state'] as String?;
+    final clean = st['clean_state'] as String?;
+    final zones = (st['clean_zones'] as List?) ?? [];
+    final museum = (st['clean_percent'] as num?)?.toDouble();
+    final mission = (st['clean_mission_percent'] as num?)?.toDouble();
+    final available = battery != null || zones.isNotEmpty;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (!available)
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: _amber.withOpacity(0.12), borderRadius: BorderRadius.circular(12)),
+              child: const Text(
+                'Sin datos de limpieza: lanza pepper_cleaning cleaning_demo.launch.py en el PC.',
+                style: TextStyle(color: _amber),
+              ),
+            ),
+          // --- batería y base
+          _cardBox(
+            Row(
+              children: [
+                Icon(
+                  charging ? Icons.battery_charging_full_rounded : _batteryIcon(battery),
+                  color: _batteryColor(battery, charging),
+                  size: 44,
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(battery == null ? '— %' : '${battery.toStringAsFixed(0)} %',
+                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: (battery ?? 0) / 100,
+                          minHeight: 8,
+                          backgroundColor: Colors.white12,
+                          color: _batteryColor(battery, charging),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text('Base de carga: ${_dockText[dock] ?? (dock ?? '—')}',
+                          style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _button(Icons.ev_station_rounded, 'Ir a cargar', _amber,
+                    () => _post('/api/dock', {'action': 'dock'})),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _button(Icons.logout_rounded, 'Salir de la base', Colors.white70,
+                    () => _post('/api/dock', {'action': 'undock'})),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // --- limpieza
+          _cardBox(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.cleaning_services_rounded, color: _accent),
+                    const SizedBox(width: 8),
+                    Text(_cleanText[clean] ?? (clean ?? '—'),
+                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                    if (clean == 'CLEANING' && st['clean_zone'] != null)
+                      Flexible(
+                        child: Text('  ${st['clean_zone']}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Museo: ${museum == null ? '—' : '${museum.toStringAsFixed(0)} %'} limpio'
+                  '${mission != null && clean != 'IDLE' ? '   ·   esta orden: ${mission.toStringAsFixed(0)} %' : ''}',
+                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                ),
+                const SizedBox(height: 10),
+                for (final z in zones) _zoneRow(Map<String, dynamic>.from(z as Map)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _button(Icons.play_arrow_rounded, 'Limpiar todo', _green,
+                    () => _post('/api/clean', {'action': 'start'})),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _button(Icons.stop_rounded, 'Detener', Colors.redAccent,
+                    () => _post('/api/clean', {'action': 'stop'})),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // --- cámara inferior: se ve el piso sucio y cómo queda limpio
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: 4 / 3,
+              child: Container(
+                color: Colors.black,
+                child: widget.isActive && widget.isConnected
+                    ? Mjpeg(
+                        isLive: true,
+                        stream: '${widget.baseUrl}/stream/bottom',
+                        timeout: const Duration(seconds: 3),
+                        error: (context, error, stack) =>
+                            const Center(child: Text('Reconectando cámara...', style: TextStyle(color: Colors.white54))),
+                        loading: (context) => const Center(child: CircularProgressIndicator(color: _accent)),
+                      )
+                    : const Center(child: Text('Sin conexión', style: TextStyle(color: Colors.white54))),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text('Cámara inferior de Pepper (el piso)',
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.5))),
+        ],
+      ),
+    );
+  }
+
+  Widget _zoneRow(Map<String, dynamic> z) {
+    final pct = (z['percent'] as num?)?.toDouble() ?? 0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${z['name']}  ${pct.toStringAsFixed(0)} %', style: const TextStyle(fontSize: 13)),
+                const SizedBox(height: 4),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: pct / 100,
+                    minHeight: 6,
+                    backgroundColor: const Color(0xFF6D4C2F).withOpacity(0.6),
+                    color: _green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: 'Limpiar ${z['name']}',
+            icon: const Icon(Icons.cleaning_services_outlined, color: _accent, size: 20),
+            onPressed: _busy || !widget.isConnected ? null : () => _post('/api/clean', {'action': 'start', 'zone': z['key']}),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _cardBox(Widget child) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: _card,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
+        child: child,
+      );
+
+  Widget _button(IconData icon, String label, Color color, VoidCallback onTap) => ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color.withOpacity(0.15),
+          foregroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: color.withOpacity(0.5))),
+        ),
+        onPressed: _busy || !widget.isConnected ? null : onTap,
+        icon: Icon(icon, size: 20),
+        label: Text(label, style: const TextStyle(fontSize: 13)),
+      );
+
+  IconData _batteryIcon(double? b) {
+    if (b == null) return Icons.battery_unknown_rounded;
+    if (b > 80) return Icons.battery_full_rounded;
+    if (b > 50) return Icons.battery_5_bar_rounded;
+    if (b > 20) return Icons.battery_3_bar_rounded;
+    return Icons.battery_alert_rounded;
+  }
+
+  Color _batteryColor(double? b, bool charging) {
+    if (charging) return _green;
+    if (b == null) return Colors.white38;
+    if (b > 50) return _green;
+    if (b > 20) return _amber;
+    return Colors.redAccent;
   }
 }

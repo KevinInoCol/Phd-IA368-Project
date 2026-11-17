@@ -1,0 +1,15 @@
+{
+  "duration_min": 13.3,
+  "percent": 80.9,
+  "zones": {
+    "sala_oeste": 98.4,
+    "pasillo_sur": 86.7,
+    "sala_norte": 72.2,
+    "entrada": 69.3,
+    "esquina_base": 87.5
+  },
+  "path_m": 150.8,
+  "dock_cycles": 1,
+  "battery_min": 14.2,
+  "finished": true
+}

@@ -1,0 +1,170 @@
+<div class="phase" id="fase5" role="tabpanel" aria-labelledby="tab-fase5">
+<section class="divider">
+  <div class="wrap">
+    <div class="eyebrow">IA368 · Robótica · Pedido del profesor</div>
+    <h1>Pepper limpia el museo <span class="hl">y vuelve solo a cargarse</span></h1>
+    <p class="lead">El profesor pidió que Pepper pudiera limpiar el escenario. Se trajo al museo la tarea de la Sección 2 del curso: un piso sucio que se limpia al pasar por encima y una base de carga que el robot encuentra siguiendo un haz infrarrojo. Pepper recorre cada zona en zigzag, revisa los huecos que le quedaron y, cuando le falta batería, deja la limpieza, se carga y sigue donde iba.</p>
+    <div class="kpis">
+      <div class="kpi good"><b>@@KPI_PCT</b><span>del piso sucio queda limpio (media de @@KPI_RUNS corridas)</span></div>
+      <div class="kpi"><b>@@KPI_DOCKS</b><span>recargas en mitad de la misión (@@ALL_RUNS corridas), todas acopladas</span></div>
+      <div class="kpi"><b>@@KPI_MIN min</b><span>para limpiar 39 m² en 5 zonas (tiempo simulado)</span></div>
+      <div class="kpi"><b>1.5 cm</b><span>de error lateral al acoplarse</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="escenario5">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">01</span>De CoppeliaSim al museo</div>
+      <h2>La tarea del curso, ahora con Pepper, Nav2 y un museo con gente</h2>
+      <p class="lead">En la Sección 2 un robot tipo aspiradora limpiaba una habitación de 3 × 3 m y volvía a su base guiado sólo por el haz IR (<code>autodocking.py</code>). Aquí el espacio es un museo de 19 × 22 m con personas, así que el viaje largo lo hace Nav2 y el haz se usa sólo para el último metro, igual que en el curso. Todo va en el paquete nuevo <code>pepper_cleaning</code>.</p>
+    </div>
+    <ol class="steps">
+      <li class="ours"><span class="k">BASE</span><h3><code>dock_station</code></h3><p>Abanico IR de ±20° y 2.5 m. Publica la intensidad (1 − d/2.5) y el ángulo relativo <b>sólo cuando hay señal</b>, como el <code>charging_base_node</code> del curso. Detecta el contacto.</p></li>
+      <li class="ours"><span class="k">BATERÍA</span><h3><code>battery_sim</code></h3><p><code>BatteryState</code>: gasta 0.02 %/s más 0.6 % por metro, y carga 2 %/s en la base. Son valores de demo; el Pepper real dura horas.</p></li>
+      <li class="ours"><span class="k">ACOPLARSE</span><h3><code>autodock</code></h3><p>La máquina de estados de la tarea: Nav2 hasta delante de la base → buscar el haz → seguirlo → recuperar la señal si se pierde → cargar → salir.</p></li>
+      <li class="ours"><span class="k">ENSUCIAR</span><h3><code>dirt_floor</code></h3><p>433 baldosas de 0.3 m (39 m²) en 5 zonas del museo. Una baldosa se limpia cuando el centro de Pepper pasa a menos de 0.25 m con el cepillo encendido.</p></li>
+      <li class="ours"><span class="k">LIMPIAR</span><h3><code>cleaner</code></h3><p>Zigzag con Nav2, cortado donde los láseres ven personas, y luego un repaso de lo que le faltó. Si se pausa para cargar, sigue en el mismo tramo.</p></li>
+      <li><span class="k">SIN TRAMPA</span><h3>Pepper no ve la suciedad</h3><p>Como una aspiradora real, recorre la zona entera. El ground truth sólo mueve la física simulada: el cepillo, el haz y la batería. Para planificar, Pepper usa su mapa, el costmap y AMCL.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="base">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">02</span>Base de carga y autodocking</div>
+      <h2>Una esquina sin gente, y el último metro guiado por el haz</h2>
+      <p class="lead">La base está en la esquina suroeste. Ninguna persona quieta ni trayectoria de las que caminan pasa a menos de ~2 m en los tres mundos del museo. Está separada 0.5 m de la pared porque esa pared tiene paneles inclinados: a 1 m de altura sobresalen 46 cm, y Pepper acoplado los tocaba con el torso.</p>
+    </div>
+    <div class="cols">
+      <figure class="shots crops">
+        <img alt="Vista cenital de Pepper acoplado en la base de carga, en la esquina suroeste del museo" src="@@dock_top">
+        <figcaption><span>Pepper acoplado, visto desde arriba: la placa con la franja azul, el panel con los contactos y el emisor IR.</span></figcaption>
+      </figure>
+      <div class="head" style="gap:14px;align-content:start">
+        <ol class="steps" style="grid-template-columns:minmax(0,1fr)">
+          <li class="ours"><span class="k">CUÁNDO</span><h3>Vuelve con margen</h3><p>Cuando la batería baja de max(20 %, 10 % + 0.84 % × metros hasta la base). Desde lejos vuelve antes; en una prueba decidió volver con 22 %.</p></li>
+          <li class="ours"><span class="k">NAV2</span><h3>Hasta 1.8 m de la base</h3><p>NavigateToPose. Si Nav2 sigue ocupado con un tramo de limpieza, rechaza el objetivo, y el nodo reintenta al segundo.</p></li>
+          <li class="ours"><span class="k">HAZ</span><h3>Seguir el ángulo</h3><p>Gira en proporción al ángulo y avanza más lento cuanto más fuerte es la señal.</p></li>
+          <li class="ours"><span class="k">SEÑAL PERDIDA</span><h3>Recuperar</h3><p>Gira hacia el último ángulo que vio. Si no la encuentra, retrocede y vuelve a pedir la pose a Nav2.</p></li>
+        </ol>
+      </div>
+    </div>
+    <div class="table-wrap" style="margin-top:24px">
+      <table>
+        <thead><tr><th>Prueba</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td>batería al 15 % → base → carga → salida</td><td class="new">acoplado a 1.5 cm del centro, 15 → 96 % y sale solo</td></tr>
+          <tr><td>teletransporte fuera del haz a mitad de la aproximación</td><td class="new">pierde la señal, gira, vuelve a Nav2 y se acopla</td></tr>
+          <tr><td>recargas en mitad de la limpieza (@@ALL_RUNS corridas completas)</td><td class="new">@@KPI_DOCKS de @@KPI_DOCKS: pausa, carga y sigue en el mismo tramo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="piso">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">03</span>El piso sucio</div>
+      <h2>Barro y polvo que desaparecen bajo la base de Pepper</h2>
+      <p class="lead">Cada zona es una sola malla de baldosas con una textura generada (ruido periódico de barro y polvo). Al limpiar, la malla se regenera sin esas baldosas y debajo aparece el piso. La parte limpia de una baldosa se ve igual que el piso: 196/255 en la cámara de Pepper, medido.</p>
+    </div>
+    <figure class="shots">
+      <img alt="Vista cenital de la sala oeste antes y después de que Pepper la limpie" src="@@before_after">
+      <figcaption><span>Sala oeste antes de limpiar.</span><span>La misma sala después: queda una sola baldosa sucia, pegada a la pared (arriba a la izquierda); Pepper ya sale hacia la zona siguiente.</span></figcaption>
+    </figure>
+    <div class="takeaways" style="margin-top:24px">
+      <div class="take neg"><h3>450 modelos: el simulador a un tercio</h3><p>Con un modelo de Gazebo por baldosa, el factor de tiempo real bajó de 0.93 a 0.35, porque todos los sensores de Pepper los renderizan. Con una malla por zona volvió a ~1.0.</p></div>
+      <div class="take"><h3>El material, calibrado</h3><p>El PBR de SDF trae metalness 0.5 por defecto, y la baldosa salía mucho más oscura que el piso. Con metalness 0 y la textura mezclada en espacio lineal y guardada en sRGB, los bordes no se notan.</p></div>
+      <div class="take"><h3>La suciedad no frena la simulación</h3><p>Navegando, el factor de tiempo real queda en 0.65–0.9 con el cepillo encendido o apagado. La carga viene de Nav2 y YOLO, no del piso.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cobertura">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">04</span>Limpieza por cobertura</div>
+      <h2>Zigzag, repaso y pausas para cargar</h2>
+      <p class="lead">Los carriles van cada 0.4 m, menos que el ancho del cepillo, para que se solapen, y se cortan donde el mapa no deja pasar. Justo antes de mandar cada tramo, Pepper lo vuelve a cortar con lo que ven sus láseres (el costmap global), y así no intenta atravesar a una persona. Al terminar los carriles de una zona revisa los huecos que no cubrió según su memoria de cobertura, construida con su pose de AMCL.</p>
+    </div>
+    <figure class="shots">
+      <img alt="Mapa del museo con las baldosas limpias en verde y sucias en marrón, la trayectoria de Pepper y la curva de limpieza y batería" src="@@run_best">
+      <figcaption><span>Corrida completa. Izquierda: verde = limpiado, marrón = sigue sucio, en azul la trayectoria de Pepper. Derecha: % limpio y batería; el sombreado marca cuándo carga en la base.</span></figcaption>
+    </figure>
+    <div class="table-wrap" style="margin-top:24px">
+      <table>
+        <thead><tr><th>Versión</th><th>Limpio</th><th>Sala oeste</th><th>Esquina</th><th>Pasillo sur</th><th>Sala norte</th><th>Entrada</th><th>Tiempo</th><th>Recorrido</th><th>Recargas</th></tr></thead>
+        <tbody>
+@@RESULTS_ROWS
+        </tbody>
+      </table>
+    </div>
+    <p class="tree-cap">Mundo <code>museum_test_people</code> (4 personas quietas), salvo donde se indica. Tiempo simulado. v1 y v2 usaban el mapa del láser solo: no son comparables uno a uno con las corridas finales, que evitan los salientes (39 m² de suciedad en lugar de 41).</p>
+    <div class="takeaways">
+      <div class="take"><h3>El repaso suma ~12 puntos</h3><p>De 81 % (v1, sólo zigzag) a 93 % (v2), recuperando bordes y tramos abandonados.</p></div>
+      <div class="take neg"><h3>Lo que falta es localización</h3><p>Las franjas que quedan sucias están donde AMCL se equivoca más: @@AMCL_BAD m en la sala norte y la entrada, frente a @@AMCL_GOOD m en el resto. Pepper cree que pasó por ahí y el repaso no las incluye.</p></div>
+      <div class="take neg"><h3>Junto a las personas</h3><p>En una corrida, el carril pasó a 0.34 m de una persona quieta y el brazo de Pepper la rozó: la cabeza bajó a 0.66 m y se recuperó en 3 s. El láser ve las piernas, no los brazos. La versión siguiente deja 0.45 m a todo obstáculo que no está en el mapa.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="panel">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">05</span>Un hallazgo: lo que el láser no ve</div>
+      <h2>Pepper chocó con un panel colgante y quedó doblado</h2>
+      <p class="lead">En dos corridas, Pepper terminó de limpiar, fue a la base y no pudo acoplarse. Desde arriba se veía doblado por la cadera, con la cabeza a 0.45 m del piso en lugar de 1.0 m. Al registrar la altura de la cabeza cada segundo apareció el momento exacto: un golpe al pasar por la punta de un panel de la sala oeste. A la altura del láser ese panel no existe; a la altura de los hombros de Pepper, sí.</p>
+    </div>
+    <div class="cols">
+      <figure class="shots crops">
+        <img alt="Cortes de la malla del museo a varias alturas en la esquina del choque, con la trayectoria de Pepper" src="@@slices">
+        <figcaption><span>La malla cortada a 0.15–1.2 m. A 0.9–1.2 m (naranja y rojo) el panel llega 1 m más lejos que a la altura de los láseres. Las cruces marcan dónde la cabeza cae a 0.45 m.</span></figcaption>
+      </figure>
+      <div class="head" style="gap:14px;align-content:start">
+        <figure class="shots crops"><img alt="Pepper doblado junto a la base, visto desde arriba" src="@@bent"><figcaption><span>Pepper doblado: el torso roza el piso y la base ya no puede girar.</span></figcaption></figure>
+        <p class="tree-cap">En el museo hay 13 m² de obstáculos entre 0.25 y 1.25 m que el láser no ve: paneles, salientes y vitrinas. La solución fue un mapa de navegación (<code>maps/museum_nav</code>) que suma al mapa del hokuyo esos cortes de la malla. Con él, en las corridas finales ya no hubo choques con paneles. En un robot real esto lo haría la cámara de profundidad en el costmap.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="app5">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">06</span>En la app y por voz</div>
+      <h2>“Limpia la sala oeste”, “ve a cargarte”, “¿cuánta batería tienes?”</h2>
+      <p class="lead">La app tiene una cuarta pestaña, <b>Limpieza</b>: batería y estado de la base, el porcentaje limpio de cada zona con un botón para limpiarla, “Limpiar todo”, “Detener”, “Ir a cargar” y la cámara inferior de Pepper para ver el piso. En el chat, Gemini tiene las herramientas <code>clean_area</code>, <code>stop_cleaning</code>, <code>charge</code> y <code>get_status</code>, y las frases de Pepper (“Me queda 20 % de batería. Voy a cargarme.”) aparecen en el chat. Sin Gemini, el parser local entiende las mismas órdenes.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Pregunta en el chat</th><th>Respuesta de Pepper (Gemini 3.5 Flash, real)</th></tr></thead>
+        <tbody>
+          <tr><td>¿Cuánta batería te queda y cómo va la limpieza?</td><td class="new">“Tengo un 24 % de batería y actualmente estoy limpiando la esquina de la base de carga. Hasta ahora, el piso del museo está limpio en un 13 %.”</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="plan5">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">07</span>Estado</div>
+      <h2>Qué quedó hecho y qué se puede mejorar</h2>
+    </div>
+    <ol class="steps">
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Base y autodocking</h3><p>Haz IR, recuperación de la señal, vuelta con reserva según la distancia.</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Piso sucio</h3><p>Una malla por zona, material calibrado, sin costo para la simulación.</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Cobertura con repaso</h3><p>Zigzag, cortes con el costmap, repaso y pausas para cargar.</p></li>
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>App, chat y voz</h3><p>Pestaña Limpieza y cuatro herramientas de Gemini.</p></li>
+      <li><span class="k"><span class="st">EN CURSO</span></span><h3>Bordes y personas</h3><p>Carriles pegados al borde de cada zona (contra el corrimiento de AMCL) y 0.45 m de margen a las personas: implementado, falta medirlo con las corridas.</p></li>
+      <li><span class="k"><span class="st">IDEA</span></span><h3>Ver la suciedad</h3><p>Detectar las manchas con la cámara inferior y limpiar primero donde hay, en lugar de recorrerlo todo.</p></li>
+      <li><span class="k"><span class="st">IDEA</span></span><h3>Profundidad en el costmap</h3><p>Que la cámara de profundidad marque los paneles colgantes, en vez de sacarlos de la malla.</p></li>
+    </ol>
+  </div>
+</section>
+</div>

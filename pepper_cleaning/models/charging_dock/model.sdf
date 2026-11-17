@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- Base de carga de Pepper. Origen = punto de contacto (cara frontal del panel) a nivel del piso;
+     el haz IR sale hacia +x del modelo. El panel queda detrás (x < 0), contra la pared. -->
+<sdf version="1.9">
+  <model name="charging_dock">
+    <static>true</static>
+    <link name="base">
+      <!-- panel trasero con los contactos: lo ven los láseres (z 0.02–0.32) -->
+      <collision name="panel_col">
+        <pose>-0.05 0 0.16 0 0 0</pose>
+        <geometry><box><size>0.10 0.50 0.32</size></box></geometry>
+      </collision>
+      <visual name="panel">
+        <pose>-0.05 0 0.16 0 0 0</pose>
+        <geometry><box><size>0.10 0.50 0.32</size></box></geometry>
+        <material><ambient>0.15 0.15 0.18 1</ambient><diffuse>0.2 0.2 0.25 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular></material>
+      </visual>
+      <!-- placa en el piso (sin colisión, Pepper pasa por encima) -->
+      <visual name="plate">
+        <pose>0.25 0 0.004 0 0 0</pose>
+        <geometry><box><size>0.50 0.56 0.008</size></box></geometry>
+        <material><ambient>0.85 0.85 0.88 1</ambient><diffuse>0.9 0.9 0.92 1</diffuse></material>
+      </visual>
+      <visual name="plate_stripe">
+        <pose>0.25 0 0.009 0 0 0</pose>
+        <geometry><box><size>0.46 0.06 0.002</size></box></geometry>
+        <material><ambient>0.1 0.5 0.9 1</ambient><diffuse>0.1 0.5 0.9 1</diffuse>
+          <emissive>0.05 0.25 0.45 1</emissive></material>
+      </visual>
+      <!-- contactos metálicos -->
+      <visual name="contact_l">
+        <pose>0.002 0.10 0.10 0 0 0</pose>
+        <geometry><box><size>0.006 0.06 0.03</size></box></geometry>
+        <material><ambient>0.8 0.65 0.2 1</ambient><diffuse>0.9 0.75 0.3 1</diffuse></material>
+      </visual>
+      <visual name="contact_r">
+        <pose>0.002 -0.10 0.10 0 0 0</pose>
+        <geometry><box><size>0.006 0.06 0.03</size></box></geometry>
+        <material><ambient>0.8 0.65 0.2 1</ambient><diffuse>0.9 0.75 0.3 1</diffuse></material>
+      </visual>
+      <!-- emisor IR y LED de estado -->
+      <visual name="ir_emitter">
+        <pose>0.002 0 0.22 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.025</radius><length>0.006</length></cylinder></geometry>
+        <material><ambient>0.5 0 0 1</ambient><diffuse>0.6 0 0 1</diffuse><emissive>0.6 0 0 1</emissive></material>
+      </visual>
+      <visual name="led">
+        <pose>-0.05 0 0.325 0 0 0</pose>
+        <geometry><cylinder><radius>0.03</radius><length>0.01</length></cylinder></geometry>
+        <material><ambient>0 0.8 0.2 1</ambient><diffuse>0 0.9 0.2 1</diffuse><emissive>0 0.9 0.2 1</emissive></material>
+      </visual>
+    </link>
+  </model>
+</sdf>

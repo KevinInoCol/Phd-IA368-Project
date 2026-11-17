@@ -23,6 +23,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from builtin_interfaces.msg import Duration
 from std_msgs.msg import Int16MultiArray, String
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import BatteryState
 from cv_bridge import CvBridge
 import cv2
 import numpy as np
@@ -67,6 +68,12 @@ class AppBridgeState:
         # Lugares con nombre del museo (place_navigator): [{'key', 'name', 'aliases', 'about', 'pose'}]
         self.places = []
         self.place_status = {}
+        # Limpieza y batería (pepper_cleaning): batería, autodock, cleaner y piso sucio
+        self.battery = None        # %
+        self.charging = False
+        self.dock_status = {}
+        self.clean_status = {}
+        self.dirt_status = {}
 
     def add_visitor_log(self, kind, text, phase=None):
         with self.lock:
@@ -200,6 +207,20 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
         elif path == '/api/visitor_voice':
             self.handle_visitor_voice(post_data)
 
+        elif path == '/api/clean':
+            action = str(payload.get('action', 'start'))
+            zone = payload.get('zone') or None
+            err = None
+            if self.bridge_node:
+                err = (self.bridge_node.stop_cleaning() if action == 'stop'
+                       else self.bridge_node.start_cleaning(zone))
+            self._send_json(200 if not err else 409, {'status': 'ok' if not err else 'error', 'error': err})
+
+        elif path == '/api/dock':
+            action = str(payload.get('action', 'dock'))
+            err = self.bridge_node.dock(action) if self.bridge_node else None
+            self._send_json(200 if not err else 409, {'status': 'ok' if not err else 'error', 'error': err})
+
         elif path == '/api/visitor_end':
             if self.bridge_node:
                 self.bridge_node.visitor_end('El operador terminó la charla.')
@@ -316,9 +337,26 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
                 'robot_yaw': round(self.state.robot_yaw, 3),
                 'last_speech': self.state.last_speech,
                 'place_status': self.state.place_status,
-                'has_front_camera': self.state.front_frame_jpeg is not None
+                'has_front_camera': self.state.front_frame_jpeg is not None,
+                **self.state_cleaning(),
             }
         self.wfile.write(json.dumps(data).encode('utf-8'))
+
+    def state_cleaning(self):
+        """Batería, base de carga y limpieza (llamar con state.lock tomado)."""
+        st = self.state
+        zones = st.dirt_status.get('zones', {})
+        return {
+            'battery': None if st.battery is None else round(st.battery, 1),
+            'charging': st.charging,
+            'dock_state': st.dock_status.get('state'),
+            'clean_state': st.clean_status.get('state'),
+            'clean_zone': st.clean_status.get('zone_name'),
+            'clean_percent': st.dirt_status.get('percent'),
+            'clean_mission_percent': st.clean_status.get('mission_percent'),
+            'clean_zones': [{'key': k, 'name': z.get('name', k), 'percent': z.get('percent'),
+                             'cleaned': z.get('cleaned'), 'total': z.get('total')} for k, z in zones.items()],
+        }
 
     def handle_snapshot(self, camera='front'):
         with self.state.lock:
@@ -463,6 +501,15 @@ class PepperBridgeNode(Node):
         self.create_subscription(String, '/pepper/places', self.places_cb,
                                  QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
         self.create_subscription(String, '/pepper/place_status', self.place_status_cb, 10)
+
+        # Limpieza y batería (pepper_cleaning: cleaning_demo.launch.py)
+        self.clean_pub = self.create_publisher(String, '/pepper/clean_cmd', 10)
+        self.dock_pub = self.create_publisher(String, '/pepper/dock_cmd', 10)
+        self.create_subscription(BatteryState, '/pepper/battery', self.battery_cb, 10)
+        self.create_subscription(String, '/pepper/dock_status', self.dock_status_cb, 10)
+        self.create_subscription(String, '/pepper/clean_status', self.clean_status_cb, 10)
+        self.create_subscription(String, '/pepper/dirt/status', self.dirt_status_cb,
+                                 QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
 
         # Voz del teléfono: la transcribe voice_listener (pepper_visitors, source:=topic)
         self.audio_pub = self.create_publisher(Int16MultiArray, '/pepper/voice/audio', 10)
@@ -650,6 +697,99 @@ class PepperBridgeNode(Node):
     def cancel_go_to(self):
         self.go_to_pub.publish(String(data=json.dumps({'cancel': True})))
 
+    # ---------------------------------------------------------------- limpieza y batería
+    def battery_cb(self, msg):
+        with self.state.lock:
+            self.state.battery = msg.percentage * 100.0
+            self.state.charging = msg.power_supply_status in (BatteryState.POWER_SUPPLY_STATUS_CHARGING,
+                                                              BatteryState.POWER_SUPPLY_STATUS_FULL)
+
+    def _status_text_to_chat(self, old, new):
+        """Las frases de autodock/cleaner (voy a cargarme, terminé...) también van al chat de la app."""
+        text = new.get('text')
+        if text and (text != old.get('text') or new.get('state') != old.get('state')):
+            self.state.add_chat('pepper', text)
+
+    def dock_status_cb(self, msg):
+        st = json.loads(msg.data)
+        with self.state.lock:
+            old, self.state.dock_status = self.state.dock_status, st
+        self._status_text_to_chat(old, st)
+
+    def clean_status_cb(self, msg):
+        st = json.loads(msg.data)
+        with self.state.lock:
+            old, self.state.clean_status = self.state.clean_status, st
+        self._status_text_to_chat(old, st)
+
+    def dirt_status_cb(self, msg):
+        with self.state.lock:
+            self.state.dirt_status = json.loads(msg.data)
+
+    def clean_zones(self):
+        """[{'key', 'name'}] de las zonas que se pueden limpiar (vacío si dirt_floor no corre)."""
+        with self.state.lock:
+            zones = self.state.dirt_status.get('zones', {})
+            return [{'key': k, 'name': z.get('name', k)} for k, z in zones.items()]
+
+    def start_cleaning(self, zone=None):
+        """Limpia una zona (clave) o todo el museo (None). Devuelve un error o None."""
+        if self.clean_pub.get_subscription_count() == 0:
+            return 'la limpieza no está corriendo (pepper_cleaning cleaning_demo.launch.py)'
+        with self.state.lock:
+            if self.state.visitor_phase in VISITOR_ACTIVE:
+                return 'Pepper está atendiendo a un visitante'
+        if zone and zone not in [z['key'] for z in self.clean_zones()]:
+            return f'zona desconocida: {zone}'
+        self.clean_pub.publish(String(data=f'start {zone}' if zone else 'start'))
+        return None
+
+    def stop_cleaning(self):
+        self.clean_pub.publish(String(data='stop'))
+        return None
+
+    def dock(self, action='dock'):
+        """'dock' (ir a cargarse), 'undock' (salir de la base) o 'cancel'. Devuelve un error o None."""
+        if action not in ('dock', 'undock', 'cancel'):
+            return f'acción desconocida: {action}'
+        if self.dock_pub.get_subscription_count() == 0:
+            return 'autodock no está corriendo (pepper_cleaning cleaning_demo.launch.py)'
+        if action == 'dock':
+            self.stop_cleaning()
+        self.dock_pub.publish(String(data=action))
+        return None
+
+    def stop_all(self):
+        """Parada: cancela ir-a-lugar, limpieza y docking, y frena la base."""
+        self.cancel_go_to()
+        self.stop_cleaning()
+        self.dock_pub.publish(String(data='cancel'))
+        self.publish_cmd_vel(0.0, 0.0, 0.0)
+
+    def cleaning_status(self):
+        """Batería, base y limpieza por zona (para la herramienta get_status de Gemini)."""
+        with self.state.lock:
+            st = self.state
+            zones = st.dirt_status.get('zones', {})
+            return {
+                'battery_percent': None if st.battery is None else round(st.battery),
+                'charging': st.charging,
+                'dock_state': st.dock_status.get('state'),
+                'cleaning_state': st.clean_status.get('state'),
+                'cleaning_zone': st.clean_status.get('zone_name'),
+                'museum_clean_percent': st.dirt_status.get('percent'),
+                'zones_clean_percent': {z.get('name', k): z.get('percent') for k, z in zones.items()},
+            }
+
+    def find_zone(self, text):
+        t = strip_accents(text.lower())
+        for z in self.clean_zones():
+            name = strip_accents(z['name'].lower())
+            short = name.split(' ', 1)[1] if name.startswith(('la ', 'el ')) else name
+            if z['key'].replace('_', ' ') in t or short in t:
+                return z
+        return None
+
     def find_place(self, text):
         """Lugar (dict) nombrado en `text` por su clave, nombre o alias, o None."""
         t = ' ' + ' '.join(strip_accents(text.lower()).replace('?', ' ').replace(',', ' ').split()) + ' '
@@ -706,8 +846,30 @@ class PepperBridgeNode(Node):
         go_words = ["vamos", "ve a", "ve al", "anda", "dirígete", "dirigete", "llévame", "llevame",
                     "corre", "regresa", "vuelve", "acompáñame", "acompañame", "lleva"]
 
-        # 0. Ir a un lugar con nombre ("vamos a la mesa", "corre a la entrada")
-        if place and any(w in t for w in go_words):
+        tn = strip_accents(t)
+        # 0a. Base de carga ("ve a cargarte", "sal de la base")
+        if any(w in tn for w in ["cargate", "cargarte", "a cargar", "base de carga", "recargate", "recargarte"]) \
+                and not any(w in tn for w in ["sal ", "salir"]):
+            err = self.dock('dock')
+            reply = "Voy a la base de carga." if err is None else f"No puedo ir a cargarme: {err}."
+        elif any(w in tn for w in ["sal de la base", "deja de cargar", "salir de la base"]):
+            err = self.dock('undock')
+            reply = "Salgo de la base de carga." if err is None else f"No puedo: {err}."
+        # 0b. Limpieza ("limpia la sala oeste", "limpia el museo", "deja de limpiar")
+        elif any(w in tn for w in ["deja de limpiar", "para de limpiar", "deten la limpieza", "termina de limpiar"]):
+            self.stop_cleaning()
+            reply = "Dejo de limpiar."
+        elif "limpi" in tn and not any(w in tn for w in ["cuanto", "como va", "porcentaje"]):
+            zone = self.find_zone(tn)
+            err = self.start_cleaning(zone['key'] if zone else None)
+            reply = ((f"Voy a limpiar {zone['name']}." if zone else "Voy a limpiar el museo.") if err is None
+                     else f"No puedo limpiar: {err}.")
+        elif any(w in tn for w in ["bateria", "cuanto limpiaste", "como va la limpieza", "porcentaje"]):
+            with self.state.lock:
+                c = self.state_cleaning_summary()
+            reply = c
+        # 0c. Ir a un lugar con nombre ("vamos a la mesa", "corre a la entrada")
+        elif place and any(w in t for w in go_words):
             run = "corre" in t or "rápido" in t or "rapido" in t
             err = self.go_to_place(place['key'], run)
             name = place['name']
@@ -715,7 +877,7 @@ class PepperBridgeNode(Node):
             reply = (f"¡{'Corro' if run else 'Voy'} {to}!" if err is None
                      else f"No puedo ir {to}: {err}.")
         # 1. Movimiento adelante
-        if any(w in t for w in ["avanza", "adelante", "camina", "muévete adelante", "muevete adelante"]):
+        elif any(w in t for w in ["avanza", "adelante", "camina", "muévete adelante", "muevete adelante"]):
             self._execute_timed_move(0.25, 0.0, 1.5)
             reply = "¡Entendido! Avanzando un paso adelante."
         # 2. Movimiento atrás
@@ -732,8 +894,7 @@ class PepperBridgeNode(Node):
             reply = "Girando hacia mi derecha."
         # 5. Parada
         elif any(w in t for w in ["para", "alto", "detente", "stop", "frena", "parada"]):
-            self.cancel_go_to()
-            self.publish_cmd_vel(0.0, 0.0, 0.0)
+            self.stop_all()
             reply = "¡Parada inmediata! Me he detenido."
         # 6. Cabeza
         elif "mira arriba" in t or "arriba" in t:
@@ -773,13 +934,32 @@ class PepperBridgeNode(Node):
         elif any(w in t for w in ["gracias", "muchas gracias"]):
             reply = "¡Es un placer ayudarte! Estoy siempre a tus órdenes."
         elif "ayuda" in t or "comandos" in t:
-            reply = "Puedes decirme: 'avanza', 'retrocede', 'gira izquierda/derecha', 'alto', 'mira arriba/abajo/al frente', 'dónde estás', 'qué ves' o 'vamos a la mesa'."
+            reply = ("Puedes decirme: 'avanza', 'retrocede', 'gira izquierda/derecha', 'alto', 'mira arriba/abajo/al frente', "
+                     "'dónde estás', 'qué ves', 'vamos a la mesa', 'limpia la sala oeste', 'deja de limpiar', "
+                     "'ve a cargarte' o '¿cuánta batería tienes?'.")
         else:
             reply = f"Recibí tu indicación: '{text}'. Ejecutando y atento a tus siguientes órdenes en el museo."
 
         # Publicar también en /pepper/say para síntesis de voz en ROS 2
         self.publish_say(reply)
         return reply
+
+    def state_cleaning_summary(self):
+        """Frase con batería y limpieza (llamar con state.lock tomado)."""
+        st = self.state
+        parts = []
+        if st.battery is not None:
+            parts.append(f"Tengo {st.battery:.0f} % de batería" + (" y me estoy cargando" if st.charging else ""))
+        cs = st.clean_status
+        if cs.get('state') == 'CLEANING':
+            parts.append(f"estoy limpiando {cs.get('zone_name')}")
+        elif cs.get('state') == 'PAUSED_DOCK':
+            parts.append("pausé la limpieza para cargarme")
+        if st.dirt_status.get('percent') is not None:
+            parts.append(f"el piso del museo está {st.dirt_status['percent']:.0f} % limpio")
+        if not parts:
+            return "No tengo datos de batería ni de limpieza (¿corre cleaning_demo.launch.py?)."
+        return (", ".join(parts) + ".").capitalize() if len(parts) == 1 else parts[0] + "; " + ", ".join(parts[1:]) + "."
 
     def _execute_timed_move(self, linear_x, angular_z, duration_sec):
         def _move_task():
