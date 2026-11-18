@@ -1,0 +1,27 @@
+# Mesa de las frutas y objetos que Pepper sabe coger (pepper_fetch).
+# Frame map = mundo de Gazebo + (1.5, -1), como el resto del proyecto.
+map_offset: [1.5, -1.0]
+
+table:
+  model: fruit_table
+  center: [1.0, 2.6]        # map; zona abierta al norte del punto de partida, sin personas en museum_test_people
+  yaw_deg: 0.0              # la mesa es cuadrada: sus lados van con los ejes del mapa
+  size: [0.55, 0.55]        # tablero (x, y)
+  height: 0.70              # superficie del mantel
+  # Pepper se acerca por el lado sur (mira hacia +y del mapa)
+  approach_side: south
+  approach_distance: 0.60   # desde el borde de la mesa hasta el centro de Pepper, para mirar (Nav2)
+
+# Objetos sobre la mesa al arrancar: posición en el frame de la mesa (centro del tablero, x hacia el
+# este, y hacia el norte) y nombre del modelo en Gazebo.
+objects:
+  - name: apple
+    model: apple
+    label: manzana
+    yolo_class: apple
+    radius: 0.037
+    at: [0.08, -0.20]
+
+# Palabras con las que se puede pedir cada clase de YOLO (sin tildes ni mayúsculas)
+aliases:
+  apple: [manzana, manzanas, apple, fruta]

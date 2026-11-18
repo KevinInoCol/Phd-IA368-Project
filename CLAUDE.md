@@ -6,6 +6,23 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
 ## Estado y próximos pasos (actualizado 2026-11-16)
 
+**Punto de guardado (2026-11-18): Pepper coge la manzana de una mesa (paquete `pepper_fetch`)**
+- Pedido del usuario: "que vaya a la mesa y coja la manzana", por fases; después "¿me traes una
+  manzana?" por voz y llevarla al visitante (siguiente fase, sin empezar).
+- Hecho: mesa `models/fruit_table` en map (1.0, 2.6) + manzana YCB `013_apple` (CC BY 4.0; una
+  procedural no la detectaba YOLO), colisión cilindro (la esfera rodaba). Nodo `fetch_object`
+  (entorno yolo_ros): Nav2 → YOLO+profundidad → borde de la mesa con la profundidad → base
+  holonómica → IK propia `arm_ik.py` (5 art. + HipPitch, palma −z de r_wrist, de lado, codo
+  |y|>0.21) → MoveIt (`launch/moveit.launch.py`, sin octomap, `allowed_start_tolerance` 0.05) →
+  DetachableJoint añadido en caliente (`/world/default/entity/system/add`, por id de entidad: por
+  nombre falla; la respuesta del servicio tarda). `fetch_demo.launch.py`, `tools/fetch_trials.py`,
+  `tools/shot.py`. Resultados `results/fetch/corrida1..4` (36/40; pendiente: torso caído de lado, HipRoll en su tope, 1 vez), README "Fase 5", pestaña 6 del HTML
+  (`docs/src/fase6.tpl.html` + `build_fase6.py`).
+- Trampas: el plugin de velocidad de Pepper deja la base libre hasta el primer /cmd_vel (un golpe la
+  deja girando); `set_pose` conserva la velocidad del modelo (borrar y crear); RShoulderRoll llega a
+  su límite si el brazo toca el costado; `pkill -f`/awk con patrones que aparecen en la propia
+  línea de comandos matan el shell.
+
 **Punto de guardado (2026-11-17): Pepper atiende a quien lo llama mientras limpia**
 - Pedido del usuario: "si alguien le habla debe acercarse para interactuar con ese alguien".
   Hecho: `visitor_approach` (dock-aware: sale de la base con ≥ 40 %, si no "charging"; fin de

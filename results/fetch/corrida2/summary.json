@@ -1,0 +1,23 @@
+{
+ "trials": 10,
+ "success": 9,
+ "time_s_mean": 50.4,
+ "time_s_range": [
+  42.1,
+  63.6
+ ],
+ "vision_err_cm_mean": 2.1,
+ "vision_err_cm_max": 2.9,
+ "results": [
+  "holding",
+  "holding",
+  "holding",
+  "holding",
+  "holding",
+  "unreachable",
+  "holding",
+  "holding",
+  "holding",
+  "holding"
+ ]
+}

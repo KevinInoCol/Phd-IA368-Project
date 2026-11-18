@@ -14,6 +14,7 @@ configuraciones de la base.
 | 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | ✅ SLAM evaluado en el museo vacío, estático y dinámico; estelas y filtro dinámico (2026-10-20) |
 | 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada: 10/10 llamadas (2026-10-20); voz probada de punta a punta con audio sintetizado (2026-10-21); falta el micrófono real |
 | 4 | **Limpiar el escenario**: piso sucio que Pepper limpia al pasar, base de carga y autodocking (pedido del profesor) | ✅ todo el museo: 84 % limpio de media (87 % con gente caminando), 8/8 recargas en mitad de la misión (2026-11-16) |
+| 5 | **Coger objetos**: Pepper va a una mesa, ve la manzana con la cámara y la coge con la mano (primer paso de "¿me traes una manzana?") | ✅ 36 de 40 intentos con la manzana en la mano (2026-11-18); falta pedirlo por voz y llevarla al visitante |
 
 Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
 publicada en **https://pepper-ia368.vercel.app**.
@@ -623,3 +624,90 @@ una despedida). Tres corridas completas, 16 llamadas (`results/limpieza/visitant
   (cabeza a 0.45 m) durante 75 s y se enderezó solo. El radio de Pepper en Nav2 (0.24 m, del repo
   base) no cuenta los brazos. Falta darle más margen sin cerrar los pasillos estrechos.
 
+
+---
+
+## Fase 5 — Pepper coge la manzana de la mesa (2026-11-18)
+
+Primer paso de "¿me traes una manzana?": Pepper va a una mesa del museo, encuentra la manzana con
+la cámara, se coloca, se inclina y la coge con la mano derecha. Paquete `pepper_fetch`.
+
+### Qué puede coger Pepper
+
+Cada brazo tiene 5 articulaciones y la mano un solo motor que abre y cierra los 5 dedos: objetos
+ligeros a la altura de una mesa, no del suelo. El hombro está a 0.91 m y el brazo mide ~0.40 m: a
+una mesa de 0.70 m sólo llega **inclinándose** con la cadera (`HipPitch` negativo = hacia delante;
+−0.3 rad adelanta el hombro 9 cm).
+
+- **Mesa** (`models/fruit_table`): 0.55 × 0.55 m, tablero a 0.70 m, en map (1.0, 2.6), la zona
+  abierta al norte del punto de partida (`config/fetch.yaml`).
+- **Manzana** (`models/apple`): el escaneo `013_apple` del YCB Object and Model Set (Calli et al.,
+  2015), CC BY 4.0, textura reducida a 1024 px. Una manzana generada a mano no la reconocía YOLO; la
+  escaneada sí (0.4–0.9). Colisión: un cilindro de pie (una esfera rueda sin fin en Gazebo).
+
+### Cómo la coge: `fetch_object`
+
+1. **Nav2** hasta 0.6 m del borde de la mesa, de frente; el ajuste final (Nav2 da ±0.25 m) con la
+   base holonómica y AMCL.
+2. **YOLO** (COCO, clase `apple`) en la cámara frontal con la cabeza inclinada; el centro 3D sale de
+   la nube de profundidad dentro de la caja (mediana de 6 imágenes, en `odom`).
+3. **Borde de la mesa** medido con la profundidad (puntos a la altura del tablero). El del mapa trae
+   el error de AMCL (~10 cm) y dejaba la mesa "encima" de Pepper en MoveIt.
+4. **Acercarse** con la base holonómica hasta tener la manzana a (0.33, −0.12) m en `base_footprint`,
+   sin acercarse a menos de 0.29 m del borde; a medio camino la vuelve a localizar.
+5. **Cinemática inversa propia** (`arm_ik.py`). El IK de MoveIt (KDL, `position_only_ik`) sólo
+   resuelve la posición de la muñeca y no deja elegir cómo queda la mano. Aquí se resuelven con
+   mínimos cuadrados (scipy) las 5 articulaciones del brazo + `HipPitch` sobre la cadena del URDF:
+   la palma (−z de `r_wrist`: el sensor "Hand/Touch/Back" está en +z) contra la manzana, de lado,
+   antebrazo horizontal, el codo a más de 0.21 m del centro (pegado al costado, el contacto llevaba
+   `RShoulderRoll` a su límite y MoveIt rechazaba el estado de partida) e inclinarse poco. Error ≤ 7 mm.
+6. **MoveIt 2** (`launch/moveit.launch.py`: la configuración del repo base, sin octomap) planifica
+   cada movimiento con la mesa (caja) y la manzana (esfera) en la escena: pre-agarre a 6 cm →
+   palma contra la manzana → levantar 10 cm → enderezarse con el brazo doblado delante del pecho.
+7. **Agarre**: se añade al modelo de Pepper el sistema `DetachableJoint` de Gazebo
+   (`/world/default/entity/system/add`, unión fija muñeca–manzana) y se cierra la mano. "soltar"
+   abre la mano y deshace la unión. Es lo habitual en simulación: una mano de un solo motor no
+   sostiene un objeto con física de contacto, y el modelo de Pepper en Gazebo no lleva dedos.
+
+### Uso
+
+```bash
+ros2 launch pepper_fetch fetch_demo.launch.py                 # museo + Nav2 + MoveIt + fetch_object
+ros2 topic pub --once /pepper/fetch std_msgs/String "data: tráeme una manzana"
+ros2 topic pub --once /pepper/fetch std_msgs/String "data: soltar"
+# estado: /pepper/fetch_status (going, looking, approaching, reaching, grasping, holding, released,
+#         not_found, unreachable, nav_failed, busy, error)
+
+# Prueba repetida (con la demo en marcha): 5 puntos de salida, manzana al azar en el borde
+python3 pepper_fetch/tools/fetch_trials.py results/fetch/corrida1 --n 10 --seed 1
+python3 pepper_fetch/tools/shot.py foto.png 1.55 2.85 1.05 1.0 2.3 0.76   # cámara en Gazebo (map)
+```
+
+### Resultados
+
+`tools/fetch_trials.py`: en cada intento Pepper va con Nav2 a uno de 5 puntos del museo, la manzana
+aparece en otro sitio del borde de la mesa (4–9 cm del borde, ±15 cm a lo ancho, girada al azar) y
+se le pide "tráeme una manzana". Éxito = `holding` y la manzana más de 4 cm por encima del tablero
+(ground truth de Gazebo). `results/fetch/corrida1..4`:
+
+| Serie | En la mano | Error de la cámara (media, máx.) | Tiempo medio | El fallo |
+|---|---|---|---|---|
+| 1 | 9 de 10 | 2.2 cm (2.7) | 51 s | intento 3: el propio nodo dio la manzana por caída (comprobaba la altura con un umbral demasiado estricto) y la soltó → ahora compara con la altura antes de cogerla |
+| 2 | 9 de 10 | 2.1 cm (2.9) | 50 s | intento 6: MoveIt usaba el octomap de la cámara de profundidad (`MoveItConfigsBuilder` carga `sensors_3d.yaml` del paquete aunque no se pida) y veía obstáculos falsos pegados a Pepper → `sensors_3d = {}` en `moveit.launch.py` |
+| 3 | 9 de 10 | 2.3 cm (4.0) | 50 s | intento 5: al levantarla, el codo quedó en su tope con el peso de la manzana y MoveIt rechazó el siguiente movimiento → 0.10 rad de margen en la IK |
+| 4 | 9 de 10 | 2.5 cm (3.4) | 50 s | intento 10: **pendiente**. El torso cayó de lado hasta el tope de `HipRoll` (0.51 rad) y el motor (10.2 N·m en el modelo base) no lo levanta; la cámara veía torcido y YOLO no reconoció la manzana. Ahora `fetch_object` lo detecta y lo dice |
+| **total** | **36 de 40** | 2.3 cm (4.0) | 50 s | |
+
+- **Error de la cámara** = distancia 3D entre la posición que calcula Pepper y el ground truth al
+  estirar el brazo.
+- **Tiempo** de reloj desde el pedido, con Pepper ya cerca de la mesa (el viaje desde el punto de
+  salida va aparte).
+- Cada serie usa otra semilla (otras posiciones de la manzana). Cada fallo se corrigió antes de la
+  serie siguiente, salvo el de la serie 4.
+- Antes de esta versión fallaban intentos por: la manzana rodando (colisión esférica y `set_pose`,
+  que conserva la velocidad), la mesa mal puesta en MoveIt (borde del mapa con el error de AMCL), el
+  brazo pegado al costado (`RShoulderRoll` en su límite → "Start state out of bounds") y la muñeca
+  aún oscilando al empezar el plan (`allowed_start_tolerance` 0.01 → 0.05).
+
+**Siguiente fase:** pedirlo por voz o en el chat (herramienta de Gemini), llevar la manzana hasta el
+visitante que la pidió (con `visitor_approach`) y dársela.

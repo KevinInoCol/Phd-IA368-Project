@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- Mesita de madera (0.55 x 0.55 m, tablero a 0.70 m) con mantel blanco. Origen en el centro, a
+     nivel del piso. Las patas las ven los láseres de Pepper; el tablero no (está más alto). -->
+<sdf version="1.9">
+  <model name="fruit_table">
+    <static>true</static>
+    <link name="link">
+      <collision name="top_col">
+        <pose>0 0 0.685 0 0 0</pose>
+        <geometry><box><size>0.55 0.55 0.03</size></box></geometry>
+        <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+      </collision>
+      <visual name="top">
+        <pose>0 0 0.685 0 0 0</pose>
+        <geometry><box><size>0.55 0.55 0.03</size></box></geometry>
+        <material><ambient>0.45 0.28 0.14 1</ambient><diffuse>0.55 0.34 0.17 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular><pbr><metal><metalness>0</metalness><roughness>0.6</roughness></metal></pbr></material>
+      </visual>
+      <visual name="cloth">
+        <pose>0 0 0.7015 0 0 0</pose>
+        <geometry><box><size>0.45 0.45 0.003</size></box></geometry>
+        <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.92 0.92 0.88 1</diffuse>
+          <specular>0.05 0.05 0.05 1</specular><pbr><metal><metalness>0</metalness><roughness>0.9</roughness></metal></pbr></material>
+      </visual>
+      <!-- patas -->
+      <collision name="leg1_col"><pose>0.24 0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry></collision>
+      <collision name="leg2_col"><pose>0.24 -0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry></collision>
+      <collision name="leg3_col"><pose>-0.24 0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry></collision>
+      <collision name="leg4_col"><pose>-0.24 -0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry></collision>
+      <visual name="leg1"><pose>0.24 0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry>
+        <material><ambient>0.35 0.22 0.11 1</ambient><diffuse>0.45 0.28 0.14 1</diffuse><pbr><metal><metalness>0</metalness></metal></pbr></material></visual>
+      <visual name="leg2"><pose>0.24 -0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry>
+        <material><ambient>0.35 0.22 0.11 1</ambient><diffuse>0.45 0.28 0.14 1</diffuse><pbr><metal><metalness>0</metalness></metal></pbr></material></visual>
+      <visual name="leg3"><pose>-0.24 0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry>
+        <material><ambient>0.35 0.22 0.11 1</ambient><diffuse>0.45 0.28 0.14 1</diffuse><pbr><metal><metalness>0</metalness></metal></pbr></material></visual>
+      <visual name="leg4"><pose>-0.24 -0.24 0.335 0 0 0</pose><geometry><box><size>0.04 0.04 0.67</size></box></geometry>
+        <material><ambient>0.35 0.22 0.11 1</ambient><diffuse>0.45 0.28 0.14 1</diffuse><pbr><metal><metalness>0</metalness></metal></pbr></material></visual>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,93 @@
+<div class="phase" id="fase6" role="tabpanel" aria-labelledby="tab-fase6">
+<section class="divider">
+  <div class="wrap">
+    <div class="eyebrow">IA368 · Robótica · Manipulación</div>
+    <h1>Pepper va a la mesa <span class="hl">y coge la manzana</span></h1>
+    <p class="lead">Primer paso hacia “¿me traes una manzana?”. Pepper va a una mesa del museo, encuentra la manzana con la cámara, se coloca a su lado, se inclina y la coge con la mano derecha. Después la lleva delante del pecho. Se pide con <code>/pepper/fetch</code> (“manzana”) y se suelta con “soltar”. El paquete nuevo es <code>pepper_fetch</code>.</p>
+    <div class="kpis">
+      <div class="kpi good"><b>@@KPI_OK</b><span>intentos con la manzana en la mano, saliendo de 5 sitios del museo</span></div>
+      <div class="kpi"><b>@@KPI_ERR cm</b><span>error medio de la posición de la manzana que calcula Pepper con la cámara (máx. @@KPI_ERRMAX)</span></div>
+      <div class="kpi"><b>@@KPI_T s</b><span>de media desde el pedido hasta tenerla en la mano</span></div>
+      <div class="kpi"><b>≤ 7 mm</b><span>de error de la cinemática inversa propia (palma contra la manzana)</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="escena6">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">01</span>Qué puede coger Pepper</div>
+      <h2>Una mano para gestos, pero que alcanza una mesa</h2>
+      <p class="lead">Cada brazo de Pepper tiene 5 articulaciones y la mano un solo motor que abre y cierra los 5 dedos a la vez: sirve para objetos ligeros a la altura de una mesa, no para recoger del suelo. El hombro está a 0.91 m y el brazo mide ~0.40 m, así que sólo llega a una mesa de 0.70 m <b>inclinándose</b> con la cadera (HipPitch). En el museo se puso una mesita de madera (0.55 × 0.55 m) en la zona abierta al norte del punto de partida, con una manzana escaneada de verdad (<code>013_apple</code> del YCB Object Set, CC BY 4.0). Una manzana dibujada a mano no la reconocía YOLO; la escaneada, sí (0.4–0.9).</p>
+    </div>
+    <div class="cols">
+      <figure class="shots crops">
+        <img alt="Vista de la cámara frontal de Pepper: la mesa con la manzana, marcada por YOLO" src="@@camera">
+        <figcaption><span>Lo que ve Pepper desde 0.6 m de la mesa, con la cabeza inclinada: YOLO (COCO, clase <i>apple</i>) marca la manzana; la profundidad da su posición 3D.</span></figcaption>
+      </figure>
+      <figure class="shots crops">
+        <img alt="Pepper inclinado sobre la mesa, con la palma derecha de lado contra la manzana" src="@@grasp">
+        <figcaption><span>El agarre: Pepper se inclina y apoya la palma de lado contra la manzana, como lo hace el Pepper real.</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="pasos6">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">02</span>El algoritmo, paso a paso</div>
+      <h2>Navegar, ver, acercarse, calcular el brazo, planificar y agarrar</h2>
+      <p class="lead">Todo lo hace el nodo <code>fetch_object</code>. Reutiliza Nav2 y MoveIt 2 del repo base (sin copiarlos) y YOLO, como la búsqueda de visitantes.</p>
+    </div>
+    <ol class="steps">
+      <li class="ours"><span class="k">1 · NAV2</span><h3>A la mesa</h3><p>NavigateToPose a 0.6 m del borde, de frente. Nav2 da por llegado a ±0.25 m; el último ajuste lo hace la base holonómica con AMCL.</p></li>
+      <li class="ours"><span class="k">2 · VER</span><h3>YOLO + profundidad</h3><p>Baja la cabeza y busca la clase <i>apple</i> (si no, gira la cabeza ±20°). Los puntos de la nube que caen en el centro de la caja dan el centro 3D; mediana de 6 imágenes, en <code>odom</code>.</p></li>
+      <li class="ours"><span class="k">3 · BORDE</span><h3>Mide la mesa</h3><p>Los puntos de la profundidad a la altura del tablero dan su borde. El del mapa traía el error de AMCL (~10 cm) y dejaba la mesa “encima” de Pepper en MoveIt.</p></li>
+      <li class="ours"><span class="k">4 · ACERCARSE</span><h3>Base holonómica</h3><p>Control proporcional con la odometría hasta tener la manzana a 0.33 m delante y 0.12 m a la derecha, sin acercarse a menos de 0.29 m del borde. A medio camino la vuelve a localizar.</p></li>
+      <li class="ours"><span class="k">5 · IK PROPIA</span><h3>Cómo poner la mano</h3><p>El IK de MoveIt (KDL) sólo resuelve la posición de la muñeca. <code>arm_ik.py</code> resuelve con mínimos cuadrados las 5 articulaciones + la inclinación: palma contra la manzana, de lado, antebrazo horizontal, codo separado del cuerpo, inclinarse poco.</p></li>
+      <li class="ours"><span class="k">6 · MOVEIT</span><h3>Sin chocar</h3><p>MoveIt planifica hasta 6 cm de la manzana (mesa y manzana en la escena), luego acerca la palma (ya sin la manzana como obstáculo), levanta 10 cm y lleva la mano delante del pecho.</p></li>
+      <li class="ours"><span class="k">7 · AGARRE</span><h3>Unión con la muñeca</h3><p>Al tocarla se añade al modelo de Pepper el sistema <code>DetachableJoint</code> de Gazebo (unión fija muñeca–manzana) y se cierra la mano. “Soltar” abre la mano y deshace la unión.</p></li>
+      <li><span class="k">POR QUÉ UNIÓN</span><h3>Y no física de contacto</h3><p>Es lo habitual en simulación: una mano de 5 dedos con un único motor no sostiene un objeto de forma estable, y el modelo de Pepper en Gazebo no lleva dedos. El resto (ver, colocarse, mover el brazo) sí es real.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="resultados6">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">03</span>Resultados</div>
+      <h2>@@KPI_OK, saliendo de cinco sitios y con la manzana cada vez en otro lugar</h2>
+      <p class="lead"><code>tools/fetch_trials.py</code>: en cada intento Pepper suelta la manzana, va con Nav2 a uno de 5 puntos del museo, la manzana aparece en otro sitio del borde de la mesa (a 4–9 cm del borde, ±15 cm a lo ancho, girada al azar) y se le pide “tráeme una manzana”. El ground truth de Gazebo mide el error de la cámara y si la manzana acaba en la mano.</p>
+    </div>
+    <div class="table-wrap">
+        <table>
+          <thead><tr><th>Serie</th><th>En la mano</th><th>Error cámara</th><th>Tiempo</th><th>El fallo</th></tr></thead>
+          <tbody>
+@@ROWS
+          </tbody>
+        </table>
+      </div>
+      <figure class="shots" style="margin-top:24px;max-width:720px">
+        <img alt="Pepper sostiene la manzana delante del pecho, junto a la mesa" src="@@hold">
+        <figcaption><span>Con la manzana en la mano, el brazo doblado y separado del cuerpo, listo para llevarla.</span></figcaption>
+      </figure>
+    <p class="tree-cap">Cuatro series de 10 intentos, cada una con otra semilla (otras posiciones de la manzana). Cada fallo se corrigió antes de la serie siguiente, salvo el último. Error cámara = distancia 3D entre la posición que calcula Pepper y el ground truth al estirar el brazo (media y máximo). Tiempo de reloj desde el pedido, con Pepper ya cerca de la mesa. Antes de estas series también se corrigieron: la manzana rodando (colisión esférica: ahora es un cilindro), la mesa mal puesta en MoveIt (el borde del mapa trae el error de AMCL: ahora se mide con la profundidad) y el brazo pegado al costado (el contacto llevaba el hombro a su tope).</p>
+  </div>
+</section>
+
+<section id="plan6">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="n">04</span>Estado</div>
+      <h2>Por fases, como se acordó</h2>
+    </div>
+    <ol class="steps">
+      <li class="ours"><span class="k"><span class="st done">HECHO</span></span><h3>Ir a la mesa y coger la manzana</h3><p>Nav2, YOLO + profundidad, borde medido, IK propia, MoveIt y agarre. @@KPI_OK.</p></li>
+      <li><span class="k"><span class="st">SIGUIENTE</span></span><h3>“¿Me traes una manzana?”</h3><p>Pedirlo por voz o en el chat (herramienta de Gemini), llevarla hasta el visitante que la pidió (con <code>visitor_approach</code>) y dársela.</p></li>
+      <li><span class="k"><span class="st">IDEA</span></span><h3>Otros objetos</h3><p>Cualquier clase de COCO sobre la mesa (vaso, plátano, naranja): basta con añadirla en <code>config/fetch.yaml</code>.</p></li>
+      <li><span class="k"><span class="st">IDEA</span></span><h3>Coger con cualquiera de las dos manos</h3><p>La mano izquierda para objetos a la izquierda, con la misma IK reflejada.</p></li>
+    </ol>
+  </div>
+</section>
+</div>
