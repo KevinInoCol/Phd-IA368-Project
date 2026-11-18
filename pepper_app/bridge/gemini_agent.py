@@ -37,10 +37,19 @@ VISITOR_INSTRUCTION = (
     "a él, y ya lo saludaste («Hola, ¿en qué te puedo ayudar?»): no vuelvas a saludar. Conversa "
     "con él como guía del museo: responde sus preguntas, cuéntale de los temas del "
     "museo y pregúntale qué le interesa. Lo tienes delante en la imagen de tu cámara: puedes "
-    "comentar lo que ves de él si viene al caso. No te muevas: quédate de frente a él. "
+    "comentar lo que ves de él si viene al caso. Quédate de frente a él (no digas que no te mueves). "
     "Cuando el visitante dé por terminada la charla (dice que no tiene más preguntas, se despide, "
     "o agradece la ayuda sin pedir nada más), llama a end_conversation y despídete con una frase "
     "breve y amable. Si agradece pero sigue preguntando, responde y no la termines. "
+)
+# Traer objetos de la mesa de las frutas (pepper_fetch), si fetch_object corre
+FETCH_INSTRUCTION = (
+    "En el museo hay una mesita con fruta (una manzana). Puedes ir a por ella con tu mano derecha "
+    "y traerla con bring_object (object = el nombre que use la persona, p. ej. «manzana»). Si te "
+    "piden una manzana, fruta o algo de comer de la mesa (p. ej. «¿me traes una manzana?», «¿me "
+    "invitas una manzana?»), llama a bring_object y responde en una frase que vas a por ella y "
+    "vuelves enseguida. Si piden otra cosa que no está en la mesa, di que por ahora sólo puedes "
+    "traer la manzana. "
 )
 # Despedidas para cuando Gemini no responde (parser local)
 FAREWELL_WORDS = ("gracias", "adios", "adiós", "chao", "chau", "hasta luego", "eso es todo",
@@ -133,7 +142,22 @@ class GeminiAgent:
             "description": "Termina la charla con el visitante cuando él la da por terminada "
                            "(no tiene más preguntas, se despide o agradece la ayuda).",
             "parameters": {"type": "OBJECT", "properties": {}},
-        }]}]
+        }] + self._fetch_tools()}]
+
+    def _fetch_ok(self):
+        node = self.bridge_node
+        return node is not None and hasattr(node, "fetch_available") and node.fetch_available()
+
+    def _fetch_tools(self):
+        if not self._fetch_ok():
+            return []
+        return [{
+            "name": "bring_object",
+            "description": "Va a la mesa de la fruta, coge el objeto con la mano y se lo trae a quien lo pidió.",
+            "parameters": {"type": "OBJECT", "properties": {
+                "object": {"type": "STRING", "description": "Qué traer, p. ej. 'manzana'."}},
+                "required": ["object"]},
+        }]
 
     def _places(self):
         """Lugares con nombre que publica place_navigator (vacío si no corre)."""
@@ -211,7 +235,7 @@ class GeminiAgent:
         }] if places else []
         return [
             {
-                "functionDeclarations": go_to + self._cleaning_tools() + [
+                "functionDeclarations": go_to + self._cleaning_tools() + self._fetch_tools() + [
                     {
                         "name": "move_robot",
                         "description": "Mueve la base móvil del robot Pepper en una dirección determinada.",
@@ -333,6 +357,11 @@ class GeminiAgent:
         elif name == "end_conversation":
             return {"status": "ended"}
 
+        elif name == "bring_object":
+            obj = str(args.get("object", "manzana")) or "manzana"
+            err = self.bridge_node.bring_object(obj, to_visitor=self._visitor_mode)
+            return {"status": "error", "error": err} if err else {"status": "going", "object": obj}
+
         elif name == "get_robot_pose":
             with self.bridge_node.state.lock:
                 x = self.bridge_node.state.robot_x
@@ -341,6 +370,8 @@ class GeminiAgent:
             return {"x": round(x, 2), "y": round(y, 2), "yaw_degrees": round(yaw_deg, 1)}
 
         return {"status": "unknown_function"}
+
+    _visitor_mode = False     # True mientras responde a un visitante (bring_object se lo lleva a él)
 
     def _front_frame(self):
         """Último JPEG de la cámara frontal (sin las cajas de YOLO), o None."""
@@ -358,7 +389,9 @@ class GeminiAgent:
             + MUSEUM_DESCRIPTION +
             "Tienes herramientas para mover tu cuerpo (move_robot), tu cabeza (move_head), frenar (stop_robot) "
             "y consultar tu posición (get_robot_pose). "
-            + self._places_instruction() + self._cleaning_instruction() +
+            + self._places_instruction() + self._cleaning_instruction()
+            + (FETCH_INSTRUCTION + "Desde este chat, «tráeme» significa volver a donde estás ahora. "
+               if self._fetch_ok() else "") +
             "Con cada mensaje del usuario recibes la imagen actual de tu cámara frontal: úsala cuando "
             "te pregunten qué ves o necesites mirar algo, y describe sólo lo que de verdad aparece en ella. "
             "Cuando el usuario te pida una acción física, invoca la herramienta correspondiente. "
@@ -396,6 +429,10 @@ class GeminiAgent:
             elif action_name == "get_status":
                 with self.bridge_node.state.lock:
                     speech_text = self.bridge_node.state_cleaning_summary()
+            elif action_name == "bring_object":
+                res = executed_actions[0][1]
+                speech_text = (f"Voy a la mesa por la {res.get('object')} y te la traigo."
+                               if res.get("status") == "going" else f"No puedo: {res.get('error')}.")
             elif action_name == "get_robot_pose":
                 pose = executed_actions[0][1]
                 speech_text = f"Estoy en la posición X: {pose.get('x')} m, Y: {pose.get('y')} m."
@@ -406,18 +443,33 @@ class GeminiAgent:
         Gemini, un parser local reconoce las despedidas."""
         system_instruction = (
             "Eres Pepper, un robot humanoide guía del museo en una simulación de ROS 2 Jazzy. "
-            "Eres amable, simpático y paciente. " + MUSEUM_DESCRIPTION + VISITOR_INSTRUCTION +
+            "Eres amable, simpático y paciente. " + MUSEUM_DESCRIPTION + VISITOR_INSTRUCTION
+            + (FETCH_INSTRUCTION + "Con bring_object vas a la mesa y vuelves hasta el visitante para "
+               "dársela: dile sólo que vas por ella y que vuelves enseguida. " if self._fetch_ok() else "") +
             "Tus respuestas deben ser breves, habladas y claras (máximo 2 o 3 oraciones en español), "
             "ya que se reproducirán por tu sintetizador de voz."
         )
-        speech_text, executed_actions, err = self._converse(
-            system_instruction, user_text, conversation_history, self._visitor_tools_spec())
+        self._visitor_mode = True
+        try:
+            speech_text, executed_actions, err = self._converse(
+                system_instruction, user_text, conversation_history, self._visitor_tools_spec())
+        finally:
+            self._visitor_mode = False
         if err:
             t = user_text.lower()
+            if self._fetch_ok() and any(w in t for w in ("manzana", "fruta")) and \
+                    any(w in t for w in ("trae", "traer", "invita", "dame", "quiero")):
+                e = self.bridge_node.bring_object("manzana", to_visitor=True)
+                return ("¡Claro! Voy a la mesa por ella y vuelvo enseguida." if e is None
+                        else f"Lo siento, ahora no puedo: {e}."), False, err
             if any(w in t for w in FAREWELL_WORDS):
                 return "¡Con gusto! Que disfrutes el resto del museo.", True, err
             return "Perdona, ahora no puedo pensar bien la respuesta. ¿Me lo repites?", False, err
         ended = any(name == "end_conversation" for name, _ in executed_actions)
+        fetch = next((res for name, res in executed_actions if name == "bring_object"), None)
+        if fetch is not None and not speech_text:
+            speech_text = ("¡Claro! Voy a la mesa por ella y vuelvo enseguida." if fetch.get("status") == "going"
+                           else f"Lo siento, ahora no puedo: {fetch.get('error')}.")
         return speech_text or ("¡Hasta luego, que disfrutes el museo!" if ended else "¿Perdón?"), ended, None
 
     def _converse(self, system_instruction, user_text, conversation_history, tools):
@@ -475,8 +527,15 @@ class GeminiAgent:
                     data=json.dumps(payload).encode("utf-8"),
                     headers=headers
                 )
-                with urllib.request.urlopen(req, timeout=20) as resp:
-                    data = json.loads(resp.read().decode("utf-8"))
+                # un reintento si Vertex no responde (visto: timeouts sueltos de 20 s con el bridge en marcha)
+                for attempt in range(2):
+                    try:
+                        with urllib.request.urlopen(req, timeout=20) as resp:
+                            data = json.loads(resp.read().decode("utf-8"))
+                        break
+                    except (TimeoutError, urllib.error.URLError) as e:
+                        if isinstance(e, urllib.error.HTTPError) or attempt == 1:
+                            raise
 
                 candidates = data.get("candidates", [])
                 if not candidates:

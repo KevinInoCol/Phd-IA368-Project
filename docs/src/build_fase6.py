@@ -51,6 +51,21 @@ def main():
             "KPI_ERR": f"{statistics.mean(errs):.1f}" if errs else "—",
             "KPI_ERRMAX": f"{max(errs):.1f} cm" if errs else "—",
             "KPI_T": f"{statistics.mean(r['time_s'] for r in ok):.0f}" if ok else "—"}
+    # entrega a un visitante (tools/deliver_trials.py)
+    drs, drows = [], []
+    for d in sorted(glob.glob(os.path.join(RES, "entrega*"))):
+        drs += [json.loads(line) for line in open(os.path.join(d, "trials.jsonl"))]
+    for r in drs:
+        f = r.get("fetch") or {}
+        res = ("entregada" if r.get("success") else
+               RESULT.get(f.get("result"), f.get("result") or r.get("final_phase") or r.get("reach") or "—"))
+        dist = f'{f["handover_dist"]:.2f} m' if r.get("success") and f.get("handover_dist") else "—"
+        drows.append(f'            <tr><td>{r["n"]}</td><td class="num">({r["start"][0]:g}, {r["start"][1]:g})</td>'
+                     f'<td class="{"num new" if r.get("success") else "num"}">{res}</td><td class="num">{dist}</td>'
+                     f'<td class="num">{r["total_s"]:.0f} s</td></tr>')
+    dok = [r for r in drs if r.get("success")]
+    subs["DEL_ROWS"] = "\n".join(drows)
+    subs["DEL_OK"] = f"{len(dok)} de {len(drs)} entregas" if drs else "—"
     html = open(os.path.join(HERE, "fase6.tpl.html"), encoding="utf-8").read()
 
     def sub(m):
@@ -76,7 +91,7 @@ def main():
     page = page.replace("pepper_visitors · pepper_cleaning · pepper_app ·",
                         "pepper_visitors · pepper_cleaning · pepper_fetch · pepper_app ·")
     open(PAGE, "w", encoding="utf-8").write(page)
-    print(f"fase6: {len(ok)}/{len(recs)} intentos; página {len(page) // 1024} KB")
+    print(f"fase6: {len(ok)}/{len(recs)} intentos, {len(dok)}/{len(drs)} entregas; página {len(page) // 1024} KB")
 
 
 if __name__ == "__main__":

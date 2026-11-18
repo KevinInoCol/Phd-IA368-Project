@@ -6,9 +6,27 @@ uso, resultados): **actualizarlo al cerrar cada fase o experimento**.
 
 ## Estado y próximos pasos (actualizado 2026-11-16)
 
+**Punto de guardado (2026-11-18, tarde): "¿me traes una manzana?" de punta a punta**
+- Hecho: pestaña Visitante → `visitor_approach` → Gemini (charla) llama `bring_object` → bridge
+  publica `/pepper/fetch` JSON `{"object", "deliver": {"person": [x, y]}}` (posición de
+  `visitor_status` reached) y manda `/pepper/visitor_done` (para que visitor_approach suelte la
+  cabeza) → `fetch_object.deliver()`: Nav2 a 0.75 m de la persona (ángulos alternativos), giro,
+  brazo `offer_at` (0.34, −0.22, 0.86), espera `offer_wait` 30 s o `/pepper/fetch` con palabra de
+  TAKE_WORDS (el bridge manda "gracias" con cualquier frase del visitante en `offering` o el botón
+  "La tomo" → `/api/visitor_take`) → abre, detach, **borra la manzana del mundo** y la repone en la
+  mesa (`restock`). Chat del operador: `deliver: "here"` (vuelve a donde estaba); cualquier mensaje
+  en `offering` = la toma. Fases bridge: `fetching`, `offering` (en VISITOR_ACTIVE). Parser local
+  (chat y visitante) entiende el pedido si Gemini falla; `gemini_agent` reintenta 1 vez el timeout.
+- `tools/deliver_trials.py` (WAV Piper por HTTP, 5 salidas): `results/fetch/entrega1` 5/5,
+  ~140 s, 0.79–0.82 m. Siempre la misma visitante (female03_Sup_Der, la más cercana a la mesa).
+  README "¿Me traes una manzana?", sección 04 de la pestaña 6 (foto `img/fase6_offer.jpg`).
+- Visto: Vertex con timeouts de 20 s y HTTP 429 durante minutos (sólo dentro del bridge en marcha,
+  causa no aclarada; reiniciar el bridge lo arregló una vez); cámara frontal detenida unos segundos
+  → `not_found` una vez. APK nueva compilada (`--no-tree-shake-icons`), sin instalar (no hay teléfono).
+
 **Punto de guardado (2026-11-18): Pepper coge la manzana de una mesa (paquete `pepper_fetch`)**
 - Pedido del usuario: "que vaya a la mesa y coja la manzana", por fases; después "¿me traes una
-  manzana?" por voz y llevarla al visitante (siguiente fase, sin empezar).
+  manzana?" por voz y llevarla al visitante (hecho: punto de guardado de arriba).
 - Hecho: mesa `models/fruit_table` en map (1.0, 2.6) + manzana YCB `013_apple` (CC BY 4.0; una
   procedural no la detectaba YOLO), colisión cilindro (la esfera rodaba). Nodo `fetch_object`
   (entorno yolo_ros): Nav2 → YOLO+profundidad → borde de la mesa con la profundidad → base

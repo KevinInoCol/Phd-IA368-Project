@@ -64,6 +64,10 @@ class AppBridgeState:
         self.visitor_since = 0.0   # último cambio de fase
         self.visitor_log = []   # {'kind': 'visitor'|'pepper'|'phase', 'text', 'phase', 'time'}
         self.visitor_chat = []  # charla de la llamada en curso, para Gemini ({'sender', 'text'})
+        self.visitor_target = None   # [x, y] en map de la persona atendida (visitor_approach)
+        # Traer objetos (pepper_fetch/fetch_object): para quién es el pedido en curso
+        self.fetch_for = None      # 'visitor' | 'chat' | None
+        self.fetch_status = {}
 
         # Lugares con nombre del museo (place_navigator): [{'key', 'name', 'aliases', 'about', 'pose'}]
         self.places = []
@@ -221,6 +225,13 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
             err = self.bridge_node.dock(action) if self.bridge_node else None
             self._send_json(200 if not err else 409, {'status': 'ok' if not err else 'error', 'error': err})
 
+        elif path == '/api/visitor_take':   # botón "La tomo" mientras Pepper ofrece el objeto
+            with self.state.lock:
+                offering = self.state.visitor_phase == 'offering'
+            if self.bridge_node and offering:
+                self.bridge_node.visitor_take('(La tomo)')
+            self._send_json(200 if offering else 409, {'status': 'ok' if offering else 'error'})
+
         elif path == '/api/visitor_end':
             if self.bridge_node:
                 self.bridge_node.visitor_end('El operador terminó la charla.')
@@ -299,7 +310,17 @@ class BridgeHTTPHandler(BaseHTTPRequestHandler):
             self._send_json(200, {'status': 'ok', 'transcript': '', 'sent': False})
             return
         with self.state.lock:
-            talking = self.state.visitor_phase == 'talking'
+            phase = self.state.visitor_phase
+            talking = phase == 'talking'
+        if phase == 'offering':     # Pepper le ofrece el objeto: cualquier frase = lo toma
+            self.bridge_node.visitor_take(text)
+            self._send_json(200, {'status': 'ok', 'transcript': text, 'taken': True})
+            return
+        if phase == 'fetching':
+            self.state.add_visitor_log('visitor', text)
+            self._send_json(200, {'status': 'ok', 'transcript': text,
+                                  'reply': 'Un momento, voy por lo que me pediste.'})
+            return
         if talking:
             reply, ended = self.bridge_node.visitor_chat(text)
             self._send_json(200, {'status': 'ok', 'transcript': text, 'reply': reply, 'ended': ended})
@@ -434,7 +455,9 @@ def wav_to_pcm16k(data):
 
 
 VOICE_RATE = 16000
-VISITOR_ACTIVE = ('searching', 'approaching', 'facing')
+VISITOR_ACTIVE = ('searching', 'approaching', 'facing', 'fetching', 'offering')
+# fases de /pepper/fetch_status con las que termina un pedido (con entrega, 'holding' es intermedia)
+FETCH_END = ('delivered', 'released', 'not_found', 'unreachable', 'nav_failed', 'busy', 'error')
 VISITOR_STUCK = 180.0  # s sin cambio de fase: visitor_approach murió a mitad de una llamada
 VOICE_TIMEOUT = 20.0  # s esperando a voice_listener
 
@@ -497,6 +520,9 @@ class PepperBridgeNode(Node):
         # fin de la charla: visitor_approach deja de mirarlo y cleaner sigue limpiando
         self.visitor_done_pub = self.create_publisher(String, '/pepper/visitor_done', 10)
         self.create_subscription(String, '/pepper/visitor_status', self.visitor_status_cb, 10)
+        # Traer un objeto ("¿me traes una manzana?") -> fetch_object (pepper_fetch)
+        self.fetch_pub = self.create_publisher(String, '/pepper/fetch', 10)
+        self.create_subscription(String, '/pepper/fetch_status', self.fetch_status_cb, 10)
 
         # Lugares con nombre: "vamos a la mesa" -> place_navigator (pepper_visitors) -> Nav2
         self.go_to_pub = self.create_publisher(String, '/pepper/go_to', 10)
@@ -609,8 +635,11 @@ class PepperBridgeNode(Node):
             self.state.last_speech = msg.data
             self.state.last_speech_time = time.time()
             visitor = self.state.visitor_phase in VISITOR_ACTIVE
-        if visitor:  # lo dice visitor_approach mientras atiende la llamada
-            self.state.add_visitor_log('pepper', msg.data)
+        if visitor:  # lo dice visitor_approach (o fetch_object) mientras atiende la llamada
+            with self.state.lock:
+                last = self.state.visitor_log[-1] if self.state.visitor_log else {}
+            if not (last.get('kind') == 'pepper' and last.get('text') == msg.data):  # ya está (Gemini)
+                self.state.add_visitor_log('pepper', msg.data)
 
     def visitor_call(self, text):
         """Publica la frase en /pepper/visitor_call. Devuelve un error o None."""
@@ -646,6 +675,8 @@ class PepperBridgeNode(Node):
             self.state.visitor_phase = 'talking' if phase == 'reached' else phase
             self.state.visitor_status = st
             self.state.visitor_since = time.time()
+            if st.get('target'):
+                self.state.visitor_target = st['target']
             if phase == 'reached':
                 self.state.visitor_chat.append({'sender': 'pepper', 'text': 'Hola, ¿en qué te puedo ayudar?'})
         self.state.add_visitor_log('phase', st.get('text', ''), phase)
@@ -667,6 +698,63 @@ class PepperBridgeNode(Node):
         if ended:
             self.visitor_end('El visitante terminó la charla.')
         return reply, ended
+
+    # ---------- traer un objeto (pepper_fetch) ----------
+    def fetch_available(self):
+        return self.fetch_pub.get_subscription_count() > 0
+
+    def bring_object(self, obj, to_visitor):
+        """Pide a fetch_object que traiga `obj`: al visitante de la charla (a su posición) o, desde el
+        chat del operador, de vuelta a donde está Pepper ahora. Devuelve un error o None."""
+        if not self.fetch_available():
+            return 'fetch_object no está corriendo (pepper_fetch fetch_demo.launch.py)'
+        with self.state.lock:
+            if self.state.fetch_for is not None:
+                return 'ya estoy trayendo algo'
+            if to_visitor:
+                if self.state.visitor_phase != 'talking' or not self.state.visitor_target:
+                    return 'no sé dónde está el visitante'
+                deliver = {'person': list(self.state.visitor_target)}
+                self.state.visitor_phase = 'fetching'
+                self.state.visitor_status = {'phase': 'fetching', 'text': f'Voy a la mesa por {obj}.'}
+                self.state.visitor_since = time.time()
+            else:
+                if self.state.visitor_phase in VISITOR_ACTIVE:
+                    return 'Pepper está atendiendo a un visitante'
+                deliver = 'here'
+            self.state.fetch_for = 'visitor' if to_visitor else 'chat'
+        self.fetch_pub.publish(String(data=json.dumps({'object': obj, 'deliver': deliver}, ensure_ascii=False)))
+        self.get_logger().info(f'Traer {obj} a {deliver}')
+        if to_visitor:
+            # visitor_approach deja de mirarlo (fetch_object mueve la cabeza) y da la charla por cerrada
+            self.visitor_done_pub.publish(String(data=f'Pepper va por {obj}.'))
+        return None
+
+    def fetch_status_cb(self, msg):
+        try:
+            st = json.loads(msg.data)
+        except ValueError:
+            return
+        phase = st.get('phase', '')
+        with self.state.lock:
+            self.state.fetch_status = st
+            who = self.state.fetch_for
+            if phase in FETCH_END:
+                self.state.fetch_for = None
+            if who == 'visitor':
+                self.state.visitor_phase = ('offering' if phase == 'offering' else
+                                            'ended' if phase in FETCH_END else 'fetching')
+                self.state.visitor_status = st
+                self.state.visitor_since = time.time()
+        if who == 'visitor':
+            self.state.add_visitor_log('phase', st.get('text', ''), phase)
+        elif who == 'chat' and phase in FETCH_END + ('holding',) and st.get('text'):
+            self.state.add_chat('pepper', st['text'])
+
+    def visitor_take(self, text):
+        """El visitante habla mientras Pepper le ofrece el objeto: lo toma."""
+        self.state.add_visitor_log('visitor', text)
+        self.fetch_pub.publish(String(data='gracias'))
 
     def visitor_end(self, text, notify=True):
         with self.state.lock:
@@ -832,6 +920,12 @@ class PepperBridgeNode(Node):
         self.say_pub.publish(msg)
 
     def process_chat_command(self, text):
+        # Pepper ofrece lo que le pidieron desde el chat: cualquier mensaje = lo toma
+        with self.state.lock:
+            offering = self.state.fetch_for == 'chat' and self.state.fetch_status.get('phase') == 'offering'
+        if offering:
+            self.fetch_pub.publish(String(data='gracias'))
+            return '¡Aquí tienes!'
         # 1. Try Gemini Flash Agent with function calling
         if self.gemini_agent and self.gemini_agent.is_configured():
             # sin el último mensaje: es `text`, que el agente ya manda junto con la imagen
@@ -862,6 +956,11 @@ class PepperBridgeNode(Node):
         elif any(w in tn for w in ["sal de la base", "deja de cargar", "salir de la base"]):
             err = self.dock('undock')
             reply = "Salgo de la base de carga." if err is None else f"No puedo: {err}."
+        # 0a'. Traer la manzana ("tráeme una manzana") -> fetch_object
+        elif self.fetch_available() and any(w in tn for w in ["manzana", "fruta"]) \
+                and any(w in tn for w in ["trae", "traes", "traer", "invitas", "invitarme", "dame", "quiero"]):
+            err = self.bring_object('manzana', to_visitor=False)
+            reply = "Voy a la mesa por la manzana y te la traigo." if err is None else f"No puedo: {err}."
         # 0b. Limpieza ("limpia la sala oeste", "limpia el museo", "deja de limpiar")
         elif any(w in tn for w in ["deja de limpiar", "para de limpiar", "deten la limpieza", "termina de limpiar"]):
             self.stop_cleaning()

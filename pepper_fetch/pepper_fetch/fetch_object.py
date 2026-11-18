@@ -27,9 +27,20 @@ Al recibir /pepper/fetch con el nombre de un objeto ("manzana", o cualquier alia
      un objeto de forma estable (y el modelo de Pepper en Gazebo no lleva dedos).
   5. "soltar": abre la mano y deshace la unión (/pepper/grasp/detach_<n>).
 
+Llevárselo a alguien: el pedido puede ser un JSON (lo manda el bridge de la app cuando un visitante
+dice "¿me traes una manzana?"):
+    {"object": "manzana", "deliver": {"person": [x, y]}}    # la persona, en map (visitor_approach)
+    {"object": "manzana", "deliver": "here"}                 # volver a donde estaba al pedirlo
+Tras cogerlo va con Nav2 a `handover_distance` m de la persona (de frente; si ese punto no se puede
+alcanzar, prueba otros ángulos), estira el brazo hacia ella (`offer_at`, base_footprint) y espera
+`offer_wait` s o a que le digan que la toma ("gracias", "dámela", "soltar"...: /pepper/fetch
+mientras ofrece). Entonces abre la mano y deshace la unión; en la simulación la persona no puede
+cogerla, así que el objeto desaparece del mundo (se lo llevó) y, con `restock`, aparece otro en
+su sitio de la mesa para el siguiente pedido.
+
 Publica /pepper/fetch_status (std_msgs/String con JSON: `phase` = going | looking | approaching |
-reaching | grasping | holding | released | not_found | unreachable | nav_failed | busy | error,
-`text` y datos) y lo que diría Pepper en /pepper/say.
+reaching | grasping | holding | delivering | offering | delivered | released | not_found |
+unreachable | nav_failed | busy | error, `text` y datos) y lo que diría Pepper en /pepper/say.
 """
 
 import json
@@ -66,6 +77,8 @@ from pepper_fetch.arm_ik import ARM, VARS, ArmIK
 
 ARMS_DOWN = [1.45, -0.15, 0.0, 0.1, 1.0]      # pose arms_down del SRDF, hombro algo más abierto
 RELEASE_WORDS = ("soltar", "suelta", "sueltala", "deja", "dejala", "release", "drop")
+# mientras ofrece el objeto: el visitante lo toma
+TAKE_WORDS = RELEASE_WORDS + ("gracias", "dame", "damela", "toma", "tomo", "cojo", "agarro", "recibo")
 
 
 def norm(text):
@@ -100,7 +113,7 @@ class FetchObject(Node):
     def __init__(self):
         super().__init__("fetch_object")
         from ament_index_python.packages import get_package_share_directory
-        share = get_package_share_directory("pepper_fetch")
+        share = self.share = get_package_share_directory("pepper_fetch")
         cfg_path = self.declare_parameter("config", os.path.join(share, "config", "fetch.yaml")).value
         self.yolo_path = self.declare_parameter("yolo_model", os.path.expanduser("~/pepper_ws/yolo11m.pt")).value
         self.min_conf = self.declare_parameter("min_conf", 0.25).value
@@ -117,6 +130,11 @@ class FetchObject(Node):
         # a la altura del centro rozaría la mesa
         self.grasp_dz = self.declare_parameter("grasp_height", 0.015).value
         self.log_file = self.declare_parameter("log_file", "").value
+        # entrega: distancia a la persona, mano estirada hacia ella, espera y reponer el objeto
+        self.handover_d = self.declare_parameter("handover_distance", 0.75).value
+        self.offer_at = list(self.declare_parameter("offer_at", [0.34, -0.22, 0.86]).value)
+        self.offer_wait = self.declare_parameter("offer_wait", 30.0).value
+        self.restock = self.declare_parameter("restock", True).value
         with open(cfg_path) as f:
             self.cfg = yaml.safe_load(f)
 
@@ -164,6 +182,7 @@ class FetchObject(Node):
         self.edge_odom = None       # borde de la mesa medido (odom)
         self.held = None            # {"model", "label", "n"} del objeto en la mano
         self.grasps = 0             # uniones creadas (cada una con sus topics)
+        self.offering = None        # threading.Event mientras ofrece el objeto a alguien
         self.get_logger().info("Esperando pedidos en /pepper/fetch")
 
     # ---------- entradas ----------
@@ -177,6 +196,10 @@ class FetchObject(Node):
             self.get_logger().info("Cinemática del brazo lista (URDF de /pepper/robot_description)")
 
     def _fetch_cb(self, msg):
+        offering = self.offering
+        if offering is not None and any(w in norm(msg.data).replace('"', " ").split() for w in TAKE_WORDS):
+            offering.set()          # el visitante toma el objeto que le ofrece
+            return
         if self.busy:
             self.status("busy", "Estoy ocupado con otro pedido.")
             return
@@ -186,11 +209,26 @@ class FetchObject(Node):
     def _handle(self, text):
         log = {"text": text, "t": self.now()}
         try:
+            deliver = None
+            try:
+                req = json.loads(text)
+            except ValueError:
+                req = None
+            if isinstance(req, dict):
+                text, deliver = str(req.get("object", "")), req.get("deliver")
+                if deliver == "here":       # volver a donde está ahora
+                    p = self.pose2d(self.map_frame)
+                    deliver = {"pose": list(p)} if p else None
+                log["deliver"] = deliver
             words = norm(text)
             if any(w in words.split() for w in RELEASE_WORDS):
                 self.release(log)
             else:
-                self.fetch(words, log)
+                if not (deliver and self.held):      # si ya lo tiene en la mano, lo lleva directamente
+                    # con entrega lo pide el bridge de la app y Gemini ya dijo que va a por ello
+                    self.fetch(words, log, announce=not deliver)
+                if deliver and self.held:
+                    self.deliver(deliver, log)
         except Exception as e:
             self.get_logger().error(f"Error: {e!r}")
             log["error"] = repr(e)
@@ -276,14 +314,7 @@ class FetchObject(Node):
         d = tb["half"] + tb["approach"]
         x, y = tb["center"][0] + d * math.cos(tb["out"]), tb["center"][1] + d * math.sin(tb["out"])
         yaw = tb["out"] + math.pi
-        g = NavigateToPose.Goal()
-        g.pose = PoseStamped()
-        g.pose.header.frame_id = self.map_frame
-        g.pose.header.stamp = self.get_clock().now().to_msg()
-        g.pose.pose.position.x, g.pose.pose.position.y = x, y
-        g.pose.pose.orientation.z, g.pose.pose.orientation.w = math.sin(yaw / 2), math.cos(yaw / 2)
-        r = self._run_action(self.nav, g, 180.0)
-        if r is None or r.status != GoalStatus.STATUS_SUCCEEDED:
+        if not self.navigate(x, y, yaw):
             return False
         if not self.turn_to(yaw):
             return False
@@ -291,6 +322,16 @@ class FetchObject(Node):
         # no ve el tablero; se coloca con la base holonómica en el punto exacto
         self.drive_map(x, y)
         return True
+
+    def navigate(self, x, y, yaw, timeout=180.0):
+        g = NavigateToPose.Goal()
+        g.pose = PoseStamped()
+        g.pose.header.frame_id = self.map_frame
+        g.pose.header.stamp = self.get_clock().now().to_msg()
+        g.pose.pose.position.x, g.pose.pose.position.y = float(x), float(y)
+        g.pose.pose.orientation.z, g.pose.pose.orientation.w = math.sin(yaw / 2), math.cos(yaw / 2)
+        r = self._run_action(self.nav, g, timeout)
+        return r is not None and r.status == GoalStatus.STATUS_SUCCEEDED
 
     def drive_map(self, x, y, tol=0.03, vmax=0.15, timeout=20.0):
         """Mueve la base (sin girar) hasta (x, y) del mapa, con AMCL."""
@@ -612,7 +653,7 @@ class FetchObject(Node):
                 return o
         return None
 
-    def fetch(self, words, log):
+    def fetch(self, words, log, announce=True):
         obj = self.find_object(words)
         if obj is None:
             self.status("not_found", "No sé qué objeto es ése.")
@@ -634,7 +675,8 @@ class FetchObject(Node):
             self.say("Me quedé inclinado de lado y no me puedo enderezar. Necesito ayuda.")
             log["result"] = "tilted"
             return
-        self.say(f"Voy a la mesa por {art} {obj['label']}.")
+        if announce:
+            self.say(f"Voy a la mesa por {art} {obj['label']}.")
         self.status("going", "Voy a la mesa.")
         self.hand(0.9)
         self.edge_odom = None
@@ -764,6 +806,102 @@ class FetchObject(Node):
         self.move_arm(dict(zip(ARM, ARMS_DOWN)), speed=0.3)
         self.lean_to(0.0)
         self.head(0.0, 0.0)
+
+    # ---------- entrega ----------
+    def deliver(self, dest, log):
+        """Lleva el objeto de la mano a la persona (o a una pose) y se lo ofrece."""
+        label = self.held["label"]
+        art = "la" if label.endswith("a") else "el"
+        self.status("delivering", f"Te llevo {art} {label}.")
+        self.say(f"Te llevo {art} {label}.")
+        self.head(0.0, 0.0)
+        t0 = self.now()
+        ok = False
+        if "person" in dest:
+            px, py = map(float, dest["person"][:2])
+            r = self.pose2d(self.map_frame)
+            base = math.atan2(r[1] - py, r[0] - px) if r else 0.0      # de la persona hacia Pepper
+            for k, da in enumerate((0.0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6)):
+                a = base + da
+                gx, gy = px + self.handover_d * math.cos(a), py + self.handover_d * math.sin(a)
+                self.get_logger().info(f"Entrega: intento {k + 1} a ({gx:.2f}, {gy:.2f})")
+                if self.navigate(gx, gy, a + math.pi):
+                    ok = True
+                    break
+            if ok:
+                p = self.pose2d(self.map_frame)
+                if p:
+                    self.turn_to(math.atan2(py - p[1], px - p[0]))
+                    p = self.pose2d(self.map_frame)
+                    log["handover_dist"] = round(math.hypot(px - p[0], py - p[1]), 2)
+        else:
+            x, y, yaw = map(float, dest["pose"][:3])
+            ok = self.navigate(x, y, yaw) and self.turn_to(yaw)
+        log["deliver_nav_s"] = round(self.now() - t0, 1)
+        if not ok:
+            self.status("nav_failed", f"No consigo llegar hasta ti con {art} {label}.")
+            self.say(f"Lo siento, no consigo llegar hasta ti con {art} {label}.")
+            log["result"] = "deliver_nav_failed"
+            return
+        # ofrecerlo: el brazo estirado hacia la persona
+        q, err = self.ik.solve(self.offer_at, 0.037, approach=0.0, lean=0.0, side=False,
+                               seeds=[[0.0] + [self.joints.get(k, 0.0) for k in ARM]])
+        if err < 0.03:
+            self.set_scene(None)
+            self.move_arm(q, speed=0.3)
+        self.head(0.0, -0.15)                  # mira a la persona
+        self.offering = threading.Event()
+        self.status("offering", f"Aquí tienes {art} {label}.")
+        self.say(f"Aquí tienes {art} {label}. Tómala cuando quieras." if art == "la"
+                 else f"Aquí tienes {art} {label}. Tómalo cuando quieras.")
+        taken = self.offering.wait(self.offer_wait)
+        self.offering = None
+        log["taken_by_word"] = taken
+        self.hand_over(log)
+
+    def hand_over(self, log):
+        """La persona lo toma: abre la mano, deshace la unión y el objeto sale de la simulación
+        (se lo llevó); con `restock` aparece otro en su sitio de la mesa."""
+        held = self.held
+        art = "la" if held["label"].endswith("a") else "el"
+        self.hand(0.95)
+        self.wait(0.8)
+        self.detach(held["n"])
+        self.remove_model(held["model"])
+        self.held = None
+        log["result"] = "delivered"
+        self.say("¡Que la disfrutes!" if art == "la" else "¡Que lo disfrutes!")
+        self.status("delivered", f"Te di {art} {held['label']}.")
+        self.retract()
+        if self.restock:
+            obj = next((o for o in self.cfg["objects"] if o["model"] == held["model"]), None)
+            if obj is not None:
+                self.spawn_on_table(obj)
+
+    def remove_model(self, name):
+        from gz.msgs10.boolean_pb2 import Boolean
+        from gz.msgs10.entity_pb2 import Entity
+        e = Entity()
+        e.name, e.type = name, Entity.MODEL
+        self.gz.request(f"/world/{self.world}/remove", e, Entity, Boolean, 3000)
+
+    def spawn_on_table(self, obj):
+        """Vuelve a poner el objeto en su sitio de la mesa (fetch.yaml: `at`, frame de la mesa)."""
+        from gz.msgs10.boolean_pb2 import Boolean
+        from gz.msgs10.entity_factory_pb2 import EntityFactory
+        t = self.cfg["table"]
+        ox, oy = self.cfg.get("map_offset", [0.0, 0.0])
+        yaw = math.radians(t.get("yaw_deg", 0.0))
+        lx, ly = obj["at"]
+        x = t["center"][0] + lx * math.cos(yaw) - ly * math.sin(yaw) - ox
+        y = t["center"][1] + lx * math.sin(yaw) + ly * math.cos(yaw) - oy
+        ef = EntityFactory()
+        ef.sdf_filename = os.path.join(self.share, "models", obj["model"], "model.sdf")
+        ef.name = obj["name"]
+        ef.pose.position.x, ef.pose.position.y, ef.pose.position.z = x, y, t["height"] + 0.003
+        ef.pose.orientation.w = 1.0
+        self.gz.request(f"/world/{self.world}/create", ef, EntityFactory, Boolean, 5000)
+        self.get_logger().info(f"{obj['label']} repuesta en la mesa")
 
     def release(self, log):
         if not self.held:

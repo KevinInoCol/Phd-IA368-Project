@@ -1161,7 +1161,7 @@ class _ChatViewState extends State<ChatView> {
     _scrollToBottom();
 
     try {
-      final res = await http.post(Uri.parse(widget.chatUrl), headers: {'Content-Type': 'application/json'}, body: json.encode({'message': cleanText})).timeout(const Duration(seconds: 25));
+      final res = await http.post(Uri.parse(widget.chatUrl), headers: {'Content-Type': 'application/json'}, body: json.encode({'message': cleanText})).timeout(const Duration(seconds: 50));
 
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
@@ -1445,8 +1445,9 @@ class _VisitorViewState extends State<VisitorView> {
     ('De frente', Icons.accessibility_new_rounded),
     ('Charlamos', Icons.forum_rounded),
   ];
-  static const _stepOf = {'searching': 1, 'approaching': 2, 'facing': 3, 'talking': 4, 'ended': 5};
-  static const _failures = {'nobody', 'nav_failed', 'charging', 'error'};
+  // fetching/offering: le trae algo de la mesa (pepper_fetch) dentro de la charla
+  static const _stepOf = {'searching': 1, 'approaching': 2, 'facing': 3, 'talking': 4, 'fetching': 4, 'offering': 4, 'ended': 5};
+  static const _failures = {'nobody', 'nav_failed', 'charging', 'error', 'not_found', 'unreachable'};
 
   final AudioRecorder _recorder = AudioRecorder();
   final ScrollController _scrollCtrl = ScrollController();
@@ -1476,8 +1477,16 @@ class _VisitorViewState extends State<VisitorView> {
     super.dispose();
   }
 
-  bool get _busy => const {'searching', 'approaching', 'facing'}.contains(_phase);
+  bool get _busy => const {'searching', 'approaching', 'facing', 'fetching'}.contains(_phase);
   bool get _talking => _phase == 'talking';
+  bool get _offering => _phase == 'offering';
+
+  Future<void> _take() async {
+    try {
+      await http.post(Uri.parse('${widget.baseUrl}/api/visitor_take')).timeout(const Duration(seconds: 3));
+    } catch (_) {}
+    _fetchState();
+  }
 
   Future<void> _endTalk() async {
     try {
@@ -1690,8 +1699,12 @@ class _VisitorViewState extends State<VisitorView> {
                             ? 'Toca para enviar'
                             : _isTranscribing
                             ? (_talking ? 'Pepper piensa...' : 'Transcribiendo...')
+                            : _phase == 'fetching'
+                            ? 'Pepper va por ello...'
                             : _busy
                             ? 'Pepper está en camino...'
+                            : _offering
+                            ? 'Responder a Pepper'
                             : _talking
                             ? 'Responder a Pepper'
                             : 'Hablar como visitante',
@@ -1700,6 +1713,23 @@ class _VisitorViewState extends State<VisitorView> {
                     ),
                   ),
                 ),
+                // Tomar lo que Pepper le ofrece (también vale decir "gracias")
+                if (_offering && !_isRecording && !_isTranscribing) ...[
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00E676),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                      ),
+                      onPressed: _take,
+                      icon: const Icon(Icons.back_hand_rounded),
+                      label: const Text('La tomo', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
                 // Terminar la charla a mano (si el visitante "se va" sin despedirse)
                 if (_talking && !_isRecording && !_isTranscribing) ...[
                   const SizedBox(width: 10),
@@ -1738,7 +1768,7 @@ class _VisitorViewState extends State<VisitorView> {
             color: done ? _accent.withOpacity(0.18) : Colors.transparent,
             border: Border.all(color: current ? _accent : color.withOpacity(0.6), width: current ? 2 : 1),
           ),
-          child: current && step > 0 && step < _steps.length - 1 // en la charla, el ícono sin spinner
+          child: current && step > 0 && (step < _steps.length - 1 || _phase == 'fetching') // en la charla, sin spinner
               ? const Padding(padding: EdgeInsets.all(8), child: CircularProgressIndicator(strokeWidth: 2, color: _accent))
               : Icon(done ? Icons.check_rounded : _steps[i].$2, size: 18, color: color),
         ),

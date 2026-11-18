@@ -14,7 +14,7 @@ configuraciones de la base.
 | 2 | Objetos dinámicos en Gazebo (museo con personas en movimiento) | ✅ SLAM evaluado en el museo vacío, estático y dinámico; estelas y filtro dinámico (2026-10-20) |
 | 3 | Un visitante llama a Pepper por voz → Pepper busca a la persona estática más cercana, se acerca y la mira | ✅ búsqueda, acercamiento con Nav2 y mirada: 10/10 llamadas (2026-10-20); voz probada de punta a punta con audio sintetizado (2026-10-21); falta el micrófono real |
 | 4 | **Limpiar el escenario**: piso sucio que Pepper limpia al pasar, base de carga y autodocking (pedido del profesor) | ✅ todo el museo: 84 % limpio de media (87 % con gente caminando), 8/8 recargas en mitad de la misión (2026-11-16) |
-| 5 | **Coger objetos**: Pepper va a una mesa, ve la manzana con la cámara y la coge con la mano (primer paso de "¿me traes una manzana?") | ✅ 36 de 40 intentos con la manzana en la mano (2026-11-18); falta pedirlo por voz y llevarla al visitante |
+| 5 | **Coger objetos**: Pepper va a una mesa, ve la manzana con la cámara y la coge con la mano (primer paso de "¿me traes una manzana?") | ✅ 36 de 40 intentos con la manzana en la mano; "¿me traes una manzana?" por voz desde la app → se la lleva al visitante: 5 de 5 (2026-11-18) |
 
 Presentación del proyecto (una pestaña por fase): [`docs/proyecto.html`](docs/proyecto.html),
 publicada en **https://pepper-ia368.vercel.app**.
@@ -709,5 +709,56 @@ se le pide "tráeme una manzana". Éxito = `holding` y la manzana más de 4 cm p
   brazo pegado al costado (`RShoulderRoll` en su límite → "Start state out of bounds") y la muñeca
   aún oscilando al empezar el plan (`allowed_start_tolerance` 0.01 → 0.05).
 
-**Siguiente fase:** pedirlo por voz o en el chat (herramienta de Gemini), llevar la manzana hasta el
-visitante que la pidió (con `visitor_approach`) y dársela.
+### "¿Me traes una manzana?": llevársela al visitante
+
+Desde la pestaña **Visitante** de la app (voz del celular):
+
+1. "Hola Pepper, ven por favor" → `visitor_approach` busca a la persona quieta más cercana y se pone
+   de frente a ~1 m (Fase 3).
+2. "¿Me traes una manzana, por favor?" → Gemini (charla con el visitante) llama a la herramienta
+   **`bring_object`** → el bridge publica en `/pepper/fetch` un JSON con la posición de esa persona
+   (la que midió `visitor_approach` con la profundidad):
+   `{"object": "manzana", "deliver": {"person": [x, y]}}`, y cierra la charla en `visitor_approach`
+   (`/pepper/visitor_done`) para que deje de mover la cabeza.
+3. `fetch_object` la coge como arriba y la **lleva**: Nav2 a `handover_distance` = 0.75 m de la
+   persona (si no se puede, prueba otros ángulos alrededor de ella), giro hacia ella, brazo estirado
+   (`offer_at` = (0.34, −0.22, 0.86) en `base_footprint`, misma IK) y "Aquí tienes la manzana".
+4. Espera hasta `offer_wait` = 30 s a que la tome: cualquier frase del visitante en ese momento
+   ("Muchas gracias, ya la tomo") o el botón **La tomo** de la app. Abre la mano y deshace la unión;
+   en la simulación la persona no puede cogerla, así que la manzana sale del mundo (se la llevó) y,
+   con `restock`, aparece otra en su sitio de la mesa.
+
+Desde el chat del operador, "tráeme una manzana" la trae **a donde estaba Pepper** al pedirlo
+(`"deliver": "here"`); cualquier mensaje mientras la ofrece = la toma. Si Gemini no responde
+(timeout o HTTP 429 de Vertex, vistos en estas pruebas), el parser local del bridge también
+entiende el pedido. Fases nuevas de `/pepper/fetch_status`: `delivering`, `offering`, `delivered`;
+del bridge (pestaña Visitante): `fetching`, `offering`.
+
+```bash
+# con fetch_demo en marcha + bridge + voice_listener source:=topic
+python3 pepper_fetch/tools/deliver_trials.py --wavs llamada.wav pedido.wav gracias.wav \
+    --out results/fetch/entrega1 --fetch-log <log_file de fetch_object>
+```
+
+`tools/deliver_trials.py` hace lo mismo que el celular, por HTTP con audios de Piper, saliendo de
+los 5 puntos de `fetch_trials.py` (`results/fetch/entrega1`):
+
+| Intento | Sale de (map) | Resultado | Distancia al dársela | Tiempo total |
+|---|---|---|---|---|
+| 1 | (0, 0) | entregada | 0.81 m | 141 s |
+| 2 | (2.5, 1) | entregada | 0.79 m | 148 s |
+| 3 | (−1.5, 2.5) | entregada | 0.82 m | 129 s |
+| 4 | (3, 4.5) | entregada | 0.79 m | 142 s |
+| 5 | (0.5, 4.5) | entregada | 0.82 m | 132 s |
+
+- **5 de 5**, las tres frases bien transcritas y Gemini llamó a `bring_object` las 5 veces. Tiempo
+  total desde la llamada: ~40–55 s hasta llegar al visitante, ~80 s más hasta ofrecerle la manzana
+  (coger ~50 s + volver ~19 s).
+- Limitación: en este mundo la persona quieta más cercana a la mesa es siempre la misma
+  (`female03_Sup_Der`, a ~2.5 m de la mesa), así que las 5 entregas fueron a ella.
+- Fuera de la serie, en pruebas a mano: Vertex dejó de responder (timeout de 20 s, luego HTTP 429)
+  durante varios minutos → un reintento en `gemini_agent` y el pedido en el parser local; y una vez
+  la cámara frontal se detuvo unos segundos mientras buscaba la manzana → `not_found` (al repetir, bien).
+
+**Siguiente:** otros objetos de la mesa (cualquier clase de COCO, en `config/fetch.yaml`) y la mano
+izquierda para los que quedan a la izquierda.
